@@ -1,0 +1,139 @@
+
+
+{% extends 'base.html' %}
+{% load static %}
+{% block title %}
+	State Owners
+{% endblock %}
+
+{% block content%}
+<content>
+<div class="top-header">
+	<div class="row">
+		 <div class="col-sm-8 col-md-6 col-lg-5 col-xs-12 text-left wow fadeInUp" data-wow-duration="0.9s" data-wow-delay="0.1s">
+				<h5 class="title_style">STATE OWNERS LIST</h5>
+				<ol class="breadcrumb">
+					 <li class="breadcrumb-item"><a href="{% url 'state_owners' %}">Agency management</a></li>
+					 <li class="breadcrumb-item active" aria-current="page">State owners list</li>
+				</ol>
+		 </div>
+		 <div class="col-sm-4 col-md-6 col-lg-7 col-xs-12 text-right wow fadeIn" data-wow-duration="0.9s" data-wow-delay="0.2s">
+				<div class="search-form">
+					 <form>
+							<input type="text" name="q" class="form-control" placeholder="Search.." value="{{query}}" autofocus onfocus="this.setSelectionRange(this.value.length, this.value.length);">
+							<a href="{% url 'state_owners' %}">
+							<span class="close-icon"></span>
+							</a>
+					 </form>
+				</div>
+		 </div>
+	</div>
+</div>
+<div class="content-wrapper">
+	<div class="row">
+		 <div class="col-12">
+				<div class="table-wrapper wow fadeIn" data-wow-duration="0.9s" data-wow-delay="0.25s">
+					 <table class="table fixed_headers">
+							<thead>
+								 <tr>
+										<th>
+											<a href="{% url 'state_owners' %}?order_by={% if order_by == 'name' %}-name{% else %}name{% endif %}">
+											 {% if order_by == 'name' %}<i class="fa fa-sort-up" aria-hidden="true"></i>{% endif %}
+											 {% if order_by == '-name' %}<i class="fa fa-sort-down" aria-hidden="true"></i>{% endif %}
+											 {% if order_by != 'name' and order_by != '-name' %}<i class="fa fa-sort" aria-hidden="true"></i> {%endif%}
+											 
+											 NAME
+											 </a>
+										</th>
+										<th>
+											 <a href="#">States</a>
+										</th>
+										<th width="250">
+											 <a href="#"></a>
+										</th>
+								 </tr>
+							</thead>
+							<tbody>
+								 {% for owner in owners %}
+								 <tr>
+										<td> {% if perms.main.change_stateowners %}<a href="{% url 'update_state_owner' owner.pk %}">{{owner.get_full_name}}</a>{% else%}{{owner.get_full_name}}{%endif%}</td>
+										<td class="state_list">
+											<div class="state_table_view">
+												<ul>
+												{% for key, value in ownerState.items %}
+												  {% if key == owner.pk %}
+													 {% for state in value|slice:":2" %}
+													 <li>{{state}}</li>
+													 {% endfor %}
+													 {% if value|length > 2 %}
+													 <li class="more_state_btn pointer">+{{value|length|add:"-2"}} More </li>
+													 {% endif %}
+												  {% endif %}
+												{% endfor %}
+												</ul>
+											</div>
+											<a href="#" class="close_state_full_view"></a>
+											<div class="state_full_view state_table_view">
+											   <ul>
+												{% for key, value in ownerState.items %}
+												  {% if key == owner.pk %}
+													 {% for state in value %}
+													 <li>{{state}}</li>
+													 {% endfor %}
+												  {% endif %}
+												{% endfor %}
+											   </ul>
+											</div>
+											 <!--<div class="state_table_view">-->
+												<!--<ul>													-->
+													 <!--{% for state in owner.state.all|slice:":2" %}-->
+													 <!--<li>{{state.name}} {{ownerState}}</li>-->
+													 <!--{% endfor %}-->
+													 <!--{% if owner.state.count > 2 %}-->
+													 <!--<li class="more_state_btn pointer">+{{owner.state.count|add:"-2"}} More </li>-->
+													 <!--{% endif %}-->
+												<!--</ul>-->
+											 <!--</div>-->
+											 <!--<a href="#" class="close_state_full_view"></a>-->
+											 <!--<div class="state_full_view state_table_view">-->
+													<!--<ul>-->
+														 <!--{% for state in owner.state.all %}-->
+														 <!--<li>{{state.name}} </li>-->
+														 <!--{% endfor %}-->
+													<!--</ul>-->
+											 <!--</div>-->
+										<!--</td>-->
+										<td class="icon_col align_right">
+											{% if perms.main.change_stateowners %}
+											 <i class="material-icons inline_block" data-md-tooltip="Add State">
+											 <a href="{% url 'update_state_owner' owner.pk %}" class="table_btn add_btn_table"></a>
+											 </i>
+											{%endif%}
+										</td>
+								 </tr>
+								 {% empty %}
+									<tr><td>No search results.</td></tr>
+								{% endfor %}
+							</tbody>
+					 </table>
+				</div>
+		 </div>
+	</div>
+</div>
+</content>
+{% endblock %}
+
+{% block app_js_block %}
+<script>
+    $(".more_state_btn").click(function () {
+        $(this).closest('.state_list').find('.state_full_view').fadeIn(400);
+        $(this).closest('.state_list').find('.close_state_full_view').fadeIn(400);
+        // $(".state_full_view").fadeIn(400);
+        // $(".close_state_full_view").fadeIn(400);
+    });
+    $(".close_state_full_view").click(function () {
+        $(this).siblings('.state_full_view').fadeOut(400);
+        $(this).fadeOut(100);
+    });
+</script>
+{% endblock app_js_block %}

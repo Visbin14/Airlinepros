@@ -1,0 +1,218 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block title %} Agency Collection {% endblock %}
+{% block content%}
+    <content>
+        <div class="top-header">
+            <div class="row">
+                <div class="col-sm-5 col-lg-4 col-xs-12 text-left">
+                    <h5 class="title_style">AGENCY COLLECTION DETAIL - {{object.name}}</h5>
+                    <ol class="breadcrumb">
+                        <li class="breadcrumb-item"><a href="{% url 'agency_collections' %}">Agency collection list</a></li>
+                        <li class="breadcrumb-item active" aria-current="page">Agency collection Detail</li>
+                    </ol>
+                </div>
+
+                <div class="col-sm-7 col-lg-8 col-xs-12 text-right">
+                    {% if perms.agency.change_agencycollection %}
+                    <i class="material-icons inline_block" data-md-tooltip="Edit">
+                    <a href='{% url 'agency_collection_update'  object.pk %}' class="edit-icon">
+                    </a>
+                    </i>
+                    {%endif%}
+          
+                    {% if perms.report.view_agency_collection_report %}
+                     <a href="{% url 'agency_collection_report' object.pk %}" class="secondary_btn">View Collection Report</a>
+                    {%endif%}
+                </div>
+
+
+            </div>
+        </div>
+        <div class="content-wrapper">
+            <div class="row">
+                <div class="col-12">
+                    <div class="row">
+                        <div class="col-12">
+                          <div class="filter-wrapper form-wrapper">
+
+                              <form method="get"  action="{% url "agency_collection_details" object.pk %}">
+
+                              <div class="row">
+                                  <div class="col-12 col-sm-6 col-lg-3  pr-0">
+                                    <select class="dropdown-toggle form-control dropdown_arr_btn" id="filter_1" name="state" id="id_state">
+                                      <option value=""><a class="dropdown-item" id="filter_by">Filter By States</a></option>
+                                      {% for state in states %}
+                                        <option value="{{state.0}}" {% if selected_state == state.0|slugify %}selected{% endif %}>{{state.1}}</option>
+                                      {% endfor %}
+                                    </select>
+                                  </div>
+                                    <div class="col-12 col-sm-6 col-lg-3  pr-0">
+                                        <select class="dropdown-toggle form-control dropdown_arr_btn form-element-field" name="city" id="id_city">
+                                          <option value="">Filter by city</option>
+                                          {% for city in cities %}
+                                            <option value="{{city.1}}" {% if selected_city == city.1|slugify %}selected{% endif %} >{{city.0}}</option>
+                                          {% endfor %}
+                                        </select>
+                                        <!-- <label class="form-element-label" for="field2">Filter by city</label> -->
+                                    </div>
+
+                                    <div class="filter_btn_grp">
+                                        <button class="primary_btn_v2" type="submit">Apply</button>
+                                        <button class="secondary_btn_v2" type="reset" id="reset">Reset</button>
+                                    </div>
+                                </form>
+                              </div>
+                          </div>
+                            <div class="table-wrapper">
+                                <table class="table fixed_headers">
+                                    <thead>
+                                        <tr>
+                                            <th>
+                            
+                                              <a href="{% url "agency_collection_details" object.id %}?&order_by={% if order_by == 'agency_no' %}-agency_no{% else %}agency_no{% endif %}">
+                                                    {% if order_by == 'agency_no' %}
+                                                        <i class="fa fa-sort-up" aria-hidden="true"></i>
+                                                    {% endif %}
+                                                    {% if order_by == '-agency_no' %}
+                                                        <i class="fa fa-sort-down" aria-hidden="true"></i>
+                                                    {% endif %}
+                                                    {% if order_by != 'agency_no' and order_by != '-agency_no' %}
+                                                        <i class="fa fa-sort" aria-hidden="true"></i>
+                                                    {%endif%}  
+                                                Agency Number</a></th>
+                                            <th>
+                      
+                                              <a href="{% url "agency_collection_details" object.id %}?order_by={% if order_by == 'trade_name' %}-trade_name{% else %}trade_name{% endif %}">
+                                                    {% if order_by == 'trade_name' %}
+                                                    <i class="fa fa-sort-up" aria-hidden="true"></i>
+                                                {% endif %}
+                                                {% if order_by == '-trade_name' %}
+                                                    <i class="fa fa-sort-down" aria-hidden="true"></i>
+                                                {% endif %}
+                                                {% if order_by != 'trade_name' and order_by != '-trade_name' %}
+                                                    <i class="fa fa-sort" aria-hidden="true"></i>
+                                                {%endif%}  
+                                                Trade Name</a></th>
+                                            <th>
+                          
+                                              <a href="{% url "agency_collection_details" object.id %}?&order_by={% if order_by == 'city' %}-city{% else %}city{% endif %}">
+                                                    {% if order_by == 'city' %}
+                                                    <i class="fa fa-sort-up" aria-hidden="true"></i>
+                                                {% endif %}
+                                                {% if order_by == '-city' %}
+                                                    <i class="fa fa-sort-down" aria-hidden="true"></i>
+                                                {% endif %}
+                                                {% if order_by != 'city' and order_by != '-city' %}
+                                                    <i class="fa fa-sort" aria-hidden="true"></i>
+                                                {%endif%}  
+                                                City</a></th>
+                                            <th>
+                           
+                                              <a href="{% url "agency_collection_details" object.id %}?&order_by={% if order_by == 'state' %}-state{% else %}state{% endif %}">
+                                                    {% if order_by == 'state' %}
+                                                    <i class="fa fa-sort-up" aria-hidden="true"></i>
+                                                {% endif %}
+                                                {% if order_by == '-state' %}
+                                                    <i class="fa fa-sort-down" aria-hidden="true"></i>
+                                                {% endif %}
+                                                {% if order_by != 'state' and order_by != '-state' %}
+                                                    <i class="fa fa-sort" aria-hidden="true"></i>
+                                                {%endif%}  
+                                                State</a></th>
+
+                                            <th width="150">
+                                              Actions
+                                            </th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                      {%  for agency in agencies %}
+                                        <tr data-id="{{agency.id}}">
+                                            <td><a href="{% url "agency_details" agency.id %}">{{ agency.agency_no }}</a></td>
+                                            <td>{{ agency.trade_name }}</td>
+                                            <td>{{ agency.city.name }}</td>
+                                            <td>{{ agency.state.abrev }}</td>
+                                            <td>{% if perms.agency.change_agencycollection %}
+                                                <i class="material-icons inline_block" data-md-tooltip="Delete">
+                                                    <a data-toggle="modal" class="remove_agency_from_type delete_table_icon"></a>
+                                                </i>
+                                                {% endif %}
+                                            </td>
+                                        </tr>
+                                      {% empty %}
+                                      <tr><td colspan="5" align="left">No data found.</td></tr>
+                                      {% endfor %}
+                                    </tbody>
+                                </table>
+                                {% if paginator.num_pages > 1 %}
+                                <div class="table_pagination">
+                                    <ul class="pagination">
+                                        {% if agencies.has_previous %}
+                                          <li><a href="?page={{ agencies.previous_page_number }}" class="prev"></a></li>
+                                        {% endif %}
+                                        {% for i in paginator.page_range %}
+                                          <li><a href="?page={{i}}" class="{% if page == i %}selected {% endif %}">{{i}}</a></li>
+                                        {% endfor %}
+                                        {% if agencies.has_next %}
+                                        <li><a href="?page={{ agencies.next_page_number }}" class="next"></a></li>
+                                        {% endif %}
+                                    </ul>
+                              </div>
+                              {% endif %}
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </content>
+    <!-- Modal -->
+    <div class="modal fade" id="remove_agency_from_type_modal" tabindex="-1" role="dialog" aria-hidden="true">
+      <div class="modal-dialog modal-dialog-centered" role="document">
+          <div class="modal-content">
+          <div class="modal-header">
+                  <h5 class="title_style">REMOVE AGENCY FROM {{object.name}}</h5>
+              <!-- <button type="button" class="close" data-dismiss="modal" aria-label="Close"> -->
+              <!-- <span aria-hidden="true">&times;</span> -->
+              </button>
+          </div>
+          <div class="modal-body">
+              <div class="modal_content">
+                Are you sure you want to remove this agency ?
+              </div>
+          </div>
+          <div class="modal-footer button_group">
+              <a href="#" data-dismiss="modal">No</a>
+              <button type="button" class="primary_btn" id="btnDelteYes">Yes</button>
+          </div>
+          </div>
+      </div>
+    </div>
+
+{% endblock %}
+
+{% block app_js_block %}
+  <script>
+  $('#reset').on('click', function() {
+    if ($("#id_city").val() != '' || $("#id_state").val() != ''){
+      location.href = '{% url "agency_collection_details" object.pk %}';
+    }
+  });
+
+  $(document).on('click', '.remove_agency_from_type', function(e){
+      e.preventDefault();
+      var id = $(this).closest('tr').data('id');
+      $('#remove_agency_from_type_modal').data('id', id).modal('show');
+  });
+
+  $('#btnDelteYes').click(function () {
+      var id = $('#remove_agency_from_type_modal').data('id');
+      $.ajax({url: '/agencies/collections/removeagency', type:'post',data:{"agency_id":id}, success: function(result){
+          $("tr[data-id=" + id + "]").detach();
+          $('#remove_agency_from_type_modal').modal('toggle');
+          toastr.success('Agency removed successfully');
+      }});
+  });
+  </script>
+{% endblock app_js_block %}

@@ -1,0 +1,368 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block title %} FTP Management {% endblock %}
+{% block content%}
+<style>
+.tab-loader {
+border: 10px solid #f3f3f3;
+    border-radius: 50%;
+    border-top: 10px solid #3498db;
+    width: 80px;
+    height: 80px;
+    -webkit-animation: spin 2s linear infinite;
+    animation: spin 2s linear infinite;
+  z-index: 999;
+    position: absolute;
+    left: 38%;
+    top: 40%;
+}
+
+/* Safari */
+@-webkit-keyframes spin {
+  0% { -webkit-transform: rotate(0deg); }
+  100% { -webkit-transform: rotate(360deg); }
+}
+
+@keyframes spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+</style>
+
+
+    <content>
+        <div class="top-header">
+            <div class="row">
+                <div class="col-sm-5 col-lg-4 col-xs-12 text-left wow fadeInUp" data-wow-duration="0.9s" data-wow-delay="0.1s">
+                    <h5 class="title_style">FTP MANAGEMENT</h5>
+{#                    <ol class="breadcrumb">#}
+{#                        <li class="breadcrumb-item"><a href="{% url 'agencies' %}">Agency management</a></li>#}
+{#                        <li class="breadcrumb-item active" aria-current="page">Show agency list</li>#}
+{#                    </ol>#}
+                </div>
+<!--                <div class="col-sm-7 col-lg-8 col-xs-12 text-right wow fadeIn" data-wow-duration="0.9s" data-wow-delay="0.2s">-->
+<!--                    <div class="search-form inline_block">-->
+<!--                        <form  method="get"  action="{% url "agencies" %}">-->
+<!--                            <input name="q" type="text" id="search" class="form-control" placeholder="Search for agency no, trade name, phone" value="{{query}}">-->
+<!--                            <span class="close-icon" id="clear"></span>-->
+<!--                        </form>-->
+<!--                    </div>-->
+<!--                    <i class="material-icons inline_block" data-md-tooltip="Download">-->
+<!--                        <a href='{% url "agency_download" %}?{% if selected_city %}city={{selected_city}}&{% endif %}{% if selected_owner %}owner={{selected_owner}}&{% endif %}{% if selected_status %}status={{selected_status}}&{% endif %}{% if query %}q={{query}}&{% endif %}{% if selected_sate %}state={{selected_sate}}&{% endif %}{% if selected_alpha %}alpha={{selected_alpha}}&{% endif %}' class="download-icon wow bounceIn" data-wow-duration="0.4s" data-wow-delay="0.5s" ></a>-->
+<!--                    </i>-->
+<!--                </div>-->
+            </div>
+        </div>
+        <div class="content-wrapper">
+            <div class="row">
+                <div class="filter_vertical wow fadeIn" data-wow-duration="0.9s" data-wow-delay="0.25s">
+                    <div class="side_filter_scroller">
+                        <div class="menu-bar" id="states_id">
+                            <button class="filter_prev" onclick="states_id_up()">up</button>
+                            {% for state in states %}
+                            <div class="slick-item {% if active_state == state %}slick-current scroll_state{% endif %}">
+                                <a href="{% url "agencies" %}?state={{state}}">{{state}}</a>
+                            </div>
+                            {% endfor %}
+                            <button class="filter_next" onclick="states_id_down()">down</button>
+
+                        </div>
+
+                        <div class="menu-bar" id="alphabets_id">
+                            <button class="filter_prev" onclick="alphabets_id_up()" >up</button>
+                        {% for char in alpha %}
+                        <div id="d" class="slick-item {% if active_alpha == char %}slick-current scroll_alpha{% endif %}">
+                            <a href="{% url "agencies" %}?alpha={{char}}&state=">{{char}}</a>
+                        </div>
+                        {% endfor %}
+                        <button class="filter_next"  onclick="alphabets_id_down()" >down</button>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-12 agency_list_table">
+                    <div class="row">
+                        <div class="col-12">
+                            <div class="filter-wrapper form-wrapper" style="padding-right:0px;">
+
+<!--                                <form method="get"  action="{% url "agencies" %}">-->
+                                <input type="hidden" value="{{active_alpha}}" name="alpha">
+                                <input type="hidden" value="{{active_state}}" name="state">
+                                <div class="filter_btn_grp wow fadeIn" data-wow-duration="0.85s" data-wow-delay="0.65s" style="width:100%!important;position:unset!important;margin-bottom:15px;">
+                                          <!--<button class="primary_btn_v2 btn-connect-server">Connect</button>-->
+                                        <a href="/add-remote-host/"><button class="primary_btn_v2 btn-add-server">ADD</button></a>
+<!--                                          <button class="secondary_btn_v2" type="reset" id="reset">Reset</button>-->
+                                      </div>
+                            </div>
+                        </div>
+                        <div class="col-12">
+                            <div class="table-wrapper wow fadeIn" data-wow-duration="0.9s" data-wow-delay="0.65s">
+                               <div class="tab-loader"></div>
+
+                                <table class="table fixed_headers">
+
+                                    <thead>
+                                        <tr>
+                                            <th width="">
+
+                                              File Name</th>
+                                            <th>
+
+                                              Date</th>
+                                            <th>
+
+                                              Status</th>
+                                        </tr>
+                                    </thead>
+
+                                    {% include 'includes/ftp-management-table-content.html' %}
+                                </table>
+
+                                <!-- <div class="table_pagination">
+                                    <ul class="pagination">
+                                        <li><a href="#" class="prev"></a></li>
+                                        <li><a href="#" class="selected">1</a></li>
+                                        <li><a href="#">2</a></li>
+                                        <li><a href="#">3</a></li>
+                                        <li><a href="#">4</a></li>
+                                        <li><a href="#">5</a></li>
+                                        <li><a href="#" class="next"></a></li>
+                                    </ul>
+                                </div> -->
+
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </content>
+
+{% endblock %}
+
+{% block app_js_block %}
+<link href="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.6-rc.0/css/select2.min.css" rel="stylesheet" />
+<script src="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.6-rc.0/js/select2.min.js"></script>
+<script>
+  console.log(sessionStorage.filter_1)
+  $(function(){
+    //set filter_1 status in sessionStore to preselect the selection
+    if ('{{state_filter}}' == 'state' ) {
+      $("#alphabets_id").hide();
+      $("#states_id").show();
+    } else {
+      $("#states_id").hide();
+      $("#alphabets_id").show();
+    }
+
+    //show div according to filter_1
+    $('#filter_1').on('change', function() {
+      if (this.value == 'alpha'){
+        $("#alphabets_id").show();
+        $("#states_id").hide();
+        $("#alphabets_warn").removeClass('hide');
+        $("#states_warn").addClass('hide');
+      } else {
+        $("#alphabets_id").hide();
+        $("#states_id").show();
+        $("#alphabets_warn").addClass('hide');
+        $("#states_warn").removeClass('hide');
+      }
+      sessionStorage.filter_1 = this.value;
+    });
+
+    //search auto when type more than 3 char
+    $('input#search').keyup( function() {
+        var keycode = (event.keyCode ? event.keyCode : event.which);
+        if(keycode == '13'){
+          location.href = '{% url "agencies" %}?q='+this.value;
+        }
+      });
+    });
+    //serach clear
+    $('#clear').on('click', function() {
+      if ($('input#search').val().length > 0){
+        location.href = '{% url "agencies" %}';
+      }
+    });
+    //reset filter
+    $('#reset').on('click', function() {
+      if ($("#id_city").val() != '' || $("#id_owner").val() != '' || $("#id_status").val() != ''){
+        location.href = '{% url "agencies" %}';
+      }
+    });
+  </script>
+
+<script>
+function alphabets_id_up(){
+    document.getElementById("alphabets_id").scrollBy(0, 200);
+}
+function alphabets_id_down(){
+    document.getElementById("alphabets_id").scrollBy(0, -200);
+}
+
+function states_id_up(){
+    document.getElementById("states_id").scrollBy(0, 200);
+}
+function states_id_down(){
+    document.getElementById("states_id").scrollBy(0, -200);
+}
+$(document).ready(function(){
+    if ($('.scroll_alpha')[0].getBoundingClientRect().top > 0) {
+      var shift = $(window).height() - $('.scroll_alpha').height()*10;
+    } else {
+      var shift = 0;
+    }
+    $('#alphabets_id').animate({
+    scrollTop: ($('.scroll_alpha').offset().top - shift)
+    },500);
+});
+
+$(document).ready(function(){
+    if ($('.scroll_state')[0].getBoundingClientRect().top > 0) {
+      var shift = $(window).height() - $('.scroll_state').height()*10;
+    } else {
+      var shift = 0;
+    }
+    $('#states_id').animate({
+    scrollTop: ($('.scroll_alpha').offset().top - shift)
+    },500);
+});
+
+$(document).ready(function() {
+    $('.js-example-basic-multiple').select2();
+});
+
+
+</script>
+<script>
+$(document).ready(function(){
+  $(".tab-loader").hide()
+})
+$(document).on("change",".select-hostname",function(){
+  if ($(this).val() != "--"){
+  $(".inp-hostname").val("")
+  $(".inp-user").val("")
+  $(".inp-password").val("")
+  }
+})
+  $(document).on("click",".btn-connect-server",function(e){
+  e.preventDefault()
+  var host = $(".inp-hostname").val()
+  var user = $(".inp-user").val()
+  var password = $(".inp-password").val()
+  var selected_r_host = $(".select-hostname").val()
+  var err_flag = 0
+  if (host == "" && password == "" && user == ""){
+    if (selected_r_host == "--"){
+      err_flag = 1
+      err_message = "No valid remote host given"
+      //alert("No valid remote host given")
+    }else{
+      from_inp_status = "False"
+    }
+  }else{
+    from_inp_status = "True"
+  }
+  if (err_flag == 0){
+  $(".tab-loader").show()
+    data = {
+      'host':host,
+      'user':user,
+      'password':password,
+      'selected_r_host':selected_r_host,
+      'from-inp':from_inp_status,
+      'type':'connect-server'
+    }
+
+      $.ajax({
+            type: 'GET',
+            data: data,
+            success: function (response) {
+            $("#ftp-filelist-table-content").replaceWith(response.html_content)
+            $(".tab-loader").hide()
+            }
+      })
+  }else{
+    alert(err_message)
+  }
+})
+</script>
+<script>
+  $(document).on("click",".directory-val",function(e){
+  e.preventDefault()
+  var host = $(".inp-hostname").val()
+  var user = $(".inp-user").val()
+  var password = $(".inp-password").val()
+  var r_server_id = $(".r-server-id").val()
+  var current_path = $(".current_path").val()
+  var selected_file = $(this).attr("data-attr")
+  $(".tab-loader").show()
+    $.ajax({
+          type: 'GET',
+          data: {
+              'host':host,
+              'user':user,
+              'password':password,
+              'r_server_id':r_server_id,
+              'current_path':current_path,
+              'selected_file':selected_file,
+              'type':'forward-directory'
+          },
+          success: function (response) {
+          $("#ftp-filelist-table-content").replaceWith(response.html_content)
+          $(".tab-loader").hide()
+          }
+    })
+  })
+
+$(document).on("click",".prev-path",function(e){
+  e.preventDefault()
+  var host = $(".inp-hostname").val()
+  var user = $(".inp-user").val()
+  var password = $(".inp-password").val()
+  var prev_path = $(this).attr("data-attr")
+  $(".tab-loader").show()
+    $.ajax({
+          type: 'GET',
+          data: {
+              'host':host,
+              'user':user,
+              'password':password,
+              'prev_path':prev_path,
+              'type':'backward-directory'
+          },
+          success: function (response) {
+          $("#ftp-filelist-table-content").replaceWith(response.html_content)
+          $(".tab-loader").hide()
+          }
+    })
+  })
+
+$(document).on("click",".btn-download-file",function(e){
+  e.preventDefault()
+  var host = $(".inp-hostname").val()
+  var user = $(".inp-user").val()
+  var password = $(".inp-password").val()
+  var current_path = $(".current_path").val()
+  var selected_file = $(this).attr("data-attr")
+  $(".tab-loader").show()
+    $.ajax({
+          type: 'GET',
+          data: {
+              'host':host,
+              'user':user,
+              'password':password,
+              'current_path':current_path,
+              'selected_file':selected_file,
+              'type':'download-file'
+          },
+          success: function (response) {
+          $(".tab-loader").hide()
+            window.open(response.target_path,'_blank');
+          }
+    })
+  })
+
+</script>
+
+{% endblock app_js_block %}

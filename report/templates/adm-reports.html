@@ -1,0 +1,318 @@
+
+{% extends 'base.html' %}
+{% load static %}
+{% block title %} ADM REPORT {% endblock %}
+{% block content%}
+    <content>
+        <div class="top-header">
+            <div class="row">
+                <div class="col-sm-8 col-lg-8 col-xs-12 text-left wow fadeInUp" data-wow-duration="0.9s" data-wow-delay="0.1s">
+                    <h5 class="title_style">ADM REPORT</h5>
+                    <ol class="breadcrumb">
+                        <li class="breadcrumb-item"><a href="{% url 'sales_report' %}">Report management</a></li>
+                        <li class="breadcrumb-item active" aria-current="page">ADMS TO BE RAISED</li>
+                    </ol>
+                </div>
+                {% if adms and perms.report.download_adm %}
+                <div id ="admdown" class="col-sm-4 col-lg-4 col-xs-12 text-right">
+                    <a href='{% url "adm_report_download" %}?airline={{selected_airline}}&month_year={{month_year}}&agency_list=0' class="primary_btn">
+                        Get EXCEL File
+                    </a>
+                </div>
+                {% endif %}
+            </div>
+        </div>
+
+
+
+        <div class="content-wrapper">
+            <div class="row">
+
+            <div class="col-12">
+                    <div class="form-wrapper filter_wrapper">
+	                    <form method="get"  action='{% url "adm_report" %}'>
+                            <div class="row">
+                                    <div class="col-12 col-sm-6 col-lg-3 pr-0 wow fadeIn" data-wow-duration="0.9s" data-wow-delay="0.25s">
+                                        <select  id="airline" name="airline" class="form-control dropdown_arr_btn" required>
+
+	                                        <option value="">Select Airline</option>
+                                            {% for airline in airlines %}
+                                            <option value="{{airline.id}}" {% if selected_airline == airline.id|slugify %}selected{% endif %}>{{airline.name}}</option>
+                                            {% endfor %}
+                                        </select>
+                                    </div>
+                                    <div class="col-12 col-sm-6 col-lg-4 pr-0 custom_date_range wow fadeIn" data-wow-duration="0.9s" data-wow-delay="0.35s">
+
+                                        <div id="month_year_div">
+                                            <input type="text" autocomplete="off" name="month_year" class="monthyearpicker form-control" value="{{month_year}}" placeholder="Choose Month and Year" autocomplete="off" required/>
+                                        </div>
+
+                                      </div>
+
+
+
+
+
+
+
+                                      <div class="col-6 col-sm-6 col-lg-3 pr-0 wow fadeIn" data-wow-duration="0.9s" data-wow-delay="0.25s">
+                                        <select id="agencylist"  name="agencylist" class="form-control dropdown_arr_btn" >
+
+                                          <option value="0">Select From Ignore List</option>
+                                            {% for list in exclude_list %}
+                                            <option value="{{ list.id }}" >{{ list.name}}</option>
+                                            {% endfor %}
+                                        </select>
+                                    </div>
+
+
+
+
+
+
+                                    <div class="filter_btn_grp wow fadeIn" data-wow-duration="0.9s" data-wow-delay="0.45s">
+                                            <button type="submit" class="primary_btn_v2">Apply</button>
+                                            <a href="{% url 'adm_report' %}"><button type="button" class="secondary_btn_v2"> Reset </button></a>
+                                    </div>
+                                </div>
+		                    </form>
+                    </div>
+                </div>
+
+                {% if selected_airline and month_year %}
+                <div class="col-12">
+                    <div class="row">
+                        <div class="col-12">
+                            <div class="table-wrapper">
+                                <table class="table fixed_headers">
+                                    <thead>
+                                        <tr>
+
+                                            <th>
+                                                <a href="#">
+                                                    Agency&nbsp;Number
+                                                </a>
+                                            </th>
+	                                        <th>
+                                                <a href="#">
+                                                   Agency&nbsp;Name
+                                                </a>
+                                            </th>
+
+                                            <th width="135">
+                                                <a href="#">
+                                                    Tkt&nbsp;Number
+                                                </a>
+                                            </th>
+
+                                            <th width="115">
+                                                <a href="#">
+                                                    Issue&nbsp;Date&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                                                </a>
+                                            </th>
+
+                                            <th>
+                                                <a href="#">
+                                                    Tkt&nbsp;Base&nbsp;Fare
+                                                </a>
+                                            </th>
+
+
+                                            <th>
+                                                <a href="#">
+                                                    Deducted&nbsp;Commission
+                                                </a>
+                                            </th>
+
+                                            <th>
+                                                <a href="#">
+                                                   Commission&nbsp;Charged&nbsp;(%)
+                                                </a>
+                                            </th>
+
+
+                                            <th>
+                                                <a href="#">
+                                                    Authorized&nbsp;Commission&nbsp;{{allowed_commission_rate}}0%
+                                                </a>
+                                            </th>
+
+                                            <th>
+                                                <a href="#">
+                                                ADM&nbsp;Amount
+                                                 </a>
+                                            </th>
+
+
+
+                                            <th width="800">
+                                                Comments&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                                            </th width="800">
+	                                        <th>
+                                                ADM&nbsp;NO
+                                            </th>
+                                        </tr>
+                                    </thead>
+                                    <tbody id ="ligero">
+
+
+
+
+                                    <tr id ="myrow"></tr>
+
+
+                                        {% for adm in adms %}
+                                        {% if adm.std_comm_rate > adm.allowed_commission_amount  %}
+                                        <tr data-id="#" class="{{ adm.agency_no }} admtr" >
+                                            <td>{{adm.agency_no|default:"None"}}</td>
+	                                        <td>{{adm.trade_name|default:"None"}}</td>
+	                                        <td>{{adm.ticket_no}}</td>
+                                            <td>{{adm.issue_date}}</td>
+	                                        <td>{{adm.fare_amount|floatformat:2}}</td>
+	                                        <td>{{adm.std_comm_amount|floatformat:2}}</td>
+                                            <td>{{adm.std_comm_rate|floatformat:2}}</td>
+                                            <td>{{adm.allowed_commission_amount|floatformat:2}}</td>
+                                            <td>{{adm.amount|floatformat:2}}</td>
+	                                        <td>{{adm.comment|default:"None"}}</td>
+                                            <td>
+                                            </td>
+                                        </tr>
+                                        {% endif%}
+                                        {% empty %}
+                                            <tr>
+                                               <td colspan="8" align="center">
+                                                    No data available.
+                                                </td>
+                                            </tr>
+                                        {% endfor %}
+
+
+
+								        <!-- <tr><td>No results.</td></tr> -->
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+				{% if missing_dates_count %}
+                <div class="col-sm-6">
+                    <div class="missing_file" data-toggle="modal" data-target="#missing_preview"> <img id="profileimage" src="{% static "main/img/file_red.svg" %}">  {{missing_dates_count}} Files missing</div>
+                </div>
+				{% endif %}
+            </div>
+
+                {% else %}
+                <div class="base_msg wow fadeIn" data-wow-duration="0.9s" data-wow-delay="0.6s">
+                    <p> Please choose above selection and apply to view here </p>
+                </div>
+                {% endif %}
+            </div>
+        </div>
+    </content>
+
+<!-- Modal 2-->
+    <div class="modal fade" id="missing_preview" tabindex="-1" role="dialog" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered modal-lg" role="document">
+            <div class="modal-content">
+            <div class="modal-header box_shadow">
+                    <h5 class="title_style">MISSING FILES</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                {% for date in missing_dates_ped %}
+	                <div id="ped_details" class="missing_file_name">
+	                    {% if not is_arc %}
+	                    <p>Billing details file on {{date|date}} is missing.</p>
+	                    {% else %}
+	                    <p>Carrier report file on {{date|date}} is missing.</p>
+	                    {% endif %}
+	                 </div>
+                {% endfor %}
+                {% for date in missing_dates_details %}
+	                <div id="ped_detailss" class="missing_file_name">
+	                  {% if not is_arc %}
+                        <p>Daily transaction file on {{date|date}} is missing.</p>
+                        {% else %}
+                        <p>Carrier deductions file on {{date|date}} is missing.</p>
+                      {% endif %}
+	                 </div>
+                {% endfor %}
+                {% for date in missing_dates_disbursement %}
+                    <div id="ped_details_disb" class="missing_file_name">
+                        <p>Disbursement advice file on {{date|date}} is missing.</p>
+                     </div>
+                {% endfor %}
+            </div>
+            </div>
+        </div>
+      </div>
+
+{% endblock %}
+
+{% block app_js_block %}
+<script>
+
+
+	$('input.monthyearpicker').datepicker({
+		autoclose:true,
+		format:'MM yyyy',
+		minViewMode:1
+	});
+
+
+
+
+
+
+ $('#agencylist').change(function(){
+       var Id = $(this).val();
+       var airline ="{{ selected_airline }}";
+       var monthyear ="{{ month_year }}" ;
+
+       $('#admdown').empty()
+       var linq='{% url "adm_report_download" %}?airline={{selected_airline}}&month_year={{month_year}}&agency_list='+Id
+       console.log(linq)
+       $('#admdown').append('<a href="'+linq+'" class="primary_btn">Get EXCEL File</a>')
+
+
+
+       $('#myrow').find('td').remove()
+       $('.admtr').show()
+
+      //  rrjx=$('.rjax').find('td').remove()
+
+
+
+   $.ajax({
+       type: "GET",
+       url: "https://assda.airlinepros.com/reports/adm_ignorelist/",
+       data: {'agency_no' : Id,
+       'airline': airline,
+       'monthyear' : monthyear,
+      },
+
+       success: function( respo ) {
+
+        console.log(respo)
+        toastr.success('Successfully updated');
+
+
+          $.each(respo, function(index,vall){
+            let pp='.'
+            zig=pp+vall
+            console.log(zig)
+            $(zig).hide()
+               });
+
+        console.log("===========")
+
+       }
+   });
+
+   });
+</script>
+{% endblock app_js_block %}

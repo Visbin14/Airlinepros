@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="31px" height="31px" viewBox="0 0 31 31" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <!-- Generator: Sketch 47.1 (45422) - http://www.bohemiancoding.com/sketch -->
+    <title>Group 10</title>
+    <desc>Created with Sketch.</desc>
+    <defs></defs>
+    <g id="Page-1" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+        <g id="Page1-list-page-Copy-12" transform="translate(-30.000000, -621.000000)" fill-rule="nonzero">
+            <g id="Group-7" transform="translate(0.000000, 600.000000)">
+                <g id="Group-8">
+                    <g id="canada" transform="translate(30.000000, 21.000000)">
+                        <g id="Group-10">
+                            <circle id="Oval" fill="#F0F0F0" cx="15.5" cy="15.5" r="15.5"></circle>
+                            <g id="Group" transform="translate(0.000000, 1.000000)" fill="#D80027">
+                                <path d="M31,14 C31,7.84884848 27.4237988,2.53393939 22.2391094,0.0243636364 L22.2391094,27.9755758 C27.4237988,25.4660606 31,20.1511515 31,14 Z" id="Shape"></path>
+                                <path d="M0,14 C0,20.1511515 3.57620117,25.4660606 8.76089063,27.9756364 L8.76089063,0.0243636364 C3.57620117,2.53393939 0,7.84884848 0,14 Z" id="Shape"></path>
+                                <polygon id="Shape" points="18.195668 16.023697 20.8912754 14.6745455 19.543502 14 19.543502 12.6508485 16.847834 14 18.195668 11.301697 16.847834 11.301697 15.5 9.278 14.152166 11.301697 12.804332 11.301697 14.152166 14 11.456498 12.6508485 11.456498 14 10.1087246 14.6745455 12.804332 16.023697 12.1304453 17.3728485 14.8261133 17.3728485 14.8261133 19.3965455 16.1738867 19.3965455 16.1738867 17.3728485 18.8695547 17.3728485"></polygon>
+                            </g>
+                        </g>
+                    </g>
+                </g>
+            </g>
+        </g>
+    </g>
+</svg>

@@ -1,0 +1,147 @@
+
+{% extends 'base.html' %}
+{% load static %}
+{% block title %} Sales By Report {% endblock %}
+{% block content%}
+    <content>
+        <div class="top-header">
+            <div class="row">
+                <div class="col-sm-8 col-lg-8 col-xs-12 text-left wow fadeInUp" data-wow-duration="0.9s" data-wow-delay="0.1s">
+                    <h5 class="title_style">RE-PROCESS REPORTS</h5>
+                    <ol class="breadcrumb">
+                        <li class="breadcrumb-item"><a href="#">Reports</a></li>
+                        <li class="breadcrumb-item active" aria-current="page">Re-Process Reports</li>
+                    </ol>
+                </div>
+
+            </div>
+        </div>
+
+
+
+        <div class="content-wrapper">
+            <div class="row">
+
+            <div class="col-12">
+                    <div class="form-wrapper filter_wrapper pr-240">
+                        <form method="post" id="filterform">
+                            {% csrf_token %}
+                            <div class="row filter_elements_grp">
+                                    <div class="col-12 col-sm-6 col-lg-6 pr-0 wow fadeIn" data-wow-duration="0.9s" data-wow-delay="0.25s">
+                                        <select name="airline" id="airline_select" class="form-control dropdown_arr_btn" required>
+                                            <option value="">All Airlines</option>
+                                            {% for airline in airlines %}
+                                            <option value="{{airline.id}}" {% if selected_airline == airline.id|slugify %}selected{% endif %}>{{airline.name}}</option>
+                                            {% endfor %}
+                                        </select>
+
+                                        <small id="airline-error" class="form-element-hint hide">Please select an airline.</small>
+                                    </div>
+
+                                    <div class="col-12 col-sm-6 col-lg-6 flex pr-0 custom_date_range" id="date_range_div">
+                                        <span class="w_50perc wow fadeIn" data-wow-duration="0.4s" data-wow-delay="0.1s">
+                                            <input type="text" id="start_date" value="{{start_date}}" name="start_date" class="date_ranger form-control"  placeholder="Start Date"  autocomplete="off"/>
+                                            <small id="start_date-error" class="form-element-hint hide">Please select a start date.</small>
+                                        </span>
+
+                                        <span class=" ml-15 w_50perc wow fadeIn" data-wow-duration="0.4s" data-wow-delay="0.2s">
+                                            <input type="text" id="end_date" value="{{end_date}}" name="end_date" class="date_ranger form-control" placeholder="End Date"  autocomplete="off"/>
+                                            <small id="end_date-error" class="form-element-hint hide">Please select an end date.</small>
+                                            <small id="greater-error" class="form-element-hint hide">Please select a date greater than start date.</small>
+                                        </span>
+                                    </div>
+
+
+                                    <div class="filter_btn_grp wow fadeIn" style="width:220px"  data-wow-duration="0.9s" data-wow-delay="0.5s">
+                                            <button id="filterformsubmit" type="button" class="primary_btn_v2">Re-Process</button>
+                                            <a href="{% url 're_process' %}"><button type="button" class="secondary_btn_v2"> Reset </button></a>
+                                    </div>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+
+                {% for pending in pendings %}
+                    <div class="pendings base_msg  wow fadeIn">
+                        <p>    <img src="/static/main/img/reprocess.gif" alt="" class="reprocess_img">
+                            Please wait, we are re-processing files of {% if pending.airline %}{{pending.airline.name}}{% else %} All Airlines{% endif %} from {{pending.start_date}} to {{pending.end_date}}  </p>
+                    </div>
+                {% endfor %}
+
+                    
+
+
+                <div id="select_msg" class="base_msg  wow fadeIn {% if pendings %}hide{% endif %}"  data-wow-duration="0.9s" data-wow-delay="0.7s">
+                    <p> Please select an airline and date to re-process files. </p>
+                </div>
+
+            </div>
+        </div>
+    </content>
+
+{% endblock %}
+
+{% block app_js_block %}
+    <script>
+
+    $('#filterformsubmit').click(function(e){
+            e.preventDefault();
+            $('#end_date-error').addClass('hide');
+            $('#start_date-error').addClass('hide');
+            $('#greater-error').addClass('hide');
+
+            if ((!$("#start_date").val().length > 0 | !$("#end_date").val().length > 0)){
+
+                 if (!$("#start_date").val().length > 0){
+                    $('#start_date-error').removeClass('hide');
+                 }
+                 if (!$("#end_date").val().length > 0){
+                    $('#end_date-error').removeClass('hide');
+                 }
+                return false;
+            }
+            if ($("#start_date").val().length > 0 & $("#end_date").val().length > 0){
+                var StartDate = new Date($("#start_date").val());
+                var EndDate = new Date($("#end_date").val());
+                if (StartDate >= EndDate){
+                    $('#greater-error').removeClass('hide');
+                    return false;
+                    }
+
+            }
+
+           $('#filterform').submit();
+        });
+        $('input.monthyearpicker').datepicker({
+            autoclose:true,
+            format:'MM yyyy',
+            minViewMode:1
+        });
+        $('input.date_ranger').datepicker({
+            autoclose:true,
+            format:'dd MM yyyy',
+            minViewMode:0
+        });
+
+        {% if pendings %}
+            (function checkPending() {
+            $.ajax({
+                url: "{% url 'check_process' %}",
+                type: "GET",
+                success: function(data) {
+                    if(data.has_pending == 'false'){
+                        $('.pendings').addClass('hide');
+                        $('#select_msg').removeClass('hide');
+
+                    }
+                },
+                dataType: "json",
+                complete: setTimeout(function() {checkPending()}, 5000),
+                timeout: 2000
+            })
+            })();
+        {% endif %}
+
+    </script>
+
+{% endblock app_js_block %}

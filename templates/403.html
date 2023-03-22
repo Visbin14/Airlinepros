@@ -1,0 +1,27 @@
+
+{% extends 'base.html' %}
+{% load static %}
+{% block title %}
+	users
+{% endblock %}
+
+{% block content%}
+
+
+
+<content>
+	<div id="notfound">
+		<div class="notfound">
+			<div class="notfound-404">
+				<h3>Oops! Permission denied</h3>
+				<h1><span>4</span><span>0</span><span>3</span></h1>
+      </div>
+    	{% for message in messages %}
+       <h2>{{ message|safe }}</h2>
+      {% endfor %}
+      
+		</div>
+	</div>
+</content>
+{% endblock %}
+

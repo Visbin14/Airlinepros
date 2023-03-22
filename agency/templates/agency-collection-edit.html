@@ -1,0 +1,96 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block title %} Agency Collection Update {% endblock %}
+{% block content%}
+    <content>
+        <div class="top-header">
+            <div class="row">
+                <div class="col-sm-5 col-lg-4 col-xs-12 text-left">
+                    <h5 class="title_style">AGENCY COLLECTION UPDATE</h5>
+                    <ol class="breadcrumb">
+                        <li class="breadcrumb-item"><a href="{% url 'agency_collections' %}">Agency collection list</a></li>
+                        <li class="breadcrumb-item active" aria-current="page">Agency collection edit</li>
+                    </ol>
+                </div>
+                <div class="col-sm-7 col-lg-8 col-xs-12 text-right">
+
+                </div>
+            </div>
+        </div>
+        <div class="content-wrapper baner_sm">
+            <div class="row">
+                <div class="col-12">
+                    <div class="row">
+                        <div class="col-12">
+                          <form method="post" enctype="multipart/form-data" id="form">
+                              {% csrf_token %}
+                              <div class="form-wrapper">
+                                  <div class="row">
+                                      <div class="col-6">
+                                          <div class="form-element form-input {% if form.name.errors %}form-has-error{% endif %}">
+                                              <input class="form-element-field" placeholder=" " type="text" name="name" id="id_name" required="" maxlength="254" value= "{{ form.name.value|default_if_none:"" }}">
+                                              <label class="form-element-label mandatory" for="field2">Name</label>
+                                              <small class="form-element-hint">{{ form.name.errors }}</small>
+                                          </div>
+                                      </div>
+                                    </div>
+                                <div class="row">
+                                      <div class="col-12">
+                                        <div class="form-element form-input {% if form.agencies.errors %}form-has-error{% endif %}">
+                                            <textarea class="form_element_textarea_field form-element-field" name="agencies" cols="40" id="id_agencies" rows="10" placeholder=" ">{{form.agencies.value|default_if_none:""}}</textarea>
+                                            <label class="form-element-label" for="field2">Type agency numbers in comma seperation</label>
+                                            <small class="form-element-hint">{{ form.agencies.errors }}</small>
+                                        </div>
+                                      </div>
+                                  </div><!-- row -->
+                              </div> <!-- form wrapper -->
+
+                              <div class="row">
+                                  <div class="col-12 align_right">
+                                      <a href="{% url 'agency_collection_details' object.pk %}">Cancel</a>
+                                      <button type="submit" class="primary_btn">Save</button>
+                                  </div>
+                              </div>
+                          </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </content>
+{% endblock %}
+
+{% block app_js_block %}
+  <script>
+  $(document).ready(function(){
+      $("#form").validate({
+          rules: {
+              name: "required",
+          },
+
+          // Specify validation error messages
+          messages: {
+              name: "Please enter name",
+          },
+
+          success: function (element) {
+              $('#'+element[0].id).nextAll().eq(1).text('');
+          },
+
+          errorPlacement: function(error, element) {
+              var placement = $(element).data('error');
+              if (placement) {
+                $(placement).append(error)
+              } else {
+                $('#'+element[0].id).nextAll().eq(1).text(error[0].innerHTML);
+              }
+          },
+
+          submitHandler: function(form) {
+              form.submit();
+          },
+
+      });
+  });
+  </script>
+{% endblock app_js_block %}

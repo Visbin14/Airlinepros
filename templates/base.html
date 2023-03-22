@@ -1,0 +1,1023 @@
+<!DOCTYPE html>
+<html class="no-js css-menubar" lang="en">
+<head>
+  {% load static %}
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="format-detection" content="telephone=no"/>
+    <meta name="msapplication-tap-highlight" content="no" />
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=0, minimal-ui">
+    <meta name="description" content="asplinks dashboard">
+    <meta name="author" content="">
+    <title>{% block title %} Dashboard {% endblock title %}</title>
+
+    <!-- #FAVICONS -->
+    <link rel="shortcut icon" href="{% static 'main/img/favicon.ico' %}" type="image/x-icon">
+    <link rel="icon" href="{% static 'main/img/favicon.ico' %}" type="image/x-icon">
+    <!-- Fonts -->
+    <link href="https://fonts.googleapis.com/css?family=Open+Sans:300,400,600,700" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+
+  <!-- Stylesheets -->
+    <!-- Bootstrap CSS CDN -->
+    <link rel="stylesheet" href="{% static "main/css/bootstrap.min.css" %}">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css" >
+    <link href="https://fonts.googleapis.com/css?family=Montserrat:700,900" rel="stylesheet">
+
+  <!-- Plugins -->
+  <link rel="stylesheet" href="{% static "main/css/animate.css" %}">
+  <link rel="stylesheet" href="{% static "main/css/style.css" %}">
+  <link rel="stylesheet" href="{% static "main/css/table.css" %}">
+  <link rel="stylesheet" href="{% static "main/css/user.css" %}">
+  <link rel="stylesheet" href="{% static "main/css/bootstrap-datepicker.min.css" %}">
+  <link rel="stylesheet" href="{% static "main/css/error.css" %}">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/css/toastr.min.css">
+
+    {% block css %}
+    {% endblock %}
+
+</head>
+
+<div class="loader show_sec"></div>
+
+<div class="wrapper hide_sec">
+
+
+    <div class="landscape_menu">
+            <div id="nav-icon2" class="">
+                    <span></span>
+                    <span></span>
+                    <span></span>
+                </div>
+    </div>
+    <!-- Sidebar  -->
+    <nav id="sidebar">
+
+        <div class="nav_brand_sec flex for_pc">
+            <div class="sidebar-header">
+                <h4>ASSDA</h4>
+            </div>
+        </div>
+
+
+
+        <ul class="list-unstyled menu_list_ul components">
+            <div class="nav_indicator_slider"></div>
+            {% if perms.agency or perms.main.view_stateowners %}
+            <li class="has_submenu main_menu menu_indicator">
+
+                <a href="#" id="agency_menu">
+                    <div class="menu_box {% if activate == 'agencies' %}active{% endif %}">
+                        <img src="{% static "main/img/agencies.svg" %}" class="dashicon_hover_arrow">
+                        <h5>AGENCIES</h5>
+                    </div>
+                </a>
+            </li>
+            {% endif %}
+            {% if perms.account or perms.auth %}
+            <li class="has_submenu main_menu menu_indicator">
+                <a href="#" id="users_menu">
+                    <div class="menu_box {% if activate == 'users' %}active{% endif %}">
+                        <img src="{% static "main/img/users.svg" %}" class="dashicon_hover_arrow">
+                        <h5>USERS</h5>
+                    </div>
+                </a>
+            </li>
+            {% endif %}
+            {% if perms.report %}
+            <li class="has_submenu main_menu menu_indicator">
+                <a href="#" id="reports_menu">
+                    <div class="menu_box {% if activate == 'reports' %}active{% endif %}">
+                        <img src="{% static "main/img/reports.svg" %}" class="dashicon_hover_arrow">
+                        <h5>REPORTS</h5>
+                    </div>
+                </a>
+            </li>
+            {% endif %}
+            {% if perms.report.view_airline_management %}
+            <li class=" main_menu menu_indicator">
+                <a href="{% url 'airlines' %}" class="single_menu" id="airlines_menu">
+                    <div class="menu_box {% if activate == 'airlines' %}active{% endif %}">
+                        <img src="{% static "main/img/airlines.svg" %}" class="dashicon_hover_arrow">
+                        <h5>AIRLINES</h5>
+                    </div>
+                </a>
+            </li>
+            {% endif %}
+             <li class="main_menu menu_indicator">
+                <a href="{% url 'dashboard' %}" class="single_menu" id="airlines_menu">
+                    <div class="menu_box">
+                        <img src="{% static "main/img/dashboard.png" %}" class="dashicon_hover_arrow">
+                        <h5>DASHBOARD</h5>
+                    </div>
+                </a>
+            </li>
+
+            <!-- SUBMENU SECTION -->
+            <div class="submenu_collapse_bar" style="width:0px">
+
+                <a href="#" class="for_mob close_submenu"></a>
+
+                <div class="submenu_box">
+                    <div id="agency_submenu_list" class="fadeIn submenu_uniq">
+                        <ul>
+                            {% if perms.agency.view_agency %}
+                            <a href='{% url "agencies" %}'>
+                                <li>Show Agency List</li>
+                            </a>
+                            {% endif %}
+                            {% if perms.agency.change_agency %}
+                            <a href='{% url "agency_uploads" %}'>
+                                <li>Upload Agency list</li>
+                            </a>
+                            {% endif %}
+                            {% if perms.agency.view_agencytype %}
+                            <a href='{% url "agency_types" %}'>
+                                <li>Agency Types</li>
+                            </a>
+                            {% endif %}
+                            {% if perms.agency.view_agencycollection %}
+                            <a href='{% url "agency_collections" %}'>
+                                <li>Agency Collections</li>
+                            </a>
+                            {% endif %}
+                            {% if perms.main.view_stateowners %}
+                            <a href='{% url "state_owners" %}'>
+                                <li>States Owners</li>
+                            </a>
+                            {% endif %}
+<!--                            {% if perms.main.view_stateowners %}-->
+                            <a href='{% url "new_agent_report" %}'>
+                                <li>New Agent List</li>
+                            </a>
+<!--                            {% endif %}-->
+                        </ul>
+                    </div>
+
+                    <div id="users_submenu_list" class="fadeIn submenu_uniq">
+                        <ul>
+                            {% if perms.account.view_user %}
+                            <a href="{% url 'users' %}">
+                                <li>User List</li>
+                            </a>
+                            {% endif %}
+                            {% if perms.auth.view_group %}
+                            <a href="{% url 'roles' %}">
+                                <li>Users Roles</li>
+                            </a>
+                            {% endif %}
+                        </ul>
+                    </div>
+
+                    <!-- <div id="airlines_submenu_list" class="fadeIn submenu_uniq"">
+                        <ul>
+                            <a href="{% url 'airlines' %}">
+                                <li>Airlines List</li>
+                            </a>
+                        </ul>
+                    </div> -->
+
+                    <div id="reports_submenu_list" class="fadeIn submenu_uniq">
+                        <ul>
+                            {% if perms.report.view_upload_reports %}
+                            <a href="{% url 'upload_report' %}">
+                                <li>Upload Sales File</li>
+                            </a>
+                            {% endif %}
+                            {% if perms.report.view_sales_details %}
+                            <a href="{% url 'sales_report' %}">
+                                <li>Sales Details Report</li>
+                            </a>
+                            {% endif %}
+                            {% if perms.report.view_sales_summary %}
+                            <a href="{% url 'sales_summary' %}">
+                                <li>Sales Summary Report</li>
+                            </a>
+                            {% endif %}
+
+                            
+                            {% if perms.report.view_new_sales_summary %}
+                                {% if choosen_country.name != "United States" %}
+                                <a href="{% url 'new_sales_summary' %}">
+                                    <li>BSP-Sales Summary Report</li>
+                                </a>
+                                {% endif %}
+                            {% endif %}
+                            
+                            {% if perms.report.view_adm %}
+                            <a href="{% url 'adm_report' %}">
+                                <li>ADM Report</li>
+                            </a>
+                            {% endif %}
+                            {% if perms.report.view_sales_by %}
+                            <a href="{% url 'sales_by_report' %}">
+                                <li>Sales By Report</li>
+                            </a>
+                            {% endif %}
+                            {% if perms.report.view_all_sales %}
+                            <a href="{% url 'all_sales_report' %}">
+                                <li>All Sales For Month Report</li>
+                            </a>
+                            {% endif %}
+                            {% if perms.report.view_year_to_year %}
+                            <a href="{% url 'year_to_year_sales_report' %}">
+                                <li>Year To Year Sales Report</li>
+                            </a>
+                            {% endif %}
+                          {% if perms.report.view_weekly_sales_report %}
+                            <a href="{% url 'weekly_sales_report' %}">
+                                <li>Monthly Airlines Summary Report</li>
+                            </a>
+                            {% endif %}
+                            {% if perms.report.view_commission %}
+                            <a href="{% url 'commission_report' %}">
+                                <li>Commission Report</li>
+                            </a>
+                            {% endif %}
+                            {% if perms.report.view_sales_comparison %}
+                            <a href="{% url 'sales_comparison_report' %}">
+                                <li>Sales Comparison Report</li>
+                            </a>
+                            {% endif %}
+                            {% if perms.report.view_top_agency %}
+                            <a href="{% url 'top_agent_report' %}">
+                                <li>Top Agency Report</li>
+                            </a>
+                            {% endif %}
+                            {% if perms.report.view_monthly_yoy %}
+                            <a href="{% url 'monthly_yoy' %}">
+                                <li>Monthly YOY Report</li>
+                            </a>
+                            {% endif %}
+                            {% if perms.report.view_airline_agency %}
+                            <a href="{% url 'airline_agency' %}">
+                                <li>Airline Agency Report</li>
+                            </a>
+                            {% endif %}
+                            {% if perms.report.view_disbursement_summary and is_arc %}
+                            <a href="{% url 'disbursement_summary_report' %}">
+                                <li>Disbursement Summary Report</li>
+                            </a>
+                            {% endif %}
+                        </ul>
+                    </div>
+
+                    <!-- <div id="airlines_submenu_list" class="fadeIn submenu_uniq">
+                        <ul>
+                            <a href="#">
+                                <li>Settings</li>
+                            </a>
+                        </ul>
+                    </div> -->
+
+
+                </div>
+            </div>
+            <li class=" main_menu menu_indicator">
+                <a href="{% url 'ftp_management' %}" class="single_menu" id="airlines_menu">
+                    <div class="menu_box {% if activate == 'ftp_management' %}active{% endif %}">
+{#                        <img src="{% static "main/img/ftp-icon.png" %}" class="dashicon_hover_arrow">#}
+                         <img src="{% static "main/img/airlines.svg" %}" class="dashicon_hover_arrow">
+                        <h5>FTP</h5>
+                    </div>
+                </a>
+            </li>
+        </ul>
+        <!-- {% if perms.main.view_airline %}
+        <div class="for_pc menu_indicator">
+            <a href="{% url 'airlines' %}" class="single_menu" id="airlines_menu">
+                <div class="menu_box {% if activate == 'airlines' %}active{% endif %}">
+                    <img src="{% static "main/img/airlines.svg" %}" class="dashicon_hover_arrow">
+                    <h5>AIRLINES</h5>
+                </div>
+            </a>
+        </div>
+        {% endif %} -->
+
+        <ul class="list_bottom_nav for_pc">
+            <li style="
+            height: 75px;
+        ">
+                <a href="#" class="settings_choose">
+                    <div class="menu_box">
+                        <img src="{% static "main/img/settings.svg" %}">
+                    </div>
+                </a>
+
+                <div class="settings_list_box">
+                    <ul>
+                      {% if perms.report.view_calendar %}
+                        <a href="{% url 'calendar' %}" class="settings_selector">
+                            <li>
+                                <div class="country_indv">
+                                        <img src="{% static 'main/img/calendar.svg' %}">
+                                            <p>Calendar</p>
+                                </div>
+                            </li>
+                        </a>
+                      {% endif %}
+                      <a href="/countries/" class="settings_selector">
+                            <li>
+                                <div class="country_indv">
+                                        <img src="{% static 'main/img/flag_common.svg' %}">
+                                            <p>Country</p>
+                                </div>
+                            </li>
+                        </a>
+                        <a href="{% url 're_process' %}" class="settings_selector">
+                            <li>
+                                <div class="country_indv">
+                                        <img src="{% static "main/img/refresh.svg" %}">
+                                    <p>Refresh files</p>
+                                </div>
+                            </li>
+                        </a>
+                    </ul>
+                </div>
+
+            </li>
+
+            <!-- <><><><><><><><><><><><><><><><><><><><><><><><><><> -->
+            <li style="
+            height: 0px;
+        ">
+                <div class="menu_icons" style="/* list-style: none; */display: inline-block;vertical-align: top;border-top: 1px solid #d4d8e640;transition: all 0.2s ease-in-out;border-radius: 4px;width: 82%;/* height: 80px; */text-align: center;padding-top: 14px;">
+                    <div id = "assda_tag" style="display: none;">
+                        <h5>AIRLINE PROS</h5>
+                    </div>
+                    <div>
+                        <img class="selected_flagset" id="selected_flagset" style= "display: none;     width: 30px;
+                        height: 30px;
+                        margin-bottom: 8px;
+                        object-fit: contain;
+                        overflow: hidden;
+                        border-radius: 50%;">
+                    </div>
+                    <p class="selected_country" id="selected_country" style="font-size: 14px;color: white;font-weight: 500;text-align: center">{{country_dropdown}}</p>
+                </div>
+            </li>
+            <!-- <><><><><><><><><><><><><><><><><><><><><><><><><><> -->
+
+
+            <li style="
+            height: 100px;
+        "> 
+                <a href="#" class="country_choose country_choose_global" id = "country_choose_global">
+                    <div class="menu_box">
+                        <img src="{{choosen_country.photo_url}}">
+                    </div>
+                    <p style="font-size: 14px;color: white;font-weight: 500;text-align: center">{{choosen_country.name}}</p>
+                </a>
+
+                <div class="country_list_box {% if countries.count < 2 %}single-country{% endif %}">
+                    <ul>
+                        {% for country in countries %}
+                        <a href="#" class="country_selector" id="{{country.id}}">
+                            <li>
+                                <div class="country_indv">
+                                    <div class="country_flag">
+                                        <img src="{{country.photo_url}}">
+                                    </div>
+                                    <p>{{country.name}}</p>
+                                </div>
+                            </li>
+                        </a>
+                        {% endfor %}
+                      <a href="/add-country/" class="add_country">
+                            <li>
+                                <div class="">
+                                    <div  class="add-icon" id="">
+                                    </div>
+                                </div>
+                            </li>
+                        </a>
+                    </ul>
+                </div>
+
+            </li>
+            <li>
+                <a href="{% url 'logout' %}" class="logout">
+                    <div class="menu_box">
+                        <img src="{% static "main/img/logout.svg" %}">
+                    </div>
+                </a>
+            </li>
+        </ul>
+
+    </nav>
+
+
+
+
+    <!-- Page Content  -->
+    <div id="content">
+        <header>
+            <nav class="navbar navbar-expand-lg navbar-light">
+                    <div class="container-fluid">
+
+                        <i class="material-icons" data-md-tooltip="Back" onclick="history.back()">
+                                <div class="back_btn wow bounceIn" data-wow-duration="0.4s" data-wow-delay="0.5s"></div>
+                        </i>
+
+                        <div class="nav-logo for_mbl">
+                            <h4>ASSDA</h4>
+                        </div>
+
+                        <div class="humberger_menu for_mbl">
+                            <div id="nav-icon1">
+                                <span></span>
+                                <span></span>
+                                <span></span>
+                            </div>
+
+                        </div>
+
+
+                        <div class="hum_menu_box for_mbl">
+                            {% if request.user.is_authenticated %}
+
+                            <div class="user_head">
+                                <a class="nav-link" href="{% url 'user_details' user.pk %}">
+                                    <div class="user_pic">
+                                        <img src="{{user.photo_url}}">
+                                    </div>
+                                </a>
+                            </div>
+                            {% endif %}
+
+                            <div class="menu_icons">
+                                <ul>
+                                    <li class="sep_bar settings_choose">
+                                        <img src="{% static "main/img/settings-gray.svg" %}" class="log_out">
+                                        <h5>SETTINGS</h5>
+
+
+                                        <div class="settings_list_box">
+                                            <ul>
+                                                <a href="{% url 'calendar' %}" class="settings_selector">
+                                                    <li>
+                                                        <div class="country_indv">
+                                                                <img src="{% static "main/img/calendar.svg" %}">
+                                                                <p>Calendar</p>
+                                                        </div>
+                                                    </li>
+                                                </a>
+                                                <a href="{% url 're_process' %}" class="settings_selector">
+                                                    <li>
+                                                        <div class="country_indv">
+                                                                <img src="{% static "main/img/refresh.svg" %}">
+                                                            <p>Refresh files</p>
+                                                        </div>
+                                                    </li>
+                                                </a>
+                                            </ul>
+                                        </div>
+
+                                    </li>
+
+
+
+
+
+                                    <li class="mob_hum_menu pt-0">
+                                            <a href="#" class="country_choose">
+                                                <div class="menu_box mbl_menu_box">
+                                                    <img src="{{choosen_country.photo_url}}" class="log_out">
+                                                    <h5>{{choosen_country.name}}</h5>
+                                                </div>
+                                            </a>
+
+                                            <span class="close_country_popup close-icon"></span>
+                                            <div class="country_list_box">
+                                                <ul>
+                                                    {% for country in countries %}
+                                                    <a href="#" class="country_selector" id="{{country.id}}">
+                                                        <li>
+                                                            <div class="country_indv">
+                                                                <div class="country_flag">
+                                                                    <img src="{{country.photo_url}}" class="log_out">
+                                                                </div>
+                                                                <p>{{country.name}}</p>
+                                                            </div>
+                                                        </li>
+                                                    </a>
+                                                    {% endfor %}
+                                                  <a href="/add-country/" class="add_country">
+                                                      <li>
+                                                          <div class="">
+                                                              <div  class="add-icon" id="">
+                                                              </div>
+                                                          </div>
+                                                      </li>
+                                                  </a>
+                                                </ul>
+                                            </div>
+
+                                        </li>
+
+
+
+                                    <li class="mob_hum_menu mob_log_out">
+                                        <a href="{% url 'logout' %}" class="logout_btn_mbl">
+                                            <div class="mbl_menu_box">
+                                                <img src="{% static "main/img/logout_gray.svg" %}" class="log_out">
+                                                 <h5>LOGOUT</h5>
+                                            </div>
+                                        </a>
+                                    </li>
+
+
+                                    <!-- <li>
+                                        <a href="{% url 'logout' %}" >
+                                            <img src="{% static "main/img/logout_gray.svg" %}" class="log_out">
+                                            <h5>LOGOUT</h5>
+                                        </a>
+                                    </li> -->
+                                </ul>
+                            </div>
+                        </div>
+
+
+                        <div class="collapse navbar-collapse" id="navbarSupportedContent">
+                            <ul class="nav navbar-nav ml-auto">
+                                {% if request.user.is_authenticated %}
+                                <li class="nav-item active">
+                                    <a class="nav-link" href="{% url 'user_details' user.pk %}">
+                                        <div class="user_profile">
+                                            <div class="user_icon">
+                                                <img src="{{user.photo_url}}">
+                                            </div>
+                                            <h4>{{user.get_full_name}}</h4>
+                                        </div>
+                                    </a>
+                                </li>
+                                {% endif %}
+                            </ul>
+                        </div>
+                    </div>
+                </nav>
+            </header>
+
+
+            <div class="page_content">
+                {% block content %}
+                {% endblock content %}
+            </div> <!-- page content -->
+
+    </div> <!-- #content -->
+</div>
+
+    <div class="menu_backdrob"></div>
+    <div class="backdrob_transparent"></div>
+    <div class="touch_backdrob"></div>
+    <script src="https://cdn.polyfill.io/v2/polyfill.min.js"></script>
+
+    <!-- jQuery 3.3.1 -->
+    <script src="{% static "main/js/jquery-3.3.1.min.js" %}"></script>
+    <!-- Font Awesome JS -->
+    <script defer src="{% static "main/js/bootstrap.min.js" %}"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/2.0.2/js/toastr.min.js"></script>
+    <script type="text/javascript" src="https://cdn.jsdelivr.net/momentjs/latest/moment.min.js"></script>
+    <script src="{% static "main/js/bootstrap-datepicker.min.js" %}"></script>
+
+    <script src="{% static "main/js/fixed-table.js" %}"></script>
+    <script src="{% static "main/js/wow.js" %}"></script>
+    <script src="{% static "main/js/main.js" %}"></script>
+     <!--Jquery Validation JS-->
+    <script src="https://cdn.jsdelivr.net/jquery.validation/1.16.0/jquery.validate.min.js"></script>
+
+
+<!-- Plugins -->
+
+
+<!-- Scripts -->
+
+{% block app_js_block %}
+
+{% endblock app_js_block %}
+
+<script>
+    $(window).on('load', function() {
+        $('.loader').removeClass('show_sec').addClass('hide_sec');
+        $('.wrapper').removeClass('hide_sec').addClass('show_sec');
+    });
+
+
+
+</script>
+
+
+
+
+<script>
+$(document).ready(function() {
+
+
+if ($(window).width() > 767)
+{
+    $('.menu_indicator').hover(function(){
+        var top  = $(this).index() * 84 - 84;
+        $('.nav_indicator_slider').css('top',top+'px')
+    })
+
+    $(".menu_list_ul li.has_submenu").hover(function () {
+        $(".submenu_collapse_bar").addClass("active_submenu");
+        $(".submenu_uniq").toggleClass("view_submenu");
+        $(".nav_indicator_slider").addClass("width_active");
+        $('select').blur();
+        $(".touch_backdrob").addClass("touch_backdrob_active");
+    });
+    $(".submenu_collapse_bar").hover(function () {
+        $(".submenu_collapse_bar").addClass("active_submenu");
+    });
+    $(".submenu_collapse_bar").mouseleave(function () {
+        $(".submenu_collapse_bar").removeClass("active_submenu");
+    });
+
+    $(".menu_list_ul li.has_submenu").mouseleave(function(){
+        $(".submenu_collapse_bar").removeClass("active_submenu");
+        $(".nav_indicator_slider").removeClass("width_active");
+    });
+
+    $(".single_menu").hover(function () {
+        $(".nav_indicator_slider").addClass("width_active");
+    });
+
+   $(".single_menu").mouseleave(function () {
+        $(".nav_indicator_slider").removeClass("width_active");
+    });
+
+    $("#agency_menu").hover(function () {
+        $(".submenu_box").addClass("agency_menu_active");
+        $(".submenu_box").removeClass("users_menu_active");
+        $(".submenu_box").removeClass("airlines_menu_active");
+        $(".submenu_box").removeClass("reports_menu_active");
+    });
+    $("#users_menu").hover(function () {
+        $(".submenu_box").removeClass("agency_menu_active");
+        $(".submenu_box").addClass("users_menu_active");
+        $(".submenu_box").removeClass("airlines_menu_active");
+        $(".submenu_box").removeClass("reports_menu_active");
+    });
+    $("#airlines_menu").hover(function () {
+        $(".submenu_box").removeClass("agency_menu_active");
+        $(".submenu_box").removeClass("users_menu_active");
+        $(".submenu_box").addClass("airlines_menu_active");
+        $(".submenu_box").removeClass("reports_menu_active");
+    });
+    $("#reports_menu").hover(function () {
+        $(".submenu_box").removeClass("agency_menu_active");
+        $(".submenu_box").removeClass("users_menu_active");
+        $(".submenu_box").removeClass("airlines_menu_active");
+        $(".submenu_box").addClass("reports_menu_active");
+    });
+
+
+
+
+}
+else
+{
+	$('#nav-icon1').click(function(){
+		$(this).toggleClass('open');
+	});
+    $('#nav-icon2').click(function(){
+		$(this).toggleClass('open');
+		$(this).toggleClass('secondary_menu');
+		$('body').toggleClass('pb-80');
+	});
+
+
+    $('.landscape_menu').click(function(){
+		$('#sidebar').toggleClass('landscape_menu_active');
+
+        if (!$("#nav-icon2").hasClass("open")) {
+        $(".submenu_collapse_bar").removeClass("active_submenu");
+        }
+	});
+    $('.menu_indicator.has_submenu').click(function(){
+        $(".submenu_collapse_bar").addClass("active_submenu");
+
+        var top  = $(this).index() * 84 - 84;
+        $('.nav_indicator_slider').css('top',top+'px')
+    })
+
+    window.addEventListener("orientationchange", function() {
+        // Announce the new orientation number
+
+        if ($(".submenu_collapse_bar").hasClass("active_submenu")) {
+            $('#sidebar').addClass('landscape_menu_active');
+            $('#nav-icon2').addClass('open');
+        }
+
+    }, false);
+
+
+    $(".menu_list_ul li #agency_menu").click(function () {
+        $(".submenu_uniq").toggleClass("view_submenu");
+        $(".submenu_box").addClass("agency_menu_active");
+        $(".submenu_box").removeClass("users_menu_active");
+        $(".submenu_box").removeClass("airlines_menu_active");
+        $(".submenu_box").removeClass("reports_menu_active");
+    });
+    $("#users_menu").click(function () {
+        $(".submenu_box").removeClass("agency_menu_active");
+        $(".submenu_box").addClass("users_menu_active");
+        $(".submenu_box").removeClass("airlines_menu_active");
+        $(".submenu_box").removeClass("reports_menu_active");
+    });
+    $("#airlines_menu").click(function () {
+        $(".submenu_box").removeClass("agency_menu_active");
+        $(".submenu_box").removeClass("users_menu_active");
+        $(".submenu_box").addClass("airlines_menu_active");
+        $(".submenu_box").removeClass("reports_menu_active");
+    });
+    $("#reports_menu").click(function () {
+        $(".submenu_box").removeClass("agency_menu_active");
+        $(".submenu_box").removeClass("users_menu_active");
+        $(".submenu_box").removeClass("airlines_menu_active");
+        $(".submenu_box").addClass("reports_menu_active");
+    });
+
+    $(".close_submenu").click(function () {
+        $(".submenu_collapse_bar").removeClass("active_submenu");
+        $(".nav_indicator_slider").removeClass("width_active");
+    });
+
+    $(".humberger_menu").click(function () {
+
+        $(".hum_menu_box").toggleClass("appear_hum_menu_box");
+        $(".menu_backdrob").toggleClass("backdrob_active");
+    });
+    $(".menu_backdrob").click(function () {
+        $(".close_country_popup").removeClass("popup_close_appear");
+        $(".hum_menu_box").removeClass("appear_hum_menu_box");
+        $(".menu_backdrob").removeClass("backdrob_active");
+		$('#nav-icon1').removeClass('open');
+    });
+
+}
+});
+
+</script>
+
+
+
+<script>
+    // Firefox 1.0+
+    var isFirefox = typeof InstallTrigger !== 'undefined';
+
+    if(isFirefox == true)
+    {
+        $(".side_filter_scroller").addClass("scroll_adjust_firefox");
+    }
+
+    var isEdge = !isIE && !!window.StyleMedia;
+    if(isEdge == true)
+    {
+        $(".side_filter_scroller").addClass("scroll_adjust_ie");
+        $(".form-element-label").addClass("ie_custom_form_label");
+        $(".menu_box").addClass("border_bottom_menu");
+        $(".delete_table_icon").addClass("ie_custom_table_btn");
+        $(".upload_field").addClass("upload_field_for_edge");
+    }
+
+    var isIE = /*@cc_on!@*/false || !!document.documentMode;
+    if(isIE == true)
+    {
+        $(".side_filter_scroller").addClass("scroll_adjust_ie");
+        $(".form-element-label").addClass("ie_custom_form_label");
+        $(".menu_box").addClass("border_bottom_menu");
+        $(".delete_table_icon").addClass("ie_custom_table_btn");
+
+    }
+
+    if ("ontouchstart" in document.documentElement)
+    {
+        $("#content").addClass("touch_device");
+    $(".menu_list_ul li.has_submenu").hover(function () {
+        $(".touch_backdrob").addClass("active_touch_backdrob");
+    });
+
+    $(".touch_backdrob").click(function () {
+        $(".touch_backdrob").removeClass("active_touch_backdrob");
+    });
+
+    }
+    else
+    {
+        console.log("your device is a touch device");
+    }
+
+</script>
+
+<script>
+$(document).ready(function() {
+
+    $(".user_email_td").css("width",$(".user_email_th").innerWidth());
+
+    $(window).resize(function()
+    {
+        $(".user_email_td").css("width",$(".user_email_th").innerWidth());
+    });
+
+});
+
+</script>
+
+
+<script>
+$(document).ready(function() {
+
+    $(".country_choose").click(function () {
+
+        $(".country_choose").toggleClass("open_menu");
+        $(".country_list_box").toggleClass("active_country_list_box");
+        $(".backdrob_transparent").toggleClass("backdrob_active");
+        $(".close_country_popup").toggleClass("popup_close_appear");
+        $(".settings_choose").removeClass("open_menu");
+        $(".settings_list_box").removeClass("active_settings_list_box");
+    });
+
+    $(".close_country_popup").click(function () {
+        $(".country_choose").removeClass("open_menu");
+        $(".country_list_box").removeClass("active_country_list_box");
+        $(".backdrob_transparent").removeClass("backdrob_active");
+        $(".close_country_popup").removeClass("popup_close_appear");
+    });
+    $(".backdrob_transparent").click(function () {
+        $(".close_country_popup").removeClass("popup_close_appear");
+        $(".country_choose").removeClass("open_menu");
+        $(".settings_choose").removeClass("open_menu");
+        $(".country_list_box").removeClass("active_country_list_box");
+        $(".settings_list_box").removeClass("active_settings_list_box");
+        $(".backdrob_transparent").removeClass("backdrob_active");
+    });
+
+    $('.country_selector').click(function(e) {
+        if ( $('.country_selector').is("a[disabled]"))
+            return false;
+        e.stopImmediatePropagation();
+        e.preventDefault();
+        $('.country_selector').attr("disabled", "disabled");
+        $.ajax({
+				  type: "POST",
+				  url: "/set-country/",
+				  data: {country: this.id},
+				  success: function (result) {
+				  	window.location.replace('/agencies');
+					   toastr.success(result.message);
+				  }
+			 });
+
+    })
+});
+
+</script>
+
+
+<script>
+    $(document).ready(function() {
+
+        $(".settings_choose").click(function () {
+            $(".country_choose").removeClass("open_menu");
+            $(".country_list_box").removeClass("active_country_list_box");
+            $(".settings_choose").toggleClass("open_menu");
+            $(".settings_list_box").toggleClass("active_settings_list_box");
+            $(".backdrob_transparent").toggleClass("backdrob_active");
+        });
+    });
+
+    </script>
+
+
+<script>
+
+
+new WOW().init();
+
+function getCookie(cname) {
+    var name = cname + "=";
+    var decodedCookie = decodeURIComponent(document.cookie);
+    var ca = decodedCookie.split(';');
+    for(var i = 0; i <ca.length; i++) {
+        var c = ca[i];
+        while (c.charAt(0) == ' ') {
+            c = c.substring(1);
+        }
+        if (c.indexOf(name) == 0) {
+            return c.substring(name.length, c.length);
+        }
+    }
+    return "";
+}
+var csrftoken = getCookie('csrftoken');
+function csrfSafeMethod(method) {
+    // these HTTP methods do not require CSRF protection
+    return (/^(GET|HEAD|OPTIONS|TRACE)$/.test(method));
+}
+$.ajaxSetup({
+    beforeSend: function(xhr, settings) {
+        if (!csrfSafeMethod(settings.type) && !this.crossDomain) {
+            xhr.setRequestHeader("X-CSRFToken", csrftoken);
+        }
+    }
+});
+$.ajaxSetup({
+error: function (x, status, error) {
+    if (x.status == 403) {
+        toastr.error("Sorry, you do not have permission for this action");
+        <!--alert("Sorry, you do not have permission for this action");-->
+        <!--window.location.href ="/account/login/";-->
+    }
+    else {
+        if (!(this.url.match(/standards_ajax_filter/) || this.url.match(/select2\/fields/))){
+            toastr.error("An error occurred: " + status + "nError: " + error);
+        }
+    }
+}
+});
+</script>
+
+<script>
+var $select = $('.form-select select');
+$select.each(function() {
+    if($(this).val())
+    {
+        $(this).parent().addClass("select_checked");
+    }
+    else
+    {
+        $(this).parent().removeClass("select_checked");
+    }
+}).on('change', function(ev) {
+    if($(this).val())
+    {
+        $(this).parent().addClass("select_checked");
+    }
+    else
+    {
+        $(this).parent().removeClass("select_checked");
+    }
+});
+
+</script>
+
+
+
+<!-- <script>
+var event = 'ontouchstart' in window ? 'input' : 'keydown';
+console.log(event);
+$('input.char_30').on(event,function(e) {
+    var max = 30;
+    var char = $(this);
+	if(char.val().length < max) {
+    	return true;
+    }
+    return false;
+});
+
+</script> -->
+
+
+
+
+{% block js %}
+{% endblock %}
+{% if messages %}
+    <script type="text/javascript">
+           toastr.options = {
+              "closeButton": true,
+              "debug": false,
+              "newestOnTop": false,
+              "progressBar": true,
+              "positionClass": "toast-top-right",
+              "preventDuplicates": true,
+              "onclick": null,
+              "showDuration": "300",
+              "hideDuration": "1000",
+              "timeOut": "6000",
+              "extendedTimeOut": "1000",
+              "showEasing": "swing",
+              "hideEasing": "linear",
+              "showMethod": "fadeIn",
+              "hideMethod": "fadeOut"
+        }
+        {% for message in messages %}
+            console.log("{{message}}");
+            {% if message.level == DEFAULT_MESSAGE_LEVELS.SUCCESS %}
+                toastr["success"]("{{ message }}", "Success");
+            {% elif message.level == DEFAULT_MESSAGE_LEVELS.WARNING %}
+                toastr["warning"]("{{ message }}", "Warning");
+            {% elif message.level == DEFAULT_MESSAGE_LEVELS.ERROR %}
+                 toastr["error"]("{{ message }}", "Error");
+            {% endif %}
+        {% endfor %}
+
+    </script>
+
+{% endif %}
+</body>
+</html>
+

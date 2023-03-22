@@ -1,0 +1,637 @@
+{% extends 'base.html' %}
+{% load static %}
+{% load report_tags %}
+{% block title %} DASHBOARD {% endblock %}
+{% block content%}
+
+
+<style type="text/css">
+
+	.caret{
+        display: none!important;
+    }
+	.content-wrapper{
+
+		padding-right: 0px;
+		
+	}
+	
+	
+
+	.table-wrapper{
+		overflow-x: scroll;
+	}
+.highcharts-container {
+	margin-left: 0px;
+	}
+
+	.filter_btn_grp{
+
+		width: 600px;
+		right: 115px
+	}
+
+	.highcharts-credits{
+		display:none;
+	}
+    body
+    {
+        font-family: Arial;
+        font-size: 10pt;
+    }
+    .modal
+    {
+        position: fixed;
+        z-index: 999;
+        height: 100%;
+        width: 100%;
+        top: 0;
+        left: 0;
+        background-color: Black;
+        filter: alpha(opacity=60);
+        opacity: 0.6;
+        -moz-opacity: 0.8;
+    }
+    .center
+    {
+        z-index: 1000;
+        margin: 300px auto;
+        padding: 10px;
+        width: 130px;
+        background-color: White;
+        border-radius: 10px;
+        filter: alpha(opacity=100);
+        opacity: 1;
+        -moz-opacity: 1;
+    }
+    .center img
+    {
+        height: 128px;
+        width: 128px;
+    }
+	
+	.divScroll 
+	{
+	overflow:scroll;
+	height:25px;
+	width:200px;
+	}
+
+	
+
+	.btn-default
+	{
+        
+        width: 220px!important; 
+        height: 37px!important;
+        border-radius: 20px!important;
+        border-width: 1.5px!important;
+        
+        border-color:#B2BEB5!important;
+      }
+
+    .multiselect-container{
+
+        width: 500px;
+        height: 250px;
+        overflow-y: scroll;
+        scrollbar-color: rebeccapurple green;
+        scrollbar-width: thin;
+    }
+
+		.checkboxes
+		{
+			height: auto;
+			display:none;
+			background: aliceblue;
+			width: 65px;
+			margin-left: 10px;
+			margin-bottom: 10px;
+			margin-left: 10px;
+			margin-bottom: 10px;
+			width: 148px;
+			border-radius: 4px;
+			margin-left: 32px;
+	}
+
+		.showchecks{
+		margin-left: 30px;
+		background-color: white;
+		border-radius: 32px;
+		border-bottom-color: white;
+		border-width: 1px;
+		width: 149px;
+		height: 34px;
+		font-size: 15px;
+		color: #44413c;
+	}
+	
+</style>
+
+
+
+
+<content>
+	
+
+<div class="top-header">
+	<div class="row">
+		<div class="col-sm-8 col-lg-8 col-xs-12 text-left">
+			<h5 class="title_style">DASHBOARD</h5>
+		</div>
+	</div>
+</div>
+<div class="content-wrapper">
+	<div class="row">
+		<div class="col-12">
+			<div class="form-wrapper filter_wrapper">
+				<p id = "admin-flag" style="display: none;">{{user_admin_flag}}</p>
+					
+						<div>
+							<div>
+								<form action="" method="get">
+									
+										
+										<p id = "no_data" style="display: none;">{{no_data}}</p>
+
+									<table>
+                                        <tr>
+                                            
+												<td><div>
+											
+													<select id ='country' class="form-control dropdown_arr_btn" name = "country_dropdown" style="margin-bottom: 0px;margin-left: 5px;width: 160px">
+														<option value="">Filter by Country</option>
+														{% for i in unique_country %}
+															<option value="{{i}}"{% if country_dropdown == i %} selected {% endif %}>{{i}}</option>
+														{% endfor %}
+													</select>
+											
+												</div></td>
+												<td><div id = 'airline-div' >
+												
+														<select id ='airline' class="form-control dropdown_arr_btn" multiple="multiple" name="airline_dropdown" style="margin-left: 14px;width: 160px;">
+															<option value="">Filter by airline</option>
+															{% for i in unique_airline %}
+															<option value="{{i}}" {% if i in airline_dropdown  %} selected{% endif %}>{{i}}</option>
+															{% endfor %}
+														</select>
+													</div></td>
+												<td><div id = 'agreement_type-div' style="margin-left: 15px;">
+											
+													<select id ='agreement_type' class="form-control dropdown_arr_btn"  multiple="multiple" name = "agreement_dropdown" style="margin-left: 14px;width: 160px">
+														<option value="">Filter by agreement_type</option>
+														{% for i in unique_agreement_type %}
+															<option value="{{i}}" {% if i in agreement_dropdown  %} selected{% endif %}>{{i}}</option>
+														{% endfor %}
+													</select>
+												</div></td>
+										</tr>
+									</table>
+									
+									
+										
+									
+										<input type="submit" class="secondary_btn_v2" style="margin-left: 645px;position: absolute;margin-top: -37px;">
+									
+								</form>
+							</div>
+							
+							<div class="filter_btn_grp" >
+									
+										<button class="primary_btn" onclick="location.href='{% url 'upload' %}'" >Upload-File</button>
+
+										<!-- {% comment %} <input class="secondary_btn_v2" type="button" id="btnReset" value="Reset" onclick="Reset();" /> {% endcomment %} -->
+
+										<button class="primary_btn" onclick="location.href='{% url 'pivot' %}'">Show pivot</button>
+										<!-- <input class="secondary_btn_v2" type="button" id="btnReset" value="Reset" onclick="Reset();" />  -->
+										<button class="secondary_btn_v2" onclick="location.href='{% url 'dashboard' %}'">Reset</button>
+							</div>
+						</div>
+			</div>
+		</div>
+
+			<br><br><br><br>
+			 	<div class="col-12">
+                    <div class="row">
+                        <div class="col-12">
+							<div class="dragscroll" style="width: 100%; height: 100%; cursor: grab; cursor : -o-grab; cursor : -moz-grab; cursor : -webkit-grab;">
+			
+								<div class="table-wrapper" >      
+
+									<table class="table_border summary_table" >
+										<tr>
+											<td><div  id="container5" style="min-width: 310px; height: 400px; margin: 0 auto"></div>
+										
+											<div  id="container" style="margin-left: 860px;margin-top: -405px;overflow: hidden;"></div>	
+										
+											<br><br>
+
+											<div  id="container4" style="margin-left: 860px;margin-top: -20px;overflow: hidden;"></div>
+											<div  id="container2" style="margin-top: -350px;margin-left: 0px;overflow: hidden;"></div></td>
+									</tr>
+										
+										
+									</table>
+									
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+			
+	</div>
+</div>
+		
+
+</content>	
+<script src="{% static 'highcharts.js' %}" ></script>
+<script src="{% static 'highcharts2.js' %}" ></script>
+<script src="{% static 'highcharts3.js' %}" ></script>
+<script src="{% static 'highcharts4.js' %}" ></script>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.1/jquery.min.js"></script>
+
+<link  rel="stylesheet" href="{% static 'bootstrap1.css' %}"> 
+<script src="{% static 'bootstrap-multiselect3.js' %}" ></script>
+<script src="{% static 'bootstrap2.js' %}" ></script>
+<link  rel="stylesheet" href="{% static 'bootstrap-multiselect4.css' %}">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.11.0/umd/popper.min.js"></script>
+<script>
+
+
+	$('#airline').multiselect();
+	$('#agreement_type').multiselect();
+
+	
+	airline_for_view = $('#airline-div').find(".multiselect").attr("title")
+	agreement_type_for_view = $('#agreement_type-div').find(".multiselect").attr("title")
+
+	if(airline_for_view == "None selected"){
+		el = $("#airline-div")
+		closee = el.closest("div").find(".multiselect-selected-text").text("Filter by Airline")}
+	if(agreement_type_for_view == "None selected"){
+		el = $("#agreement_type-div")
+		closee = el.closest("div").find(".multiselect-selected-text").text("Filter by Agreement_type")}
+
+
+	flag_value = document.getElementById("admin-flag").innerHTML
+	if (flag_value == "False"){
+			$("#country").hide();	
+		
+			const tag = document.getElementById('assda_tag');
+			tag.style.display = 'none';
+
+			
+		}
+	else{
+		$(".country_choose_global").hide();
+		const myDiv = document.getElementById('assda_tag');
+		myDiv.style.display = 'block';
+	}
+
+		
+	//no = $("#no_data").val();
+	console.log("no","/////////////////////////////////////////////")
+
+	
+		$( document ).ready(function() {
+			console.log( "ready!" );
+	
+			no_data = document.getElementById("no_data").innerHTML
+			if (no_data == "True"){
+				alert('No Data in selected filter')
+	
+			}
+	});
+
+	if("{{country_dropdown}}" == "None"){
+		var div = document.getElementById("selected_country");
+		div.style.display = "none";
+		
+		}
+
+	Country___ = $('#country').find(":selected").val()
+	if ("{{selected_flag}}" && "{{selected_flag}}" != "None") {
+	const img = document.getElementById('selected_flagset');
+	img.src = "/media/{{selected_flag}}";
+		$("#selected_flagset").show();
+
+		var element = document.getElementById("assda_tag");
+        element.style.display = "none";
+		
+	}
+	else if(!Country___){
+		const myDiv = document.getElementById('assda_tag');
+		myDiv.style.display = 'block';
+
+	}
+
+	else{
+		const img = document.querySelectorAll('#selected_flagset,#selected_country');
+		img.src = "/static/main/img/flag_placeholder.jpg";
+		$("#selected_country").show();
+		$("#selected_flagset").show();
+		var element = document.getElementById("assda_tag");
+        element.style.display = "none";
+	}
+	if (flag_value == "False"){
+		$("#country").hide();	
+	
+		const tag = document.getElementById('assda_tag');
+		tag.style.display = 'none';
+
+		
+	}
+
+
+	
+	_label = {{label|safe}};
+	
+
+	var values = {{Gross_values|safe}}
+	for (var key in values) {
+		values[key] = values[key].map(function(item) {
+		  return item === 0 ? null : item;
+		});
+	  }
+	var data = [];
+	for (var key in values) {
+		data.push({
+			name: key,
+			data: values[key]
+		});
+	}
+	console.log("{{Gross_values|safe}}",".........label........")
+
+
+	
+	Highcharts.chart('container5', {
+		chart: {
+			height: 350,
+			width: 850,
+			type: 'line'
+		},
+		title: {
+			text: 'Gross Sales Trend'
+		},
+		
+		xAxis: [{
+			categories:_label,
+			
+			
+
+		}],
+		yAxis: {lineWidth: 1,
+			tickWidth: 1,
+			min: -500000,
+			title: {
+					align: 'high',
+					offset: 0,
+					text: 'Amount (M)',
+					rotation: 0,
+					y: -10
+		}
+		},
+		
+		plotOptions: {
+			column: {
+				pointPadding: 0.2,
+				borderWidth: 0
+			}
+		},
+		series: data
+	});
+
+
+
+
+
+
+
+
+
+	_label = {{label|safe}};
+	var values = {{Nett_values|safe}}
+	for (var key in values) {
+		values[key] = values[key].map(function(item) {
+		  return item === 0 ? null : item;
+		});
+	  }
+	var data = [];
+	for (var key in values) {
+		data.push({
+			name: key,
+			data: values[key]
+		});
+	}
+
+
+	Highcharts.chart('container', {
+		chart: {
+			height: 355,
+			width: 850,
+			type: 'line'
+		},
+		title: {
+			text: 'Nett Sales Trend'
+		},
+		
+		xAxis: [{
+			categories:_label,
+			
+			
+
+		}],
+		yAxis: {lineWidth: 1,
+			tickWidth: 1,
+			min: -500000,
+			title: {
+					align: 'high',
+					offset: 0,
+					text: 'Amount (M)',
+					rotation: 0,
+					y: -10
+		}
+		},
+
+		plotOptions: {
+			column: {
+				pointPadding: 0.2,
+				borderWidth: 0
+			}
+		},
+		series:data
+	});
+
+
+
+
+		
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+	__label = {{label_airline|safe}};
+	__values_gross = {{values_gross_airline|safe}};
+	__values_nett = {{values_nett_airline|safe}}
+	Highcharts.chart('container2', {
+		chart: {
+			height: 350,
+			width: 850,
+			type: 'column'
+			
+			
+			
+	},
+		title: {
+			text: 'Sales Trend By Airline'
+		},
+		
+		xAxis: [{
+			categories:__label,
+			
+
+		}],
+		yAxis: {lineWidth: 1,
+				tickWidth: 1,
+				min: -500000,
+				labels: {
+					format: '{value}'
+				},
+				title: {
+					    align: 'high',
+				    	offset: 0,
+				    	text: 'Amount (M)',
+				    	rotation: 0,
+				    	y: -10
+			}
+    	},
+		plotOptions: {
+			column: {
+				pointPadding: 0.2,
+				borderWidth: 0
+			}
+		},
+		series: [{
+			name: 'Gross',
+			data: __values_gross
+		},{
+
+			name:'Nett',
+			data: __values_nett
+			
+		}]
+	});
+
+
+
+	
+	
+
+
+
+	___label = {{label_year|safe}};
+	___values_gross = {{values_gross_year|safe}};
+	___values_nett = {{values_nett_year|safe}}
+	Highcharts.chart('container4', {
+		chart: {
+			type: 'area',
+			height: 350,
+			width: 850
+		},
+		title: {
+			text: 'Sales Trend By Year'
+		},
+		
+		xAxis: [{
+			categories:___label,
+			
+
+		}],
+		yAxis: {lineWidth: 1,
+				tickWidth: 1,
+				min: -500000,
+				labels: {
+					format: '{value}'
+				},
+				title: {
+					    align: 'high',
+				    	offset: 0,
+				    	text: 'Amount (M)',
+				    	rotation: 0,
+				    	y: -10
+			}
+    	},
+		plotOptions: {
+			column: {
+				pointPadding: 0.2,
+				borderWidth: 0
+			}
+		},
+		series: [{
+			name: 'Gross',
+			data:___values_gross,
+			
+		},{
+			name: 'Nett',
+			data:___values_nett,
+			
+		}]
+	}); 
+	
+
+
+	
+
+
+
+
+	function getsorted(reset=false){
+		Airline_ = $('#airline').find(":selected").val()
+        Agreement_type_ = $('#agreement_type').find(":selected").val()
+		Country_ = $('#country').find(":selected").val()
+		
+		//if(agreement_type) {
+		//	Agreement_Type_ = $('#agreement_type').find(":selected").val();
+		//	window.location = "?agreement_type="+Agreement_Type_;
+		//}
+//
+		//else if(airline) {
+		//	Airline_ = $('#airline').find(":selected").val();
+		//	window.location = "?airline="+Airline_;
+		//}
+
+			
+	}
+
+
+	flag_value = document.getElementById("admin-flag").innerHTML
+	if (flag_value == "False"){
+			$("#country").hide();
+		}
+
+
+
+		
+</script>
+
+			
+
+
+
+
+{% endblock %}

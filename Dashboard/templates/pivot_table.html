@@ -1,0 +1,162 @@
+<style>
+   
+</style>
+<div class="dragscroll" style="width: 100%; height: 100%; cursor: grab; cursor : -o-grab; cursor : -moz-grab; cursor : -webkit-grab;">
+    <br><br>                    
+    <div class="table-wrapper">      
+        <table class="table_border summary_table">
+            <div>
+                <tr>
+                    <td>{{pivot_data|safe}}</td>
+                </tr>
+            </div>
+            <div>
+                <tr>
+                    <td><div  id="container5" style="min-width: 310px; height: 400px; margin: 0 auto"></div>
+                            
+                        <div  id="container" style="margin-left: 860px;margin-top: -400px;overflow: hidden;"></div></td>
+                </tr>
+            </div>
+        </table>
+       
+       
+
+
+
+       
+	
+   
+</div>
+
+<script src="https://code.highcharts.com/highcharts.js"></script>
+<script src="https://code.highcharts.com/modules/exporting.js"></script>
+<script src="https://code.highcharts.com/modules/export-data.js"></script>
+<script src="https://code.highcharts.com/modules/accessibility.js"></script>
+
+<script>
+
+    _label = {{label|safe}};
+    console.log("{{label|safe}}","...........label.......")
+
+    var values = {{Gross_values|safe}}
+    for (var key in values) {
+        values[key] = values[key].map(function(item) {
+          return item === 0 ? null : item;
+        });
+      }
+    var data1 = [];
+    for (var key in values) {
+        data1.push({
+            name: key,
+            data: values[key]
+        });
+    }
+    console.log(data1,".........values........")
+
+
+    
+    Highcharts.chart('container5', {
+        chart: {
+            height: 350,
+            width: 850,
+            type: 'line'
+        },
+        title: {
+            text: 'Gross Sales Trend'
+        },
+        
+        xAxis: [{
+            categories:_label,
+            
+            
+
+        }],
+        yAxis: {lineWidth: 1,
+            tickWidth: 1,
+            min: -500000,
+            title: {
+                    align: 'high',
+                    offset: 0,
+                    text: 'Amount (M)',
+                    rotation: 0,
+                    y: -10
+        }
+        },
+        
+        plotOptions: {
+            column: {
+                pointPadding: 0.2,
+                borderWidth: 0
+            }
+        },
+        series: data1
+    });
+
+
+
+
+
+
+
+
+
+    _label = {{label|safe}};
+    var values = {{Nett_values|safe}}
+    for (var key in values) {
+        values[key] = values[key].map(function(item) {
+          return item === 0 ? null : item;
+        });
+      }
+    var data = [];
+    for (var key in values) {
+        data.push({
+            name: key,
+            data: values[key]
+        });
+    }
+
+
+    Highcharts.chart('container', {
+        chart: {
+            height: 355,
+            width: 850,
+            type: 'line'
+        },
+        title: {
+            text: 'Nett Sales Trend'
+        },
+        
+        xAxis: [{
+            categories:_label,
+            
+            
+
+        }],
+        yAxis: {lineWidth: 1,
+            tickWidth: 1,
+            min: -500000,
+            title: {
+                    align: 'high',
+                    offset: 0,
+                    text: 'Amount (M)',
+                    rotation: 0,
+                    y: -10
+        }
+        },
+
+        plotOptions: {
+            column: {
+                pointPadding: 0.2,
+                borderWidth: 0
+            }
+        },
+        series:data
+    });
+
+</script>
+
+
+
+
+
+

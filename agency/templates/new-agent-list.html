@@ -1,0 +1,178 @@
+{% extends 'base.html' %}
+{% load static %}
+{% load agency_tags %}
+{% block title %}
+	new agent list
+{% endblock %}
+
+{% block content%}
+
+
+
+    <content>
+        <div class="top-header">
+            <div class="row">
+                <div class="col-sm-3 col-lg-4 col-xs-12 text-left wow fadeInUp" data-wow-duration="0.9s" data-wow-delay="0.1s">
+                    <h5 class="title_style">NEW AGENT LIST</h5>
+                    <ol class="breadcrumb">
+                        <li class="breadcrumb-item"><a href="#">Agencies</a></li>
+                        <li class="breadcrumb-item"><a href="{% url 'new_agent_report' %}">New Agent Report</a></li>
+                    </ol>
+                </div>
+                <div class="col-sm-6 col-xs-12 text-right wow fadeIn" data-wow-duration="0.9s" data-wow-delay="0.2s">
+                    <div class="search-form right_lg_btn">
+                        <form>
+                            <input type="text" name="q" class="form-control" placeholder="Search.." value="{{query}}" autofocus onfocus="this.setSelectionRange(this.value.length, this.value.length);">
+							<a href="{% url 'new_agent_report' %}">
+								<span class="close-icon"></span>
+							</a>
+                        </form>
+
+                    </div>
+                </div>
+              <div class="col-sm-2 text-right">
+                {% if agent_list %}
+                <a href='{% url "get_new_agent_report" %}?airline={{selected_airline}}&ped={{selected_ped}}' class="primary_btn">
+                        Get EXCEL File
+				 </a>
+                {% endif %}
+              </div>
+            </div>
+        </div>
+        <div class="content-wrapper">
+
+			<div class="row">
+
+				<div class="col-12">
+					<div class="form-wrapper filter_wrapper">
+            <form method="get"  action="/agencies/new-agent-list/">
+              <div class="row">
+
+                <div class="col-12 col-sm-6 col-lg-4 pr-0 wow fadeIn" data-wow-duration="0.9s" data-wow-delay="0.3s">
+                  <select name="airline" class="form-control dropdown_arr_btn" required>
+                                    <option value="">Select Airline</option>
+                                    {% for airline in airlines %}
+                                    <option value="{{airline.id}}" {% if selected_airline == airline.id|slugify %}selected{% endif %}>{{airline.name}}</option>
+                                    {% endfor %}
+                                </select>
+
+                </div>
+                 <div class="col-12 col-sm-6 col-lg-2 pr-0 wow fadeIn" data-wow-duration="0.9s" data-wow-delay="0.3s">
+                  <select name="ped" class="form-control dropdown_arr_btn" required>
+                                    <option value="">Select Week</option>
+                                    {% for ped in ped_list %}
+                                    {% week_number_of_month ped as week_num %}
+                                    {% change_dateformat ped as ped_str %}
+                                    <option value="{{ped_str}}" {% if selected_ped == ped_str %}selected{% endif %}>{{ped|date:"F"}} : week{{week_num}}</option>
+                                    {% endfor %}
+                                </select>
+
+                </div>
+                <div class="col-12 col-sm-6 col-lg-2 pr-0 wow fadeIn" data-wow-duration="0.9s" data-wow-delay="0.3s">
+                 <div class="filter_btn_grp">
+                  <button class="primary_btn" type="submit">Apply</button>
+                  <a href="{% url 'new_agent_report' %}">
+                    <button class="secondary_btn" type="button"> Reset</button>
+                  </a>
+                </div>
+  <!--								<select name="status" class="form-control dropdown_arr_btn">-->
+  <!--									<option value="">Filter by status</option>-->
+  <!--									<option value="1" {% if status == '1' %} selected {% endif %}>Active</option>-->
+  <!--									<option value="0" {% if status == '0' %} selected {% endif %}>Inactive</option>-->
+  <!--							  	</select>-->
+  <!--							</div>-->
+  <!--							<div class="col-12 col-sm-6 col-lg-6 pr-0 wow fadeIn" data-wow-duration="0.9s" data-wow-delay="0.35s">-->
+  <!--								<select name="role" class="form-control dropdown_arr_btn">-->
+  <!--									<option value="">Filter by user role</option>-->
+  <!--									{% for group in groups %}-->
+  <!--										<option value="{{group.id}}" {% if group.id|slugify == role %} selected {% endif %} >{{group}}</option>-->
+  <!--									{% endfor %}-->
+  <!--							  	</select>-->
+  <!--							</div>-->
+  <!--							<div class="filter_btn_grp wow fadeIn" data-wow-duration="0.9s" data-wow-delay="0.4s">-->
+  <!--									<button type="submit" class="primary_btn_v2">Apply</button>-->
+  <!--									<a href="{% url 'users' %}"><button type="button" class="secondary_btn_v2"> Reset </button></a>-->
+  <!--							</div>-->
+              </div>
+              </div>
+            </form>
+					</div>
+				</div>
+
+				<div class="col-12">
+					<div class="table-wrapper wow fadeIn" data-wow-duration="0.9s" data-wow-delay="0.5s">
+						<table class="table fixed_headers table-bordered">
+							<thead>
+								<tr>
+<!--                  <th width="200">WEEK</th>-->
+									<th class="user_email_th" style=" width:250px;">
+
+								  		<a href="{% url 'new_agent_report' %}?order_by={% if order_by == 'agency__trade_name' %}-agency__trade_name{% else %}agency__trade_name{% endif %}">
+
+												{% if order_by == 'agency__trade_name' %}<i class="fa fa-sort-up" aria-hidden="true"></i>{% endif %}
+												{% if order_by == '-agency__trade_name' %}<i class="fa fa-sort-down" aria-hidden="true"></i>{% endif %}
+												{% if order_by != 'agency__trade_name' and order_by != '-agency__trade_name' %}<i class="fa fa-sort" aria-hidden="true"></i> {%endif%}
+										AGENCY NO
+										</a>
+									</th>
+									<th width="200">
+
+								  		<a href="{% url 'users' %}?order_by={% if order_by == 'first_name' %}-first_name{% else %}first_name{% endif %}">
+												{% if order_by == 'first_name' %}<i class="fa fa-sort-up" aria-hidden="true"></i>{% endif %}
+												{% if order_by == '-first_name' %}<i class="fa fa-sort-down" aria-hidden="true"></i>{% endif %}
+												{% if order_by != 'first_name' and order_by != '-first_name' %}<i class="fa fa-sort" aria-hidden="true"></i> {%endif%}
+										AGENCY NAME
+										</a>
+									</th>
+                  <th width="200">
+
+								  		<a href="{% url 'users' %}?order_by={% if order_by == 'first_name' %}-first_name{% else %}first_name{% endif %}">
+												{% if order_by == 'first_name' %}<i class="fa fa-sort-up" aria-hidden="true"></i>{% endif %}
+												{% if order_by == '-first_name' %}<i class="fa fa-sort-down" aria-hidden="true"></i>{% endif %}
+												{% if order_by != 'first_name' and order_by != '-first_name' %}<i class="fa fa-sort" aria-hidden="true"></i> {%endif%}
+										CITY
+										</a>
+									</th>
+                  <th width="200">
+
+								  		<a href="{% url 'users' %}?order_by={% if order_by == 'first_name' %}-first_name{% else %}first_name{% endif %}">
+												{% if order_by == 'first_name' %}<i class="fa fa-sort-up" aria-hidden="true"></i>{% endif %}
+												{% if order_by == '-first_name' %}<i class="fa fa-sort-down" aria-hidden="true"></i>{% endif %}
+												{% if order_by != 'first_name' and order_by != '-first_name' %}<i class="fa fa-sort" aria-hidden="true"></i> {%endif%}
+										EMAIL
+										</a>
+									</th>
+
+                  <th width="200">
+
+                                        <a href="/agencies/new-agent-list/?order_by={% if order_by == 'agent__ped' %}-agent__ped{% else %}agent__ped{% endif %}">
+												{% if order_by == 'agent__ped' %}<i class="fa fa-sort-up" aria-hidden="true"></i>{% endif %}
+												{% if order_by == '-agent__ped' %}<i class="fa fa-sort-down" aria-hidden="true"></i>{% endif %}
+												{% if order_by != 'agent__ped' and order_by != '-agent__ped' %}<i class="fa fa-sort" aria-hidden="true"></i> {%endif%}
+										CREATED ON
+										</a>
+									</th>
+
+								</tr>
+							</thead>
+							<tbody>
+                  {% for agent in agent_list %}
+                    <tr>
+                      <td>{{agent.agency.agency_no}}</td>
+                      <td>{{agent.agency.trade_name}}</td>
+                      <td>{{agent.agency.city.name}}</td>
+                      <td>{{agent.agency.email}}</td>
+                      <td>{{agent.ped}}</td>
+                    </tr>
+								{% empty %}
+								<tr><td>No data available.</td></tr>
+								{% endfor %}
+							</tbody>
+						</table>
+					</div>
+				</div>
+			</div>
+				</form>
+        </div>
+    </content>
+{% endblock %}

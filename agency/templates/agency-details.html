@@ -1,0 +1,177 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block title %}
+	Agency details
+{% endblock %}
+
+{% block content%}
+
+<content>
+    <div class="top-header">
+        <div class="row">
+            <div class="col-sm-5 col-lg-4 col-xs-12 text-left wow fadeInUp" data-wow-duration="0.9s" data-wow-delay="0.1s">
+                <h5 class="title_style">AGENCY DETAILS</h5>
+                <ol class="breadcrumb">
+                    <li class="breadcrumb-item"><a href="{% url 'agencies' %}">Agency management</a></li>
+                    <li class="breadcrumb-item active" aria-current="page">Agency Detail</li>
+                </ol>
+            </div>
+
+            <div class="col-sm-7 col-lg-8 col-xs-12 text-right wow fadeIn" data-wow-duration="0.9s" data-wow-delay="0.2s">
+                 {% if perms.agency.change_agency %}
+                <i class="material-icons inline_block wow bounceIn" data-wow-duration="0.4s" data-wow-delay="0.4s" data-md-tooltip="Edit">
+                    <a href="{% url 'agency_details_update' object.pk %}" class="edit-icon"></a>
+                </i>
+                {%endif%}
+                    <a href="{% url 'status_history' object.pk %}" class="primary_btn">Status History</a>
+                    <a href="{% url 'agency_sales_details' object.pk %}" class="secondary_btn">View Sales Details</a>
+            </div>
+        </div>
+    </div>
+    <div class="content-wrapper baner_sm">
+
+        <div class="form-wrapper pt-20">
+            <div class="row">
+                <div class="col-xs-12 col-sm-6 col-xl-4 col-lg-4 wow fadeIn" data-wow-duration="0.9s" data-wow-delay="0.25s">
+
+                    <div class="view-label">
+                        <label>Agency No </label>
+                        <p class="over_dots">{{object.agency_no}}</p>
+                    </div>
+
+                </div>
+                <div class="col-xs-12 col-sm-6 col-xl-4 col-lg-4 wow fadeIn" data-wow-duration="0.9s" data-wow-delay="0.3s">
+                    <div class="view-label">
+                        <label>Trade Name </label>
+                        <p class="over_dots">{{object.trade_name}}</p>
+                    </div>
+
+                </div>
+                <div class="col-xs-12 col-sm-6 col-xl-4 col-lg-4 wow fadeIn" data-wow-duration="0.9s" data-wow-delay="0.35s">
+
+                    <div class="view-label">
+                        <label>Address </label>
+                        <p class="over_dots">{{object.address1 | default_if_none:"" }} {{object.address2 | default_if_none:"" }}</p>
+                    </div>
+
+
+                </div>
+
+                <div class="col-xs-12 col-sm-6 col-xl-4 col-lg-4 wow fadeIn" data-wow-duration="0.9s" data-wow-delay="0.4s">
+
+                    <div class="view-label">
+                        <label>City </label>
+                        <p class="over_dots">{{object.city | default_if_none:"" }}</p>
+                    </div>
+
+
+                </div>
+
+                <div class="col-xs-12 col-sm-6 col-xl-4 col-lg-4 wow fadeIn" data-wow-duration="0.9s" data-wow-delay="0.45s">
+
+                    <div class="view-label">
+                        <label>{% if is_arc %}States{% else %}Provinces{%endif%} </label>
+                        <p class="over_dots">{{object.state | default_if_none:"" }}</p>
+                    </div>
+
+
+                </div>
+
+                <div class="col-xs-12 col-sm-6 col-xl-4 col-lg-4 wow fadeIn" data-wow-duration="0.9s" data-wow-delay="0.5s">
+
+                    <div class="view-label">
+                        <label>Country </label>
+                        <p class="over_dots">{{object.country | default_if_none:"" }}</p>
+                    </div>
+
+
+                </div>
+
+                <div class="col-xs-12 col-sm-6 col-xl-4 col-lg-4 wow fadeIn" data-wow-duration="0.9s" data-wow-delay="0.55s">
+
+                    <div class="view-label">
+                        <label>ZIP Code </label>
+                        <p class="over_dots">{{object.zip_code | default_if_none:"" }}</p>
+                    </div>
+
+
+                </div>
+                <div class="col-xs-12 col-sm-6 col-xl-4 col-lg-4 wow fadeIn" data-wow-duration="0.9s" data-wow-delay="0.6s">
+
+                    <div class="view-label">
+                        <label>Email ID </label>
+                        <p class="over_dots">{{object.email | default_if_none:"" }}</p>
+                    </div>
+
+                </div>
+                <!--<div class="col-xs-12 col-sm-6 col-xl-4 col-lg-4 wow fadeIn" data-wow-duration="0.9s" data-wow-delay="0.65s">-->
+
+                    <!--<div class="view-label">-->
+                        <!--<label>VAT Number </label>-->
+                        <!--<p class="over_dots">{{object.vat_number | default_if_none:"" }}</p>-->
+                    <!--</div>-->
+
+                <!--</div>-->
+                <div class="col-xs-12 col-sm-6 col-xl-4 col-lg-4 wow fadeIn" data-wow-duration="0.9s" data-wow-delay="0.7s">
+
+                    <div class="view-label">
+                        <label>Tel </label>
+                        <p class="over_dots">{{object.tel | default_if_none:"" }}</p>
+                    </div>
+
+                </div>
+                <div class="col-xs-12 col-sm-6 col-xl-4 col-lg-4 wow fadeIn" data-wow-duration="0.9s" data-wow-delay="0.75s">
+
+                    <div class="view-label">
+                        <label>Agency Type </label>
+                        <p class="over_dots">{{object.agency_type | default_if_none:"" }}</p>
+                    </div>
+
+                </div>
+                <!-- <div class="col-xs-12 col-sm-6 col-xl-4 col-lg-4">
+
+                    <div class="view-label">
+                        <label>Home Agency </label>
+                        <p class="over_dots">{{object.home_agency | default_if_none:"" }}</p>
+                    </div>
+
+                </div> -->
+                <div class="col-xs-12 col-sm-6 col-xl-4 col-lg-4 wow fadeIn" data-wow-duration="0.9s" data-wow-delay="0.8s">
+
+                    <div class="view-label">
+                        <label>Sales Owner</label>
+                        <p class="over_dots">{{object.sales_owner | default_if_none:"" }}</p>
+                    </div>
+
+                </div>
+                <!-- <div class="col-xs-12 col-sm-6 col-xl-4 col-lg-4">
+
+                    <div class="view-label">
+                        <label>Status </label>
+                        <p class="over_dots">{{object.get_status_display}}</p>
+                    </div>
+
+                </div> -->
+                    <div class="col-xs-12 col-sm-6 col-xl-4 col-lg-4 wow fadeIn" data-wow-duration="0.9s" data-wow-delay="0.85s">
+
+                    <div class="view-label">
+                        <label>Status </label>
+                        <p class="over_dots">
+                        {% if country != 'United States' %}
+                            {{object.get_status_iata_display}}
+                        {% else %}
+                            {{object.get_status_display}}
+                        {% endif %}
+                        </p>
+                    </div>
+
+                </div>
+
+
+            </div><!-- row -->
+        </div> <!-- form wrapper -->
+
+    </div>
+
+</content>
+{% endblock %}

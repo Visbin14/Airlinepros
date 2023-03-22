@@ -1,0 +1,249 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block title %}
+	Add User
+{% endblock %}
+{% block css %}
+    {{ form.media.css }}
+{% endblock %}
+
+{% block content%}
+<style>
+    label.error {
+      font-size: 12px;
+      color: red;
+    }
+</style>
+    <content class="user_page">            	
+        <div class="top-header">
+            <div class="row">
+                <div class="col-sm-8 col-lg-4 col-xs-12 text-left wow fadeInUp" data-wow-duration="0.9s" data-wow-delay="0.1s">
+                    <h5 class="title_style">ADD USER</h5>
+                    <ol class="breadcrumb">
+                        <li class="breadcrumb-item"><a href="#">Users</a></li>
+                        <li class="breadcrumb-item"><a href="{% url 'users' %}">Users List</a></li>
+                        <li class="breadcrumb-item active" aria-current="page">Add User</li>
+                    </ol>
+                </div>
+            </div>
+        </div>
+
+        <div class="content-wrapper baner_sm">
+            
+            <form method="post" enctype="multipart/form-data" id="form" onsubmit="return checkselectfields();">
+                {% csrf_token %}
+
+            <div class="user_image_preview add_user_img_placeholder row wow fadeIn" data-wow-duration="0.9s" data-wow-delay="0.25s">
+                <div class="image_usr">
+                    <img id="profileimage" src="{% static "main/img/user_placeholder.jpg" %}">
+                </div>
+
+                <span class="edit_position">
+                        <i class="material-icons" data-md-tooltip="Upload" onclick="">
+
+                    <input type="file" name="avatar" id="id_avatar" accept="image/*">
+
+                        <div class="edit_pic upload_pic_image">
+                            
+                            <span style="position:relative">
+                            
+                            </span>
+                        </div>
+                    </i>
+
+                    </span>
+
+            </div>
+            <div class="form-wrapper content_padd">
+                <div class="row">
+                    <div class="col-xl-4 col-sm-6 col-lg-4 col-xs-12 wow fadeIn" data-wow-duration="0.9s" data-wow-delay="0.3s">
+                        
+                        <div class="form-element form-input {% if form.email.errors %}form-has-error{% endif %}">
+                            <input class="form-element-field" placeholder=" " type="email" name="email" id="id_email" required="" maxlength="254" value= "{{ form.email.value|default_if_none:"" }}">
+                            <label class="form-element-label mandatory" for="">Email ID</label>
+                            <small class="form-element-hint">{{ form.email.errors }}</small>
+                        </div>
+                        
+                    </div>
+                    <div class="col-xl-4 col-sm-6 col-lg-4 col-xs-12 wow fadeIn" data-wow-duration="0.9s" data-wow-delay="0.35s">
+                        <div class="form-element form-input {% if form.first_name.errors %}form-has-error{% endif %}">
+                            <input class="form-element-field char_30" placeholder=" " type="text" required="" name="first_name" id="id_first_name" maxlength="30" value= "{{ form.first_name.value|default_if_none:"" }}" >
+                            <label class="form-element-label mandatory" for="">First Name</label>
+                            <small class="form-element-hint">{{ form.first_name.errors }}</small>
+                        </div>
+
+                    </div>
+                    <div class="col-xl-4 col-sm-6 col-lg-4 col-xs-12 wow fadeIn" data-wow-duration="0.9s" data-wow-delay="0.4s">
+
+                        <div class="form-element form-input {% if form.last_name.errors %}form-has-error{% endif %}">
+                            <input class="form-element-field char_30" placeholder=" " type="text" required="" name="last_name" id="id_last_name"  maxlength="30" value= "{{ form.last_name.value|default_if_none:"" }}">
+                            <label class="form-element-label mandatory" for="">Last Name</label>
+                            <small class="form-element-hint">{{ form.last_name.errors }}</small>
+                        </div>
+
+                    </div>
+                    <div class="col-xl-4 col-sm-6 col-lg-4 col-xs-12 wow fadeIn" data-wow-duration="0.9s" data-wow-delay="0.45s">
+                        <div class="form-element form-input short_length_select2 select2-mandatory {% if form.groups.errors %}form-has-error{% endif %}">
+                            {{form.groups}}
+                            <!-- <label class="form-element-label" for="">User Role</label> -->
+                            <!-- {{form.groups.errors}} -->
+                            <small class="form-element-hint">{{ form.groups.errors }}</small>
+
+                        </div>
+                    </div>
+
+                    
+                    <div class="col-xl-4 col-sm-6 col-lg-4 col-xs-12 wow fadeIn" data-wow-duration="0.9s" data-wow-delay="0.5s">
+
+                        <div class="form-element form-select {% if form.is_active.errors %}form-has-error{% endif %}">
+                            <select name="is_active" id="id_is_active" class="form-element-field dropdown_arr_btn" onchange="callModal(this.value)">
+                                <option value="True" {% if form.is_active.value == True %} selected {% endif %}>Active</option>
+                                <option value="False" {% if form.is_active.value == False %} selected {% endif %}>Inactive</option>
+                            </select>
+                            <label class="form-element-label  mandatory" for="">Status</label>
+                            <small class="form-element-hint">{{ form.is_active.errors }}</small>
+
+                        </div>
+
+
+                    </div>
+                    <div class="col-xl-4 col-sm-6 col-lg-4 col-xs-12 wow fadeIn" data-wow-duration="0.9s" data-wow-delay="0.55s" style="display: none;" >
+                        <div class="form-element form-input short_length_select2 select2-mandatory select2-country-label {% if form.countries.errors %}form-has-error{% endif %}">
+                            {{form.countries}}
+                            <!-- <label class="form-element-label" for="">User Role</label> -->
+                            <!--{{form.countries.errors}}-->
+                            <small class="form-element-hint">{{ form.countries.errors }}</small>
+                        </div>
+                    </div>
+                </div><!-- row -->
+            </div> <!-- form wrapper -->
+
+            <div class="row content_padd wow fadeIn" data-wow-duration="0.9s" data-wow-delay="0.65s">
+                <div class="col-sm-12 align_right button_group">
+                    <a href="{% url 'users' %}">Cancel</a>
+                    <button type="submit" class="primary_btn">Save</button>
+                </div>
+            </div>
+            </form>
+        </div>
+
+    </content>
+<!-- Modal -->
+  <div class="modal fade" id="userStatusModal" tabindex="-1" role="dialog" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+        <div class="modal-content">
+        <div class="modal-header">
+            <h5 class="title_style">INACTIVE STATUS</h5>
+        </div>
+        <div class="modal-body">
+            <div class="modal_content">
+              This user wont be able to login to his/her account while being in “inactive” status.
+            </div>
+        </div>
+        <div class="modal-footer button_group">
+            <button type="button" class="primary_btn" data-dismiss="modal" id="btnYes">Ok</button>
+        </div>
+        </div>
+    </div>
+  </div>
+
+{% endblock %}
+
+{% block js %}
+    {{ form.media.js }}
+
+    <script>
+
+	  document.getElementById("{{ form.avatar.id_for_label }}").onchange = function () {
+        var reader = new FileReader();
+
+        reader.onload = function (e) {
+          // get loaded data and render thumbnail.
+          document.getElementById("profileimage").src = e.target.result;
+        };
+
+        // read the image file as a data URL.
+        reader.readAsDataURL(this.files[0]);
+      };
+
+
+   $(document).ready(function() {
+
+      $('#id_groups, #id_countries').change(function(e){
+
+        if(!this.value.length > 0){
+            var msg = '';
+            if(this.id == 'id_groups'){
+                msg = 'Please select user roles';
+            }else{
+                msg = 'Please select countries';
+            }
+            $('#'+this.id).nextAll().eq(1).text(msg);
+        }else{
+            $('#'+this.id).nextAll().eq(1).text('');
+        }
+      });
+
+      $("#form").validate({
+          rules: {
+              first_name: "required",
+              last_name: "required",
+              email: {
+                required: true,
+                email: true
+              },
+              is_active: "required",
+          },
+
+          // Specify validation error messages
+          messages: {
+              first_name: "Please enter your first name",
+              last_name: "Please enter your last name",
+              email: "Please enter a valid email id",
+              groups: "Please select user roles",
+              is_active: "Please select status",
+              countries: "Please select countries",
+          },
+
+          success: function (element) {
+              $('#'+element[0].id).nextAll().eq(1).text('');
+          },
+
+          errorPlacement: function(error, element) {
+              var placement = $(element).data('error');
+              if (placement) {
+                $(placement).append(error)
+              } else {
+                $('#'+element[0].id).nextAll().eq(1).text(error[0].innerHTML);
+              }
+          },
+
+      });
+   });
+
+   function callModal(value){
+        if(value == 'False'){
+            $('#userStatusModal').modal('show');
+        }
+   }
+
+   function checkselectfields(){
+        var err = '';
+        if(!$('#id_groups').val().length > 0){
+            $('#id_groups').nextAll().eq(1).text('Please select user roles');
+            err = 1;
+        }
+
+        if(!$('#id_countries').val().length > 0){
+            $('#id_countries').nextAll().eq(1).text('Please select countries');
+            err = 1;
+        }
+
+        if(err != ''){
+            return false;
+        }else{
+            return true;
+        }
+   }
+</script>
+{% endblock %}

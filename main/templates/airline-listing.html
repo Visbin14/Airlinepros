@@ -1,0 +1,114 @@
+
+
+{% extends 'base.html' %}
+{% load static %}
+{% block title %}
+	Airlines
+{% endblock %}
+
+{% block content%}
+
+
+
+    <content>
+        <div class="top-header">
+            <div class="row">
+                <div class="col-sm-3 col-lg-4 col-xs-12 text-left wow fadeInUp" data-wow-duration="0.9s" data-wow-delay="0.1s">
+                    <h5 class="title_style">AIRLINE LIST</h5>
+                    <ol class="breadcrumb">
+                        <li class="breadcrumb-item active" aria-current="page">Airlines</li>
+                    </ol>
+                </div>
+                <div class="col-sm-9 col-lg-8 col-xs-12 text-right wow fadeIn" data-wow-duration="0.9s" data-wow-delay="0.2s">
+                    <div class="search-form right_lg_btn">
+                        <form>
+                            <input type="text" name="q" class="form-control" placeholder="Search.." value="{{query}}" autofocus onfocus="this.setSelectionRange(this.value.length, this.value.length);">
+							<a href="{% url 'airlines' %}">
+								<span class="close-icon"></span>
+							</a>
+                        </form>
+                    </div>
+					{% if perms.main.change_airline %}
+                    <a href="{% url 'add_airline' %}" class="primary_btn">ADD AIRLINE</a>
+					{% endif %}
+                </div>
+            </div>
+        </div>
+        <div class="content-wrapper">
+			<div class="row">
+				<div class="col-12">
+					<div class="table-wrapper table-responsive-md table-responsive wow fadeIn" data-wow-duration="0.9s" data-wow-delay="0.4s">
+						<table class="table fixed_headers">
+							<thead>
+								<tr>
+									<th width="150">
+                                        
+								  		<a href="{% url 'airlines' %}?order_by={% if order_by == 'code' %}-code{% else %}code{% endif %}">
+
+												{% if order_by == 'code' %}<i class="fa fa-sort-up" aria-hidden="true"></i>{% endif %}
+												{% if order_by == '-code' %}<i class="fa fa-sort-down" aria-hidden="true"></i>{% endif %}
+												{% if order_by != 'code' and order_by != '-code' %}<i class="fa fa-sort" aria-hidden="true"></i> {%endif%}
+
+
+										3 Digit Code
+										</a>
+                                    </th>
+                                    <th width="280">                                        
+								  		<a href="{% url 'airlines' %}?order_by={% if order_by == 'name' %}-name{% else %}name{% endif %}">
+
+												{% if order_by == 'name' %}<i class="fa fa-sort-up" aria-hidden="true"></i>{% endif %}
+												{% if order_by == '-name' %}<i class="fa fa-sort-down" aria-hidden="true"></i>{% endif %}
+												{% if order_by != 'name' and order_by != '-name' %}<i class="fa fa-sort" aria-hidden="true"></i> {%endif%}
+												
+										Airline NAME
+										</a>
+                                    </th>
+                                    <th width="170">
+                                        
+								  		<a href="{% url 'airlines' %}?order_by={% if order_by == 'abrev' %}-abrev{% else %}abrev{% endif %}">
+												{% if order_by == 'abrev' %}<i class="fa fa-sort-up" aria-hidden="true"></i>{% endif %}
+												{% if order_by == '-abrev' %}<i class="fa fa-sort-down" aria-hidden="true"></i>{% endif %}
+												{% if order_by != 'abrev' and order_by != '-abrev' %}<i class="fa fa-sort" aria-hidden="true"></i> {%endif%}
+										2 letter code
+										</a>
+                                    </th>
+                                    <th style="width:250px">
+                                        product manager
+                                    </th>
+								</tr>
+							</thead>
+							<tbody>
+								{% for airline in airlines %}
+									<tr>
+										<td><a href="{% url 'airline_details' airline.pk %}">{{airline.code}}</a></td>
+										<td><a href="{% url 'airline_details' airline.pk %}">{{airline.name}}</a></td>
+										<td>{{airline.abrev}}</td>
+										<td>{{airline.product_manager.get_full_name}}</td>
+									</tr>
+								{% empty %}
+									<tr><td>No data available.</td></tr>
+								{% endfor %}
+							</tbody>
+						</table>
+						{% if paginator.num_pages > 1 %}
+						<div class="table_pagination">
+							<ul class="pagination">
+								{% if page_obj.has_previous %}
+								  <li><a href="?page={{ page_obj.previous_page_number }}" class="prev"></a></li>
+								{% endif %}
+								{% for i in paginator.page_range %}
+								  <li><a href="?page={{i}}" class="{% if page_obj.number == i %}selected {% endif %}">{{i}}</a></li>
+								{% endfor %}
+								{% if page_obj.has_next %}
+								<li><a href="?page={{ page_obj.next_page_number }}" class="next"></a></li>
+								{% endif %}
+							</ul>
+					    </div>
+					  {% endif %}
+					</div>
+				</div>
+			</div>
+        </div>
+    </content>
+{% endblock %}
+

@@ -1,0 +1,550 @@
+{% extends 'base.html' %}
+{% load static %}
+{% load report_tags %}
+{% block title %} DASHBOARD {% endblock %}
+{% block content%}
+
+
+
+
+
+
+
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.1/jquery.min.js"></script>
+
+    <script src="{% static 'highcharts.js' %}" ></script>
+    <script src="{% static 'highcharts2.js' %}" ></script>
+    <script src="{% static 'highcharts3.js' %}" ></script>
+    <script src="{% static 'highcharts4.js' %}" ></script>
+   
+
+   <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.1/jquery.min.js"></script>
+    <link  rel="stylesheet" href="{% static 'bootstrap1.css' %}"> 
+    <script src="{% static 'bootstrap-multiselect3.js' %}" ></script>
+    <script src="{% static 'bootstrap2.js' %}" ></script>
+    <link  rel="stylesheet" href="{% static 'bootstrap-multiselect4.css' %}">
+
+    <!-- <script src="https://cdn.plot.ly/plotly-latest.min.js"></script> -->
+    <script src="{% static 'ploty_graph.js' %}"></script>
+    
+  <!-- <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css">   -->
+  <!-- <script type="text/javascript" src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js"></script>  
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-multiselect/0.9.13/js/bootstrap-multiselect.js"></script>   -->
+  <!-- <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-multiselect/0.9.13/css/bootstrap-multiselect.css"> -->
+    
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.11.0/umd/popper.min.js"></script>
+
+
+
+
+<style type="text/css">
+   
+    
+    .caret{
+        display: none!important;
+    }
+
+    
+    .btn-default {
+        
+        width: 250px;
+        height: 40px;
+        border-radius: 20px;
+        border-width: 1.5px;
+        
+        border-color:#B2BEB5;
+      }
+
+    .multiselect-container{
+
+        width: 500px;
+        height: 250px;
+        overflow-y: scroll;
+        scrollbar-color: rebeccapurple green;
+        scrollbar-width: thin;
+    }
+
+    .highcharts-credits{
+		display:none;
+	}
+
+
+
+    body
+    {
+        font-family: Arial;
+        font-size: 10pt;
+    }
+    .modal
+    {
+        position: fixed;
+        z-index: 999;
+        height: 100%;
+        width: 100%;
+        top: 0;
+        left: 0;
+        background-color: Black;
+        filter: alpha(opacity=60);
+        opacity: 0.6;
+        -moz-opacity: 0.8;
+    }
+    .center
+    {
+        z-index: 1000;
+        margin: 300px auto;
+        padding: 10px;
+        width: 130px;
+        background-color: White;
+        border-radius: 10px;
+        filter: alpha(opacity=100);
+        opacity: 1;
+        -moz-opacity: 1;
+    }
+    .center img
+    {
+        height: 128px;
+        width: 128px;
+    }
+    .y{
+        margin-top:10px;
+    }
+    .checkboxes{height: auto;
+        display:none;
+    background: aliceblue;
+    width: 65px;
+    margin-left: 10px;
+    margin-bottom: 10px;
+    margin-left: 10px;
+    margin-bottom: 10px;
+    width: 148px;
+    border-radius: 4px;
+    margin-left: 32px;
+}
+
+.showchecks{
+    margin-left: 30px;
+    background-color: white;
+    border-radius: 32px;
+    border-bottom-color: white;
+    border-width: 1px;
+    width: 149px;
+    height: 34px;
+    font-size: 15px;
+    color: #44413c;}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+   
+</style>
+
+
+
+<content>
+
+    <div class="content-wrapper">
+        <div class="row">
+            <div class="col-12">
+                <div class="form-wrapper filter_wrapper">
+                
+                        <div class="row" style="margin-left: 15px">
+                        <p id = "admin-flag" style="display: none;">{{user_admin_flag}}</p>
+                       
+                            
+                                <div>
+                                    <table>
+                                        <tr>
+                                            <td><div id="year-div" style="margin-left: 10px ;width: auto;" >
+                                                    <select   id ='year' multiple="multiple"  >
+                                                        {% for i in unique_year %}
+                                                            <option value="{{i}}">{{i}}</option>
+                                                        {% endfor %}
+                                                    </select>   
+                                            </div>
+                                            <div id ="month-div" style="margin-top: 20px;margin-left: 10px ;width: auto;">                                              
+                                                    <select  id ='month' multiple="multiple" >
+                                                        {% for i in unique_month %}
+                                                            <option value="{{i}}">{{i}}</option>
+                                                        {% endfor %}
+                                                    </select> 
+
+                                            </div></td>
+                                        </tr>
+                                    </table>
+                                </div>     
+                                           
+
+                                           <!--  -->
+                                <div>
+                                    <table>
+                                        <tr>
+                                            <td><!-- <div id ="region-div" style="margin-left: 10px ;width: auto;">
+                                            
+                                                    <select class="form-control dropdown_arr_btn" id ='region'  >
+                                                     
+                                                        <option value="">Filter by Region</option>
+                                                        {% for i in unique_region %}
+                                
+                                                            <option value="{{i}}">{{i}}</option>
+                                                        {% endfor %}
+                                                  
+                                                    </select>
+                                            </div> -->
+                                      
+                                            
+                                            <div id ="country-div" style="margin-top: 0px;margin-left: 10px ;width: auto; ">
+                                                    <select id ='country' class="form-control dropdown_arr_btn" style="height: 40px !important;">
+                                                        <option value="">Filter by Country</option>
+                                                        {% for i in unique_country %}
+                                                            <option value="{{i}}">{{i}}</option>
+                                                        {% endfor %}
+                                                    </select>
+                                            
+                                            </div></td>
+                                        </tr>
+                                    </table>
+                                </div>
+                                <div>
+                                    <table>
+                                        <tr>
+                                            <td><div id = 'airline-div' style="margin-left: 10px;width: auto;">
+                                                
+                                                    <select id ='airline' multiple="multiple" >
+                                                           
+                                                        {% for i in unique_airline %}
+                                    
+                                                            <option value="{{i}}">{{i}}</option>
+                                                        {% endfor %}
+                                                    </select>
+                                            </div>
+                                            <div id = 'airline_IATA_code-div'  style="margin-top: 20px;margin-left: 10px;width: auto;">
+                                                       <select id ='airline_IATA_code' multiple="multiple" >
+
+                                                            {% for i in unique_airline_IATA_code %}
+                                                                <option value="{{i}}">{{i}}</option>
+                                                            {% endfor %}
+                                                        </select>                
+                                            </div> 
+                                            <div id = 'IATA_numeric_code-div' style="margin-top: 20px;margin-left: 10px;width: auto;">
+                                                        <select id ='IATA_numeric_code' multiple="multiple" >
+
+                                                            {% for i in unique_IATA_numeric_code %}
+                                                                <option value="{{i}}">{{i}}</option>
+                                                            {% endfor %}
+                                                        </select>      
+                                                    
+                                            </div></td> 
+                                        </tr>
+                                    </table>
+                                </div>
+                                <div>
+                                    
+                                    <table>
+                                        <tr>
+                                            <td><div id = 'agreement_type-div' style="margin-left: 10px ;width: auto;">
+                                            
+                                                <select id ='agreement_type' multiple="multiple" >
+                                                <div>
+                                                    {% for i in unique_agreement_type %}
+                                                        <option value="{{i}}">{{i}}</option>
+                                                    {% endfor %}
+                                                </div>
+                                                </select>   
+                                                
+                                                
+                                            </div></td>
+                                        </tr>
+                                    </table>
+                                </div>
+                                <div>
+                                    <table>
+                                        <tr>
+                                            <td><div>
+
+                                                    <select id ='revenue' class="form-control dropdown_arr_btn" style="margin-left: 10px ;width: auto; height: 40px !important;">
+                                                    
+                                                        <option value="">Filter by Revenue</option>
+                                                        <option value="Gross">Gross</option>
+                                                        <option value="Nett">Nett</option>
+                                                    </select>
+                                                
+                                            </div></td>
+                                        </tr>
+                                    </table>
+                                </div>
+                           
+                                
+                            
+                            
+                            <!--  -->
+                            <div style="margin-left:0px;margin-top: 97px">
+                                            
+                                                
+
+                                <button class="secondary_btn_v2" onclick="getsorted()">
+                                    SUBMIT
+                                </button>
+                                
+                                <button class="secondary_btn_v2" onclick="location.href='{% url 'pivot' %}'" style="margin-left:30px;">
+                                    Reset
+                                </button>
+                        
+                            </div>
+                            <!--  -->
+                            <!-- <div>
+                                
+                            
+                                
+                                <div class="filter_btn_grp" >
+                                    <a href='{% url "Pivot_data_download" %}' class="primary_btn">
+                                           Get EXCEL File
+                                    </a>
+                                </div>
+                            </div> -->
+                        </div>
+                        
+                </div>
+            </div>
+            <br><br>
+            <div class="col-12">
+                <div class="col-12">
+                    <div class="row">
+                        <div class="modal">
+                            <img src="{% static '/debug_toolbar/img/loading.gif' %}" width="100" height="100" style="margin-left: 940px; margin-top: 300px">
+                        </div>
+                        
+                            <!-- <div class="dragscroll" style="width: 100%; height: 100%; cursor: grab; cursor : -o-grab; cursor : -moz-grab; cursor : -webkit-grab;">
+                            
+                                <div class="table-wrapper" style="margin-top: 40px;">      
+                                    <table class="table_border summary_table">
+                                        <div>
+                                            <tr>
+                                                <td>{{pivot_data|safe}}</td>
+                                                
+                                            </tr>
+                                        </div>
+                                    </table>
+                                    
+                                </div>
+                                <div  id="container5" style="min-width: 310px; height: 400px; margin: 0 auto"></div>
+							
+								<div  id="container" style="margin-left: 860px;margin-top: -405px;overflow: hidden;"></div>
+                            </div> -->
+                            {% include "pivot_table.html" %}
+                       
+                    </div>
+                </div>
+            </div>
+            
+        </div>
+    </div> 
+    
+</content>
+<script>
+    Country__ = $('#country').find(":selected").val()
+
+    $( document ).ready(function() {
+        console.log( "ready!" );
+        
+
+        flag_value = document.getElementById("admin-flag").innerHTML
+        if (flag_value == "False"){
+            $("#country-div").hide();
+            $("#region-div").hide();
+            const img = document.getElementById('selected_flagset');
+            img.src = "/static/main/img/flag_placeholder.jpg";
+            $("#selected_flagset").hide();
+
+        }
+        else{
+            const tag = document.getElementById('country_choose_global');
+            tag.style.display = 'none';
+
+            const myDiv = document.getElementById('assda_tag');
+            myDiv.style.display = 'block';
+        }
+    
+    //const el = document.getElementById('year-div');
+    el = $("#year-div")
+    closee = el.closest("div").find(".multiselect-selected-text").text("Filter by Year")
+    
+    el = $("#month-div")
+    closee = el.closest("div").find(".multiselect-selected-text").text("Filter by Month")
+
+    el = $("#region-div")
+    closee = el.closest("div").find(".multiselect-selected-text").text("Filter by Region")
+
+    el = $("#country-div")
+    closee = el.closest("div").find(".multiselect-selected-text").text("Filter by Country")
+
+    el = $("#airline-div")
+    closee = el.closest("div").find(".multiselect-selected-text").text("Filter by Airline")
+
+    el = $("#airline_IATA_code-div")
+    closee = el.closest("div").find(".multiselect-selected-text").text("Filter by Airline_IATA_code")
+
+    el = $("#IATA_numeric_code-div")
+    closee = el.closest("div").find(".multiselect-selected-text").text("Filter by IATA_numeric_code")
+
+    el = $("#agreement_type-div")
+    closee = el.closest("div").find(".multiselect-selected-text").text("Filter by Agreement_type")
+
+
+
+
+    });
+
+    $('#year').multiselect();  
+    $('#month').multiselect();  
+    //$('#region').multiselect();  
+    //$('#country').multiselect();  
+    $('#airline').multiselect();  
+    $('#airline_IATA_code').multiselect();  
+    $('#IATA_numeric_code').multiselect();  
+    $('#agreement_type').multiselect();  
+   
+    
+
+
+
+    
+   
+    
+    function getsorted(reset=false){
+        
+        var year= $('#year-div').find(".multiselect").attr("title")
+        year_list = year != "None selected" ? JSON.stringify(year.split(",")) : []
+        
+        console.log(">>>>>>>>>>>>>>>>>>>>", year_list)
+
+        var month= $('#month-div').find(".multiselect").attr("title")
+        month_list = month != "None selected" ? JSON.stringify(month.split(",")) : []
+        
+        console.log(">>>>>>>>>>>>>>>>>>>>", month_list)
+
+        var airline= $('#airline-div').find(".multiselect").attr("title")
+        airline_list = airline != "None selected" ? JSON.stringify(airline.split(",")) : []
+        
+        console.log(">>>>>>>>>>>>>>>>>>>>", airline_list)
+
+        var airline_IATA_code= $('#airline_IATA_code-div').find(".multiselect").attr("title")
+        airline_IATA_code_list = airline_IATA_code != "None selected" ? JSON.stringify(airline_IATA_code.split(",")) : []
+
+        console.log(">>>>>>>>>>>>>>>>>>>>", airline_IATA_code_list)
+
+        var agreement_type= $('#agreement_type-div').find(".multiselect").attr("title")
+        agreement_type_list = agreement_type != "None selected" ? JSON.stringify(agreement_type.split(",")) : []
+        
+        console.log(">>>>>>>>>>>>>>>>>>>>", agreement_type_list)
+
+        var IATA_numeric_code= $('#IATA_numeric_code-div').find(".multiselect").attr("title")
+        IATA_numeric_code_list = IATA_numeric_code != "None selected" ? JSON.stringify(IATA_numeric_code.split(",")) : []
+        
+        console.log(">>>>>>>>>>>>>>>>>>>>", IATA_numeric_code_list)
+
+       
+
+        $(".modal").show();
+        
+        Revenue_ = $('#revenue').find(":selected").val()
+        Region_ = $('#region').find(":selected").val()
+        Country_ = $('#country').find(":selected").val()
+
+        $('.loader').css("visibility", "visible");
+        $.ajax({
+            method : "GET",
+            url : "",
+            data :
+            
+            {	
+                
+                
+                "agreement_type":agreement_type_list,
+                "IATA_numeric_code":IATA_numeric_code_list,
+                "airline":airline_list,
+                "country":Country_,
+                "revenue":Revenue_,
+                "month":month_list,
+                "year":year_list,
+                "region":Region_,
+                "airline_IATA_code":airline_IATA_code_list,
+                "is_filter":true,
+                "reset": reset
+                
+                    
+            },
+            
+            
+            success: function(response){
+                $(".modal").hide();
+
+                    if (response){
+
+                        if (response.flag_path && flag_value != "False"){
+                            const img = document.getElementById('selected_flagset');
+                            img.src = "/media/"+response.flag_path;
+                            $("#selected_flagset").show();
+                            const tag = document.getElementById('assda_tag');
+                             tag.style.display = 'none';
+                        }
+                        else{
+                            const img = document.getElementById('selected_flagset');
+                            img.src = "/static/main/img/flag_placeholder.jpg";
+                            $("#selected_flagset").show();
+                            const tag = document.getElementById('assda_tag');
+                             tag.style.display = 'none';
+                        }
+
+
+
+                        $('.dragscroll').replaceWith(response.html_to_replace);
+                        $('.form-wrapper').replaceWith(response.filter_to_replace);
+                        
+                    }
+
+            },
+            complete: function(){
+
+                
+            }
+        })
+    }
+
+
+    
+  
+    
+    
+    
+        
+    
+    
+        
+   
+
+
+
+   
+
+
+
+    	
+	
+	
+    
+       
+        
+
+   
+</script>
+{% endblock %}

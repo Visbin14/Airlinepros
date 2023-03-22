@@ -1,0 +1,131 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block title %}
+	Airline Details
+{% endblock %}
+
+{% block content%}
+<content class="">
+        <div class="top-header">
+            <div class="row">
+                <div class="col-sm-5 col-lg-4 col-xs-12 text-left  wow fadeInUp" data-wow-duration="0.9s" data-wow-delay="0.1s">
+                    <h5 class="title_style">AIRLINE DETAIL</h5>
+                    <ol class="breadcrumb">
+                        <li class="breadcrumb-item"><a href="{% url 'airlines' %}">Airlines</a></li>
+                        <li class="breadcrumb-item active" aria-current="page">Airline Detail</li>
+                    </ol>
+                </div>
+                {% if 'report.view_airline_management' in perms %}
+                <div class="col-sm-7 col-lg-8 col-xs-12 text-right">
+                    <a href="{% url 'airline_commissions' object.pk %}" class="primary_btn wow zoomIn" data-wow-duration="0.1s" data-wow-delay="0.9s">Commissions</a>
+                  {% if perms.report.change_airline_management %}
+                    <i class="material-icons inline_block" data-md-tooltip="Edit">
+                        <a href="{% url 'update_airline' object.pk %}" class="edit-icon wow zoomIn" data-wow-duration="0.1s" data-wow-delay="0.9s"></a>
+                    </i>
+                   {% endif %}
+                </div>
+                {% endif %}
+            </div>
+        </div>
+
+        <div class="content-wrapper baner_sm">
+
+            <div class="form-wrapper pt-20 wow fadeIn" data-wow-duration="0.9s" data-wow-delay="0.2s">
+                <div class="row">
+                    <div class="col-xs-12 col-sm-6 col-xl-4 col-lg-4 wow fadeIn" data-wow-duration="0.9s" data-wow-delay="0.2s">
+
+                        <div class="view-label">
+                            <label>3 Digit Code </label>
+                            <p class="over_dots">{{object.code}}</p>
+                        </div>
+
+                    </div>
+                    <div class="col-xs-12 col-sm-6 col-xl-4 col-lg-4 wow fadeIn" data-wow-duration="0.9s" data-wow-delay="0.25s">
+                        <div class="view-label">
+                            <label>2 Letter Code </label>
+                            <p class="over_dots">{{object.abrev}}</p>
+                        </div>                        
+
+                    </div>
+                    <div class="col-xs-12 col-sm-6 col-xl-4 col-lg-4 wow fadeIn" data-wow-duration="0.9s" data-wow-delay="0.3s">
+
+                        <div class="view-label">
+                            <label>Name</label>
+                            <p class="over_dots">{{object.name}}</p>
+                        </div>                        
+        
+
+                    </div>
+
+                    <!--<div class="col-xs-12 col-sm-6 col-xs-xl-4->
+
+                        <!--<div class="view-label">-->
+                            <!--<label>ARC Coordination Fee </label>-->
+                            <!--<p class="over_dots">{{object.arc_coordination_fee}}</p>-->
+                        <!--</div>-->
+
+
+                    <!--</div>-->
+
+                    <div class="col-xs-12 col-sm-6 col-xl-4 col-lg-4 wow fadeIn" data-wow-duration="0.9s" data-wow-delay="0.5s">
+
+                        <div class="view-label">
+                            <label>Product Manager </label>
+                            <p class="over_dots">{{object.product_manager.get_full_name}}</p>
+                        </div>
+
+
+                    </div>
+                    {% if object.country.name == 'United States' %}
+
+                    {% else%}
+                        <div class="col-xs-12 col-sm-6 col-xl-4 col-lg-4 wow fadeIn" data-wow-duration="0.9s" data-wow-delay="0.55s">
+
+                        <div class="view-label">
+                            <label>Accepts AMEX </label>
+                            <p class="over_dots">{% if object.accepts_AMEX == True %}Yes{% else %}No{% endif%}</p>
+                        </div>
+
+
+                    </div>
+
+                    <div class="col-xs-12 col-sm-6 col-xl-4 col-lg-4 wow fadeIn" data-wow-duration="0.9s" data-wow-delay="0.6s">
+
+                        <div class="view-label">
+                            <label>Accepts MC </label>
+                            <p class="over_dots">{% if object.accepts_MC == True %}Yes{% else %}No{% endif%}</p>
+                        </div>
+
+
+                    </div>
+
+                    <div class="col-xs-12 col-sm-6 col-xl-4 col-lg-4 wow fadeIn" data-wow-duration="0.9s" data-wow-delay="0.65s">
+
+                        <div class="view-label">
+                            <label>Accepts VI </label>
+                            <p class="over_dots">{% if object.accepts_VI == True %}Yes{% else %}No{% endif%}</p>
+                        </div>
+
+
+                    </div>
+
+                    <div class="col-xs-12 col-sm-6 col-xl-4 col-lg-4 wow fadeIn" data-wow-duration="0.9s" data-wow-delay="0.65s">
+
+                        <div class="view-label">
+                            <label>Accepts UATP </label>
+                            <p class="over_dots">{% if object.accepts_UATP == True %}Yes{% else %}No{% endif%}</p>
+                        </div>
+
+
+                    </div>
+                    {% endif %}
+
+
+
+                </div><!-- row -->
+            </div> <!-- form wrapper -->
+
+        </div>
+
+    </content>
+{% endblock %}

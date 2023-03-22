@@ -1,0 +1,328 @@
+{% extends 'base.html' %}
+{% load static %}
+{% load report_tags %}
+{% block title %} SALES SUMMARY REPORT {% endblock %}
+{% block content%}
+<content>
+	<div class="top-header">
+		<div class="row">
+			<div class="col-sm-8 col-lg-8 col-xs-12 text-left">
+				<h5 class="title_style">SALES SUMMARY REPORT</h5>
+				<ol class="breadcrumb">
+					<li class="breadcrumb-item"><a href="{% url 'agencies' %}">Report management</a></li>
+					<li aria-current="page" class="breadcrumb-item active">Sales Summary report</li>
+				</ol>
+			</div>
+			{% if transactions_headers and perms.report.download_sales_summary %}
+			<div class="col-sm-4 col-lg-4 col-xs-12 text-right">
+				 <a href='{% url "summary_report_download" %}?airline={{selected_airline}}&month_year={{month_year}}' class="primary_btn">
+                        Get EXCEL File
+				 </a>
+			</div>
+			{% endif %}
+		</div>
+	</div>
+
+
+	<div class="content-wrapper">
+		<div class="row">
+
+			<div class="col-12">
+				<div class="form-wrapper filter_wrapper">
+					<form method="get"  action='{% url "sales_summary" %}'>
+						<div class="row">
+							<div class="col-12 col-sm-6 col-lg-8 pr-0">
+	                            <select name="airline" class="form-control dropdown_arr_btn" required>
+	                                <option value="">Select Airline</option>
+	                                {% for airline in airlines %}
+	                                <option value="{{airline.id}}" {% if selected_airline == airline.id|slugify %}selected{% endif %}>{{airline.name}}</option>
+	                                {% endfor %}
+	                            </select>
+	                        </div>
+	                        <div class="col-12 col-sm-6 col-lg-4 pr-0 custom_date_range">
+
+	                            <div id="month_year_div">
+	                                <input type="text" autocomplete="off" name="month_year" class="monthyearpicker form-control" value="{{month_year}}" placeholder="Choose Month and Year" autocomplete="off" required/>
+	                            </div>
+
+	                        </div>
+							<div class="filter_btn_grp">
+								<button class="primary_btn" type="submit">Apply</button>
+								<a href="{% url 'sales_summary' %}">
+									<button class="secondary_btn" type="button"> Reset</button>
+								</a>
+							</div>
+						</div>
+					</form>
+				</div>
+			</div>
+
+			{% if selected_airline and month_year %}
+			<div class="col-12">
+				<div class="row">
+					<div class="col-12">
+						<div class="dragscroll" style="width: 100%; height: 100%; overflow: scroll; cursor: grab; cursor : -o-grab; cursor : -moz-grab; cursor : -webkit-grab;">
+
+						<div class="table-wrapper table_pb_20 wow fadeIn" style="overflow:initial">
+							{% if transactions_headers %}
+							<table class="table_border summary_table">
+
+								<tbody>
+								<tr>
+									<th rowspan="2"></th>
+									{% for transaction in transactions_headers %}
+									<th class="date" colspan="4">{{transaction}}</th>
+									{% endfor %}
+									<th valign="top" rowspan="2">AirlinePros ACM</th>
+									<th valign="top" rowspan="2">Weekly Sales Totals</th>
+									<th valign="top" rowspan="2">Weekly Cash disbursements</th>
+									<th valign="top" rowspan="2">{% if is_arc %}Arc Deductions{% else %}IATA Deductions{% endif %}</th>
+									{% if is_arc %}<th valign="top" rowspan="2">Weekly total cash disbursement</th>{% endif %}
+									<th valign="top" rowspan="2">{% if is_arc %}Disbursement Date{% else %}Remittance{% endif %}</th>
+									<th valign="top" rowspan="2">Weekly Credit Card Disbursement</th>
+									<th valign="top" rowspan="2">Pending Deductions</th>
+								</tr>
+								<tr>
+									<!--<th></th>-->
+									{% for transaction in transactions_headers %}
+									<th>Fare</th>
+									<th>Tax</th>
+									<th>YQ+YR</th>
+									<th>Comm</th>
+									{% endfor %}
+								</tr>
+								{% for transaction in transactions_rows %}
+								<tr>
+									<td>Week {{  transaction.week }}</td>
+									{% widthratio forloop.counter0  1 4 as count %}
+									{% widthratio forloop.revcounter0  1 4 as recount %}
+
+									{% for i in ""|rjust:count %}
+										<td></td>
+									{% endfor %}
+                  {% subtract_values transaction.fare transaction.pen transaction.comm as sub_fare_amount %}
+									<td>{{transaction.fare|floatformat:2}}</td>
+
+									<td>{{transaction.tax|floatformat:2}}</td>
+									<td>{{transaction.tax_yq_yr|floatformat:2}}</td>
+									<td>{{transaction.comm|floatformat:2}}</td>
+									{% for i in ""|rjust:recount %}
+										<td></td>
+									{% endfor %}
+									<td>{{transaction.total_ap_acm|floatformat:2}}</td>
+									<td>{{transaction.weekly_sales_total|floatformat:2}}</td>
+									<td>{{transaction.total_ca|floatformat:2}}</td>
+									<td>{{transaction.arc_deductions|floatformat:2}}</td>
+									{% if is_arc %}<td>{{transaction.weekly_total_cash_disbursement|floatformat:2}}</td>{% endif %}
+									<td>{{transaction.remittance}}</td>
+									<td>{{transaction.total_cc|floatformat:2}}</td>
+									<td>{{transaction.pending_deduction|floatformat:2}}</td>
+
+								</tr>
+								{% endfor %}
+								<tr class="bold_row">
+									<td>Total</td>
+									{% for transaction in transactions_rows %}
+									<td>{{transaction.ped_total|floatformat:2}}</td>
+									<td>{{transaction.tax|floatformat:2}}</td>
+									<td>{{transaction.tax_yq_yr|floatformat:2}}</td>
+									<td>{{transaction.comm|floatformat:2}}</td>
+									{% endfor %}
+
+									<td>{{total_ap_acm|floatformat:2}}</td>
+									<td>{{weekly_sales_total|floatformat:2}}</td>
+									<td>{{total_ca|floatformat:2}}</td>
+									<td>{{arc_deductions_total|floatformat:2}}</td>
+									{% if is_arc %}<td>{{weekly_total_cash_disbursement_total|floatformat:2}}</td>{% endif %}
+									<td></td>
+									<td>{{total_cc|floatformat:2}}</td>
+									<td>{{pending_deduction_total|floatformat:2}}</td>
+								</tr>
+								<tr class="bold_row">
+									<td>Net sales per week</td>
+									{% for transaction in transactions_rows %}
+									<td>{{transaction.net_sales_weekly|floatformat:2}}</td>
+									<td></td>
+									<td></td>
+									<td></td>
+									{% endfor %}
+									<td></td>
+									<td>{{net_sales_weekly_total}}</td>
+
+								</tr>
+								<tr>
+									<td>{% if is_arc %}Arc{% else %}IATA{% endif %} coordination fee ({{iata_coordination_fee}} %)</td>
+									{% for t in transactions_rows_iata %}
+									<td>{{t|floatformat:2}}</td>
+									<td></td>
+									<td></td>
+									<td></td>
+									{% endfor %}
+									<td></td>
+									<td class="bold_field">{{net_sales_weekly_total_iata|floatformat:2 }}</td>
+								</tr>
+								{% if gsa_commision %}
+								<tr>
+									<td>{% if is_arc %}Distribution Intermediary Fee{% else %}GSA commission{% endif %} ({{gsa_commision}} %) </td>
+									{% for t in transactions_rows_gsa %}
+									<td>{{t|floatformat:2}}</td>
+									<td></td>
+									<td></td>
+									<td></td>
+									{% endfor %}
+									<td></td>
+									<td class="bold_field">{{net_sales_weekly_total_gsa|floatformat:2}}</td>
+								</tr>
+								{% endif %}
+								<tr>
+									<td>Total due to AirlinePros</td>
+									{% for val in total_due_to_airlinepros %}
+									<td>{{val|floatformat:2}}</td>
+									<td></td>
+									<td></td>
+									<td></td>
+									{% endfor %}
+									<td></td>
+									<td class="bold_field">{{sum_total_due_to_airlinepros|floatformat:2}}</td>
+								</tr>
+								<tr height="20px"></tr>
+								<tr class="border_blue_th">
+									<th style="border:none !important">ACMS&nbsp;SUBMITTED</th>
+
+									{% for val in total_due_to_airlinepros_negative %}
+									<th style="border:none !important"></th>
+									<th style="border:none !important"></th>
+									<th style="border:none !important"></th>
+									<th style="border:none !important"></th>
+									{% endfor %}
+									<th style="border:none !important"></th>
+									<th style="border:none !important"></th>
+								</tr>
+								{% for val in total_due_to_airlinepros_negative %}
+								{% widthratio forloop.counter0  1 4 as count %}
+								{% widthratio forloop.revcounter0  1 4 as recount %}
+								<tr>
+									<td>ACM</td>
+									{% for i in ""|rjust:count %}
+										<td></td>
+									{% endfor %}
+									<td>{{val|default:"0.00"|floatformat:2}}</td>
+									{% for i in ""|rjust:recount %}
+										<td></td>
+									{% endfor %}
+									<td></td>
+									<td></td>
+									<td></td>
+									<td></td>
+									<td class="bold_field">{{val|default:"0.00"|floatformat:2}}</td>
+								</tr>
+								{% endfor %}
+								<tr>
+									<td>ACM TOTALS PER PED</td>
+									{% for val in total_due_to_airlinepros_negative %}
+									<td>{{ val|default:"0.00"|floatformat:2}}</td>
+									<td></td>
+									<td></td>
+									<td></td>
+									{% endfor %}
+									<td></td>
+									<td class="bold_field">{% if sum_total_due_to_airlinepros != 0.00 %}-{{sum_total_due_to_airlinepros|floatformat:2}}{% else %}0.00{% endif %}</td>
+								</tr>
+															<tr height="20px"></tr>
+
+								</tbody>
+							</table>
+
+							{% else %}
+							<table class="table_border summary_table">
+							<tr>
+                                <td>
+                                    No data available.
+                                </td>
+                            </tr>
+
+							</table>
+							{% endif %}
+						</div>
+						</div>
+					</div>
+				</div>
+			</div>
+
+			<div class="row">
+				{% if missing_dates_count %}
+                <div class="col-sm-6">
+                    <div class="missing_file" data-toggle="modal" data-target="#missing_preview"> <img id="profileimage" src="{% static "main/img/file_red.svg" %}">  {{missing_dates_count}} Files missing</div>
+                </div>
+				{% endif %}
+            </div>
+			{% else %}
+			<div class="base_msg">
+                    <p> Please choose above selection and apply to view here </p>
+                </div>
+			{% endif %}
+		</div>
+	</div>
+</content>
+
+
+<!-- Modal 2-->
+    <div class="modal fade" id="missing_preview" tabindex="-1" role="dialog" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered modal-lg" role="document">
+            <div class="modal-content">
+            <div class="modal-header box_shadow">
+                    <h5 class="title_style">MISSING FILES</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                {% for date in missing_dates %}
+	                <div id="ped_details" class="missing_file_name">
+		                {% if not is_arc %}
+	                    <p>Billing details file on {{date|date}} is missing.</p>
+	                    {% else %}
+	                    <p>Carrier report file on {{date|date}} is missing.</p>
+	                    {% endif %}
+	                 </div>
+                {% endfor %}
+	            {% for date in missing_dates_daily %}
+	                <div id="ped_detailss" class="missing_file_name">
+                        <p>Daily transaction file on {{date|date}} is missing.</p>
+	                 </div>
+                {% endfor %}
+	            {% if is_arc %}
+		            {% for date in missing_dates_credit %}
+		                <div id="ped_details_credit" class="missing_file_name">
+
+		                    <p>Carrier deductions file on {{date|date}} is missing.</p>
+
+		                 </div>
+	                {% endfor %}
+		            {% for date in missing_dates_disb %}
+		                <div id="ped_details_disb" class="missing_file_name">
+
+		                    <p>Disbursement advice file on {{date|date}} is missing.</p>
+
+		                 </div>
+	                {% endfor %}
+	            {% endif %}
+
+            </div>
+            </div>
+        </div>
+      </div>
+
+{% endblock %}
+
+{% block app_js_block %}
+<script>
+	$('input.monthyearpicker').datepicker({
+		autoclose:true,
+		format:'MM yyyy',
+		minViewMode:1
+	});
+</script>
+<script type="text/javascript" src="https://cdn.rawgit.com/asvd/dragscroll/master/dragscroll.js"></script>
+
+{% endblock app_js_block %}

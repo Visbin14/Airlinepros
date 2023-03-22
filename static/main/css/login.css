@@ -1,0 +1,222 @@
+.landing_page_bg
+{
+    background-image: url(../img/login_bg.jpg);
+    background-size: auto 100%;
+    height: 100vh;
+    overflow: hidden;
+    min-height: 800px;
+    background-position: top 0px right -350px;
+}
+.landing_page_inner
+{
+    background-color: rgba(0, 32, 96, 0.80);
+    height: 100vh;
+    position: relative;
+}
+.content_box
+{
+    position: fixed;
+    left: 0;
+    width: 40%;
+    height: 100vh;  
+    display: table;
+    text-align: center;
+}
+
+.white_bg
+{
+    position: absolute;
+    content: '';
+    width: calc(100% - 400px);
+    /* width: 23%; */
+    height: 100vh;
+    left: 0;
+    background-color: #fff;
+    z-index: -1;
+}
+.curve_bg
+{
+    position: absolute;
+    content: '';
+    width: 1200px;
+    height: 100vh;
+    left: 0;
+    background-image: url(../img/shape1.svg);
+    background-size: auto 115%;
+    background-repeat: no-repeat;
+    background-color: transparent;
+    z-index: -1;
+    background-position: left;
+}
+.content_float
+{
+    width: 330px;
+    position: absolute;
+    left: 0;
+    right: 0;
+    top: 0;
+    bottom: 0;
+    height: max-content;
+    margin: auto;
+}
+.reset_password_content.content_float
+{
+    height: 210px;
+}
+
+.login_content.content_float
+{
+    height: 280px;
+}
+
+.content_float .title_md
+{
+    margin-bottom: 40px;
+}
+.content_float .message_text
+{
+    font-size: 18px;
+    line-height: 24px;
+    margin-bottom: 20px;
+}
+.content_float .reset_icon_img
+{
+    width: 80px;
+    margin-bottom: 30px;
+}
+.content_float .form-element
+{
+    margin-top: 30px;
+    margin-bottom: 30px;
+}
+
+.in_link{
+    margin-bottom: 15px;
+    margin-top: -15px;
+    text-align: right;
+}
+.in_link.below_link
+{
+    margin-bottom: 0px;
+    margin-top: 0px;
+}
+.in_link a
+{
+    font-size:14px;
+    font-weight: 400;
+}
+.in_link a:hover
+{
+    color: var(--orange-color);
+}
+.logo_primary
+{
+    position: absolute;
+    right:40px;
+    top:20px;
+    color:#FFF;
+    font-weight: 800;
+    font-size: 40px;
+}
+.logo_secondary
+{
+    position: absolute;
+    right:40px;
+    bottom:20px;
+    color:#FFF;
+    font-weight: 800;
+    font-size: 40px;
+}
+.logo_secondary img
+{
+    width: 160px;
+    opacity: 0.5;
+}
+
+
+@media screen and (max-height:600px)
+{
+    .content_box {
+        width: 50%;
+    }
+}
+@media screen and (min-width:768px) and (max-width:991px)
+{
+    .content_box
+    {
+        width: 55%;
+    }
+    .landing_page_bg {
+        background-position: top 0px right -560px;
+    }
+}
+
+@media screen and (min-width:481px) and (max-width:767px)
+{
+    .curve_bg {
+        background-size: auto 100%;
+    }    
+    .content_box
+    {
+        width: 80%;
+    }
+    .white_bg
+    {
+        width: 23%;
+    }
+}
+
+@media screen and (max-width:480px)
+{ 
+    .content_box
+    {
+        width: 100%;
+    }
+    .white_bg
+    {
+        width: 0px;
+    }
+    .logo_primary {
+        right: 20px;
+        top: 10px;
+        font-size: 30px;
+    }
+    .curve_bg {
+        content: '';
+        width: 480px;
+        height: 800px;
+        left: 0;
+        background-position: right;
+    }
+    .landing_page_bg {
+        background-size: auto 100%;
+        height: 100%;
+        position: fixed;
+        width: 100%;
+        z-index: 1;
+        min-height: 800px;
+        background-position: top 0px right -350px;
+    }
+}
+
+@media screen and (max-width:350px)
+{
+    .content_float
+    {
+        width: 280px;
+    }
+    .logo_primary {
+        right: 15px;
+        top: 10px;
+        font-size: 25px;
+    }
+}
+
+
+@media screen and (min-width:1540px)
+{
+    .landing_page_bg
+    {
+        background-size: auto 120%;
+    }
+}

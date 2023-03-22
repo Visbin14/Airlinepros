@@ -1,0 +1,349 @@
+
+{% extends 'base.html' %}
+{% load static %}
+{% block title %} All Sales Report {% endblock %}
+{% block content%}
+    <content>
+        <div class="top-header">
+            <div class="row">
+                <div class="col-sm-8 col-lg-8 col-xs-12 text-left wow fadeInUp" data-wow-duration="0.9s" data-wow-delay="0.1s">
+                    <h5 class="title_style">ALL SALES FOR MONTH REPORT</h5>
+                    <ol class="breadcrumb">
+                        <li class="breadcrumb-item"><a href="#">Report management</a></li>
+                        <li class="breadcrumb-item active" aria-current="page">All Sales For Month report</li>
+                    </ol>
+                </div>
+                {% if perms.report.download_all_sales %}
+                {% if month_year or start_date %}
+                    {% if vals or value_list %}
+                    <div class="col-sm-4 col-lg-4 col-xs-12 text-right wow fadeIn" data-wow-duration="0.9s" data-wow-delay="0.2s">
+                        <a href="{% url 'all_sales_report_download' %}?start_date={{start_date}}&end_date={{end_date}}&month_year={{month_year}}&sales_type={{sales_type}}&airline={{selected_airline}}" class="primary_btn">
+                            Get EXCEL File
+                        </a>
+                    </div>
+                    {% endif %}
+                {% endif %}
+                {% endif %}
+            </div>
+        </div>
+
+
+
+        <div class="content-wrapper">
+            <div class="row">
+
+
+
+
+            <div class="col-12">
+                    <div class="form-wrapper filter_wrapper">
+                        <form method="get" id="filterform">
+                            <div class="row filter_elements_grp">
+                                    <div class="col-12 col-sm-6 col-lg-2 pr-0 wow fadeIn" data-wow-duration="0.9s" data-wow-delay="0.35s">
+                                            <select name="sales_type" id="sales_type" name="sales_type" class="form-control dropdown_arr_btn">
+                                                <option value="Gross" {% if sales_type == "Gross" %}selected{% endif %}>Gross sales</option>
+                                                <option value="Net" {% if sales_type == "Net" %}selected{% endif %}>Net sales</option>
+
+                                            </select>
+                                    </div>
+
+                                    <div class="col-12 col-sm-6 col-lg-3 pr-0 wow fadeIn" data-wow-duration="0.9s" data-wow-delay="0.25s">
+                                        <select id="airline" name="airline" id="airline_select" class="form-control dropdown_arr_btn" required>
+                                            <option value="">All Airlines</option>
+                                            {% for airline in airlines %}
+                                            <option value="{{airline.id}}" {% if selected_airline == airline.id|slugify %}selected{% endif %}>{{airline.name}}</option>
+                                            {% endfor %}
+                                        </select>
+
+                                        <small id="airline-error" class="form-element-hint hide">Please select an airline.</small>
+                                    </div>
+
+                                    <div class="col-12 col-sm-6 col-lg-3 pr-0 wow fadeIn" data-wow-duration="0.9s" data-wow-delay="0.35s">
+                                            <select name="date_filter" id="date_filter" name="status" class="form-control dropdown_arr_btn">
+                                                <option value="month_year" {% if date_filter == "month_year" %}selected{% endif %}>Filter by month and year</option>
+                                                <option value="date_range" {% if date_filter == "date_range" %}selected{% endif %}>Filter by specific date range</option>
+                                            </select>
+                                    </div>
+
+                                    <div class="col-12 col-sm-6 col-lg-4 pr-0 custom_date_range  wow fadeIn {% if date_filter == "date_range" %}hide{%endif%}" id="month_year_div"  data-wow-duration="0.9s" data-wow-delay="0.45s">
+                                        <input type="text" id="month_year" name="month_year" class="monthyearpicker form-control" value="{{month_year}}" placeholder="Choose Month and Year" autocomplete="off" />
+                                        <small id="month_year-error" class="form-element-hint hide">Please select a month and year.</small>
+                                    </div>
+
+                                    <div class="col-12 col-sm-6 col-lg-4 flex pr-0 custom_date_range {% if date_filter == "month_year" %}hide{%endif%}" id="date_range_div">
+                                        <span class="w_50perc wow fadeIn" data-wow-duration="0.4s" data-wow-delay="0.1s">
+                                            <input type="text" id="start_date" value="{{start_date}}" name="start_date" class="date_ranger form-control"  placeholder="Start Date"  autocomplete="off"/>
+                                            <small id="start_date-error" class="form-element-hint hide">Please select a start date.</small>
+                                        </span>
+
+                                        <span class=" ml-15 w_50perc wow fadeIn" data-wow-duration="0.4s" data-wow-delay="0.2s">
+                                            <input type="text" id="end_date" value="{{end_date}}" name="end_date" class="date_ranger form-control" placeholder="End Date"  autocomplete="off"/>
+                                            <small id="end_date-error" class="form-element-hint hide">Please select an end date.</small>
+                                            <small id="greater-error" class="form-element-hint hide">Please select a date greater than start date.</small>
+                                        </span>
+                                    </div>
+
+
+
+                                    <div class="filter_btn_grp wow fadeIn"  data-wow-duration="0.9s" data-wow-delay="0.5s">
+                                            <button id="filterformsubmit" type="button" class="primary_btn_v2">Apply</button>
+                                            <a href="{% url 'all_sales_report' %}"><button type="button" class="secondary_btn_v2"> Reset </button></a>
+                                    </div>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+
+                {% if month_year or start_date %}
+                <div class="col-12">
+                    <div class="row">
+                        <div class="col-12">
+                            <div class="table-wrapper fixed_head200">
+                                {% if sales_type == 'Gross' %}
+                                    <table class="table fixed_headers">
+                                    <thead>
+                                        <tr>
+
+                                            <th>
+                                                <a href="#">
+                                                    PED&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                                                </a>
+                                            </th>
+                                            {% for airline in airlines_values %}
+                                            <th width="300">
+                                                <a href="#">
+                                                    {{airline.name}}
+                                                </a>
+                                            </th>
+                                            {% endfor %}
+
+
+
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+
+                                        {% for values in value_list %}
+                                        <tr data-id="#">
+                                            <td>{{values|get:'report__report_period__ped'}}</td>
+                                            {% for airline in airlines_values %}
+                                            <td>{{values|get:airline.str_id|roundfloat:2}}</td>
+                                            {% endfor %}
+
+                                        </tr>
+                                        {% empty %}
+                                            <tr>
+                                                <td>
+                                                    No data available.
+                                                </td>
+                                            </tr>
+                                        {% endfor %}
+                                        {% if totals %}
+                                            <tr>
+                                                <td><b>Total: </b></td>
+                                                {% for total in totals %}
+                                                <td><b>{{total.total|roundfloat:2}}</b></td>
+                                                {% endfor %}
+                                            </tr>
+                                        {% endif %}
+
+
+								        <!-- <tr><td>No results.</td></tr> -->
+                                    </tbody>
+                                </table>
+                                {% else %}
+                                    <table class="table fixed_headers">
+                                        <thead>
+                                            <tr>
+                                                <th>
+                                                    <a href="#">
+                                                        Airline
+                                                    </a>
+                                                </th>
+                                                <th>
+                                                    <a href="#">
+                                                        PED
+                                                    </a>
+                                                </th>
+                                                <th>
+                                                    <a href="#">
+                                                        Net Sales
+                                                    </a>
+                                                </th>
+                                                <th>
+                                                    <a href="#">
+                                                        YQ+YR
+                                                    </a>
+                                                </th>
+                                                <th>
+                                                    <a href="#">
+                                                        Other Tax
+                                                    </a>
+                                                </th>
+                                                <th>
+                                                    <a href="#">
+                                                        Gross Sales
+                                                    </a>
+                                                </th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+
+                                            {% for val in vals %}
+                                            <tr data-id="#">
+                                                <td>{{val.airline_name}}</td>
+                                                <td>{{val.report__report_period__ped}}</td>
+                                                <td>{{val.net_sale|roundfloat:2}}</td>
+                                                <td>{{val.yqyr|roundfloat:2}}</td>
+                                                <td>{{val.taxes|roundfloat:2}}</td>
+                                                <td>{{val.total|roundfloat:2}}</td>
+
+                                            </tr>
+                                            {% empty %}
+                                                <tr>
+                                                    <td>
+                                                        No data available.
+                                                    </td>
+                                                </tr>
+                                            {% endfor %}
+                                            {% if totals %}
+                                                <tr>
+                                                    <td><b>Total: </b></td>
+                                                    <td></td>
+                                                    <td><b>{{totals.net_total|floatformat:2}} </b></td>
+                                                    <td><b>{{totals.yqyr_total|floatformat:2}}</b></td>
+                                                    <td><b>{{totals.tax_total|floatformat:2}}</b></td>
+                                                    <td><b>{{totals.gross_total|floatformat:2}}</b></td>
+
+                                                </tr>
+                                            {% endif %}
+
+
+                                            <!-- <tr><td>No results.</td></tr> -->
+                                        </tbody>
+                                    </table>
+                                {% endif %}
+
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                {% else %}
+                <div class="base_msg  wow fadeIn"  data-wow-duration="0.9s" data-wow-delay="0.7s">
+                    <p> Please select a month and year to view all sales for month report </p>
+                </div>
+                {% endif %}
+            </div>
+        </div>
+    </content>
+
+{% endblock %}
+
+{% block app_js_block %}
+    <script>
+
+    $('#filterformsubmit').click(function(e){
+            e.preventDefault();
+            $('#month_year-error').addClass('hide');
+            $('#start_date-error').addClass('hide');
+            $('#end_date-error').addClass('hide');
+            $('#greater-error').addClass('hide');
+            if (!$("#month_year").val().length > 0 & (!$("#start_date").val().length > 0 & !$("#end_date").val().length > 0)){
+                 if (!$("#month_year").val().length > 0){
+                    $('#month_year-error').removeClass('hide');
+                 }
+                 if (!$("#start_date").val().length > 0){
+                    $('#start_date-error').removeClass('hide');
+                 }
+                 if (!$("#end_date").val().length > 0){
+                    $('#end_date-error').removeClass('hide');
+                 }
+                return false;
+            }
+            if ($("#start_date").val().length > 0 & $("#end_date").val().length > 0){
+                var StartDate = new Date($("#start_date").val());
+                var EndDate = new Date($("#end_date").val());
+                if (StartDate >= EndDate){
+                    $('#greater-error').removeClass('hide');
+                    return false;
+                    }
+
+            }
+
+           $('#filterform').submit();
+        });
+        $('input.monthyearpicker').datepicker({
+            autoclose:true,
+            format:'MM yyyy',
+            minViewMode:1
+        });
+        $('input.date_ranger').datepicker({
+            autoclose:true,
+            format:'dd MM yyyy',
+            minViewMode:0
+        });
+
+
+
+        $(document).on('click', '#get-exel', function(e){
+          e.preventDefault();
+          $('#month_year-error').addClass('hide');
+            $('#start_date-error').addClass('hide');
+            $('#end_date-error').addClass('hide');
+            $('#greater-error').addClass('hide');
+            if (!$("#month_year").val().length > 0 & (!$("#start_date").val().length > 0 & !$("#end_date").val().length > 0)){
+                 if (!$("#month_year").val().length > 0){
+                    $('#month_year-error').removeClass('hide');
+                 }
+                 if (!$("#start_date").val().length > 0){
+                    $('#start_date-error').removeClass('hide');
+                 }
+                 if (!$("#end_date").val().length > 0){
+                    $('#end_date-error').removeClass('hide');
+                 }
+                return false;
+            }
+            if ($("#start_date").val().length > 0 & $("#end_date").val().length > 0){
+                var StartDate = new Date($("#start_date").val());
+                var EndDate = new Date($("#end_date").val());
+                if (StartDate >= EndDate){
+                    $('#greater-error').removeClass('hide');
+                    return false;
+                    }
+
+            }
+
+          var month_year = $('#month_year').val();
+          var start_date = $('#start_date').val();
+          var end_date = $('#end_date').val();
+          var sales_type = $('#sales_type').val();
+          var airline = $('#airline').val();
+          window.location.href = "{% url 'all_sales_report_download' %}?month_year=" +month_year+ "&sales_type=" +sales_type+ "&airline=" +airline+ "&start_date=" +start_date+ "&end_date=" +end_date;
+        });
+
+
+        $( "#date_filter" ).change(function()
+        {
+            $('#month_year-error').addClass('hide');
+            $('#start_date-error').addClass('hide');
+            $('#end_date-error').addClass('hide');
+            $('#greater-error').addClass('hide');
+            var filter_ca_val = ($('#date_filter :selected').val());
+            if(filter_ca_val == 'month_year')
+            {
+                $("#month_year_div").removeClass('hide');
+                $("#date_range_div").addClass("hide");
+                $('#start_date').val('');
+                $('#end_date').val('');
+            }
+            else{
+                $("#month_year_div").addClass('hide');
+                $("#date_range_div").removeClass("hide");
+                $('#month_year').val('');
+            }
+        })
+
+    </script>
+        
+{% endblock app_js_block %}

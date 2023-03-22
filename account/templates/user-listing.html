@@ -1,0 +1,128 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block title %}
+	users
+{% endblock %}
+
+{% block content%}
+
+
+
+    <content>
+        <div class="top-header">
+            <div class="row">
+                <div class="col-sm-3 col-lg-4 col-xs-12 text-left wow fadeInUp" data-wow-duration="0.9s" data-wow-delay="0.1s">
+                    <h5 class="title_style">USER LIST</h5>
+                    <ol class="breadcrumb">
+                        <li class="breadcrumb-item"><a href="#">Users</a></li>
+                        <li class="breadcrumb-item"><a href="{% url 'users' %}">User list</a></li>
+                    </ol>
+                </div>
+                <div class="col-sm-9 col-lg-8 col-xs-12 text-right wow fadeIn" data-wow-duration="0.9s" data-wow-delay="0.2s">
+                    <div class="search-form right_lg_btn">
+                        <form>
+                            <input type="text" name="q" class="form-control" placeholder="Search.." value="{{query}}" autofocus onfocus="this.setSelectionRange(this.value.length, this.value.length);">
+							<a href="{% url 'users' %}">
+								<span class="close-icon"></span>
+							</a>
+                        </form>
+                    </div>
+					{% if perms.account.change_user %}
+                    <a href="{% url 'add_user' %}" class="primary_btn">ADD&nbsp;USER</a>
+					{% endif %}
+                </div>
+            </div>
+        </div>
+        <div class="content-wrapper">
+			<form method="get"  action="/users/">
+			<div class="row">
+
+				<div class="col-12">
+					<div class="form-wrapper filter_wrapper">
+						<div class="row">
+							<div class="col-12 col-sm-6 col-lg-6 pr-0 wow fadeIn" data-wow-duration="0.9s" data-wow-delay="0.3s">
+								<select name="status" class="form-control dropdown_arr_btn">
+									<option value="">Filter by status</option>
+									<option value="1" {% if status == '1' %} selected {% endif %}>Active</option>
+									<option value="0" {% if status == '0' %} selected {% endif %}>Inactive</option>
+							  	</select>
+							</div>
+							<div class="col-12 col-sm-6 col-lg-6 pr-0 wow fadeIn" data-wow-duration="0.9s" data-wow-delay="0.35s">
+								<select name="role" class="form-control dropdown_arr_btn">
+									<option value="">Filter by user role</option>
+									{% for group in groups %}
+										<option value="{{group.id}}" {% if group.id|slugify == role %} selected {% endif %} >{{group}}</option>
+									{% endfor %}
+							  	</select>
+							</div>
+							<div class="filter_btn_grp wow fadeIn" data-wow-duration="0.9s" data-wow-delay="0.4s">
+									<button type="submit" class="primary_btn_v2">Apply</button>
+									<a href="{% url 'users' %}"><button type="button" class="secondary_btn_v2"> Reset </button></a>
+							</div>
+						</div>
+					</div>
+				</div>
+
+				<div class="col-12">
+					<div class="table-wrapper wow fadeIn" data-wow-duration="0.9s" data-wow-delay="0.5s">
+						<table class="table fixed_headers">
+							<thead>
+								<tr>
+									<th class="user_email_th" style=" width:250px;">
+										
+								  		<a href="{% url 'users' %}?order_by={% if order_by == 'email' %}-email{% else %}email{% endif %}">
+
+												{% if order_by == 'email' %}<i class="fa fa-sort-up" aria-hidden="true"></i>{% endif %}
+												{% if order_by == '-email' %}<i class="fa fa-sort-down" aria-hidden="true"></i>{% endif %}
+												{% if order_by != 'email' and order_by != '-email' %}<i class="fa fa-sort" aria-hidden="true"></i> {%endif%}
+										EMAIL ID
+										</a>
+									</th>
+									<th width="200">
+										
+								  		<a href="{% url 'users' %}?order_by={% if order_by == 'first_name' %}-first_name{% else %}first_name{% endif %}">
+												{% if order_by == 'first_name' %}<i class="fa fa-sort-up" aria-hidden="true"></i>{% endif %}
+												{% if order_by == '-first_name' %}<i class="fa fa-sort-down" aria-hidden="true"></i>{% endif %}
+												{% if order_by != 'first_name' and order_by != '-first_name' %}<i class="fa fa-sort" aria-hidden="true"></i> {%endif%}
+										FIRST NAME
+										</a>
+									</th>
+									<th width="200">
+										
+								  		<a href="{% url 'users' %}?order_by={% if order_by == 'last_name' %}-last_name{% else %}last_name{% endif %}">
+												{% if order_by == 'last_name' %}<i class="fa fa-sort-up" aria-hidden="true"></i>{% endif %}
+												{% if order_by == '-last_name' %}<i class="fa fa-sort-down" aria-hidden="true"></i>{% endif %}
+												{% if order_by != 'last_name' and order_by != '-last_name' %}<i class="fa fa-sort" aria-hidden="true"></i> {%endif%}
+										LAST NAME
+										</a>
+									</th>
+									<th>USER ROLE</th>
+									<th width="150">STATUS</th>
+								</tr>
+							</thead>
+							<tbody>
+								{% for user_data in users %}
+									<tr>
+										<td class="user_email_td three_dots"><a href="{% url 'user_details' user_data.pk %}">{{user_data.email}}</a></td>
+										<td>{{user_data.first_name}}</td>
+										<td>{{user_data.last_name}}</td>
+										<td>
+											{% for grp in user_data.groups.all %}
+													{{grp.name}}{% if not forloop.last %} , {% endif %}
+											{% endfor %}
+										</td>
+										<td>{% if user_data.is_active %}Active{% else %}Inactive {% endif %}</td>
+									</tr>
+
+								{% empty %}
+								<tr><td>No data available.</td></tr>
+								{% endfor %}
+							</tbody>
+						</table>
+					</div>
+				</div>
+			</div>
+				</form>
+        </div>
+    </content>
+{% endblock %}

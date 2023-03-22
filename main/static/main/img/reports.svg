@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="25px" height="26px" viewBox="0 0 25 26" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <!-- Generator: Sketch 47.1 (45422) - http://www.bohemiancoding.com/sketch -->
+    <title>Group 4</title>
+    <desc>Created with Sketch.</desc>
+    <defs></defs>
+    <g id="Page-1" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+        <g id="Page1-list-page-Copy-21" transform="translate(-23.000000, -335.000000)" fill-rule="nonzero">
+            <g id="sideicon3-copy" transform="translate(0.000000, 313.000000)">
+                <g id="Group-4" transform="translate(23.000000, 22.000000)">
+                    <g id="folded-newspaper" transform="translate(5.000000, 7.000000)">
+                        <path d="M14,2 L14,0 L0,0 L0,11 C0,11 0,13 2,13 L14.5,13 C14.5,13 16,12.969 16,11 L16,2 L14,2 Z M2,12 C1,12 1,11 1,11 L1,1 L13,1 L13,11 C13,11.4605 13.142,11.7795 13.338,12 L2,12 Z" id="Shape" fill="#FFFFFF"></path>
+                        <rect id="Rectangle-path" fill="#C8CAD9" x="1.68421053" y="3.46666667" width="10.1052632" height="1"></rect>
+                        <rect id="Rectangle-path" fill="#C8CAD9" x="1.68421053" y="8.66666667" width="3.36842105" height="1"></rect>
+                        <polygon id="Rectangle-path" fill="#C8CAD9" points="1.68421053 6.93333333 7.57894737 6.93333333 7.57894737 7.8 1.68421053 7.8"></polygon>
+                        <polygon id="Rectangle-path" fill="#C8CAD9" points="1.68421053 5.2 7.57894737 5.2 7.57894737 6.06666667 1.68421053 6.06666667"></polygon>
+                    </g>
+                    <path d="M12.5,0 C5.60758929,0 0,5.83189286 0,13 C0,20.1681071 5.60758929,26 12.5,26 C19.3924107,26 25,20.1681071 25,13 C25,5.83189286 19.3924107,0 12.5,0 Z M12.5,25.0714286 C6.09955357,25.0714286 0.892857143,19.656 0.892857143,13 C0.892857143,6.344 6.09955357,0.928571429 12.5,0.928571429 C18.9004464,0.928571429 24.1071429,6.344 24.1071429,13 C24.1071429,19.656 18.9004464,25.0714286 12.5,25.0714286 Z" id="Shape-Copy" fill="#FFFFFF"></path>
+                </g>
+            </g>
+        </g>
+    </g>
+</svg>

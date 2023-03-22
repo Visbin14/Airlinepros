@@ -1,0 +1,215 @@
+
+{% extends 'base.html' %}
+{% load static %}
+{% block title %} Year To Year Sales report {% endblock %}
+{% block content%}
+{% load report_tags %}
+    <content>
+        <div class="top-header">
+            <div class="row">
+                <div class="col-sm-8 col-lg-8 col-xs-12 text-left wow fadeInUp" data-wow-duration="0.9s" data-wow-delay="0.1s">
+                    <h5 class="title_style">YEAR TO YEAR SALES REPORT</h5>
+                    <ol class="breadcrumb">
+                        <li class="breadcrumb-item"><a href="#">Report management</a></li>
+                        <li class="breadcrumb-item active" aria-current="page">Year To Year Sales report</li>
+                    </ol>
+                </div>
+
+                {% if month_year2 and values and perms.report.download_year_to_years %}
+                    <div class="col-sm-4 col-lg-4 col-xs-12 text-right wow fadeIn" data-wow-duration="0.9s" data-wow-delay="0.2s">
+                        <a href="{% url 'year_to_year_sales_report_download' %}?month_year={{month_year}}&sales_type={{sales_type}}" class="primary_btn">
+                            Get EXCEL File
+                        </a>
+                    </div>
+                {% endif %}
+            </div>
+        </div>
+
+
+
+        <div class="content-wrapper">
+            <div class="row">
+
+
+
+
+            <div class="col-12">
+                    <div class="form-wrapper filter_wrapper">
+                        <form method="get" id="filterform">
+                            <div class="row filter_elements_grp">
+                                    <div class="col-12 col-sm-6 col-lg-2 pr-0 wow fadeIn" data-wow-duration="0.9s" data-wow-delay="0.35s">
+                                            <select name="sales_type" id="sales_type" name="sales_type" class="form-control dropdown_arr_btn">
+                                                <option value="Gross" {% if sales_type == "Gross" %}selected{% endif %}>Gross sales</option>
+                                                <option value="Net" {% if sales_type == "Net" %}selected{% endif %}>Net sales</option>
+
+                                            </select>
+                                    </div>
+
+                                    <!--<div class="col-12 col-sm-6 col-lg-3 pr-0 wow fadeIn" data-wow-duration="0.9s" data-wow-delay="0.25s">-->
+                                        <!--<select id="airline" name="airline" id="airline_select" class="form-control dropdown_arr_btn" required>-->
+                                            <!--<option value="">All Airlines</option>-->
+                                            <!--{% for airline in airlines %}-->
+                                            <!--<option value="{{airline.id}}" {% if selected_airline == airline.id|slugify %}selected{% endif %}>{{airline.name}}</option>-->
+                                            <!--{% endfor %}-->
+                                        <!--</select>-->
+
+                                        <!--<small id="airline-error" class="form-element-hint hide">Please select an airline.</small>-->
+                                    <!--</div>-->
+
+                                    <div class="col-12 col-sm-6 col-lg-4 pr-0 custom_date_range  wow fadeIn" id="month_year_div"  data-wow-duration="0.9s" data-wow-delay="0.45s">
+                                        <input type="text" id="month_year" name="month_year" class="monthyearpicker form-control" value="{{month_year}}" placeholder="Choose Month and Year" autocomplete="off" />
+                                        <small id="month_year-error" class="form-element-hint hide">Please select a month and year.</small>
+                                    </div>
+
+
+
+
+                                    <div class="filter_btn_grp wow fadeIn"  data-wow-duration="0.9s" data-wow-delay="0.5s">
+                                            <button id="filterformsubmit" type="button" class="primary_btn_v2">Apply</button>
+                                            <a href="{% url 'year_to_year_sales_report' %}"><button type="button" class="secondary_btn_v2"> Reset </button></a>
+                                    </div>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+
+                {% if month_year2 %}
+                <div class="col-12">
+                    <div class="row">
+                        <div class="col-12">
+                            <div class="table-wrapper">
+
+                                    <table class="table fixed_headers">
+                                        <thead>
+                                            <tr>
+                                                <th>
+                                                    <a href="#">
+                                                        Airline
+                                                    </a>
+                                                </th>
+                                                <th>
+                                                    <a href="#">
+                                                        {{month_year1}}
+                                                    </a>
+                                                </th>
+                                                <th>
+                                                    <a href="#">
+                                                        Cash
+                                                    </a>
+                                                </th>
+                                                <th>
+                                                    <a href="#">
+                                                        {{month_year2}}
+                                                    </a>
+                                                </th>
+                                                <th>
+                                                    <a href="#">
+                                                        Cash
+                                                    </a>
+                                                </th>
+
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+
+                                            {% for val in values %}
+                                            <tr data-id="#">
+                                                <td>{{val.airline}}</td>
+                                                <td>{{val.amount1| floatformat:2}}</td>
+                                                <td>{{val.cash1| floatformat:2}}</td>
+                                                <td>{{val.amount2| floatformat:2}}</td>
+                                                <td>{{val.cash2| floatformat:2}}</td>
+                                            </tr>
+                                            {% empty %}
+                                                <tr>
+                                                    <td>
+                                                        No data available.
+                                                    </td>
+                                                </tr>
+                                            {% endfor %}
+
+
+                                            <!-- <tr><td>No results.</td></tr> -->
+                                        </tbody>
+                                    </table>
+
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                {% else %}
+                <div class="base_msg  wow fadeIn"  data-wow-duration="0.9s" data-wow-delay="0.7s">
+                    <p> Please select a month and year to view year to year sales report </p>
+                </div>
+                {% endif %}
+            </div>
+        </div>
+    </content>
+
+{% endblock %}
+
+{% block app_js_block %}
+    <script>
+
+    $('#filterformsubmit').click(function(e){
+            e.preventDefault();
+            $('#month_year-error').addClass('hide');
+            if (!$("#month_year").val().length > 0){
+                    $('#month_year-error').removeClass('hide');
+                    return false;
+             }
+
+           $('#filterform').submit();
+        });
+        $('input.monthyearpicker').datepicker({
+            autoclose:true,
+            format:'MM yyyy',
+            minViewMode:1
+        });
+        $('input.date_ranger').datepicker({
+            autoclose:true,
+            format:'dd MM yyyy',
+            minViewMode:0
+        });
+
+
+
+        $(document).on('click', '#get-exel', function(e){
+          e.preventDefault();
+          $('#month_year-error').addClass('hide');
+            if (!$("#month_year").val().length > 0){
+                    $('#month_year-error').removeClass('hide');
+                    return false;
+           }
+
+          var month_year = $('#month_year').val();
+          var sales_type = $('#sales_type').val();
+          window.location.href = "{% url 'year_to_year_sales_report_download' %}?month_year=" +month_year+ "&sales_type=" +sales_type;
+        });
+
+
+        $( "#date_filter" ).change(function()
+        {
+            $('#month_year-error').addClass('hide');
+            $('#start_date-error').addClass('hide');
+            $('#end_date-error').addClass('hide');
+            $('#greater-error').addClass('hide');
+            var filter_ca_val = ($('#date_filter :selected').val());
+            if(filter_ca_val == 'month_year')
+            {
+                $("#month_year_div").removeClass('hide');
+                $("#date_range_div").addClass("hide");
+                $('#start_date').val('');
+                $('#end_date').val('');
+            }
+            else{
+                $("#month_year_div").addClass('hide');
+                $("#date_range_div").removeClass("hide");
+                $('#month_year').val('');
+            }
+        })
+
+    </script>
+        
+{% endblock app_js_block %}

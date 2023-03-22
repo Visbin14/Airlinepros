@@ -1,0 +1,151 @@
+<!DOCTYPE html>
+<html class="no-js css-menubar" lang="en">
+<head>
+  {% load static %}
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=0, minimal-ui">
+  <meta name="description" content="asplinks dashboard">
+  <meta name="author" content="">
+   <title>{% block title %} ASSDA Login {% endblock title %}</title>
+  <!-- Fonts -->
+  <link href="https://fonts.googleapis.com/css?family=Open+Sans:300,400,600,700" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+
+  <!-- #FAVICONS -->
+    <link rel="shortcut icon" href="{% static 'main/img/favicon.ico' %}" type="image/x-icon">
+    <link rel="icon" href="{% static 'main/img/favicon.ico' %}" type="image/x-icon">
+  <!-- Stylesheets -->
+    <!-- Bootstrap CSS CDN -->
+    <link rel="stylesheet" href="{% static "main/css/bootstrap.min.css" %}">
+  <!-- Plugins -->
+  <link rel="stylesheet" href="{% static "main/css/animate.css" %}">
+  <link rel="stylesheet" href="{% static "main/css/style.css" %}">
+  <link rel="stylesheet" href="{% static "main/css/login.css" %}">
+</head>
+<div class="loader show_sec"></div>
+
+
+  <body>
+
+
+
+
+      <content>
+        <div class="landing_page_bg wow fadeIn" data-wow-duration="0.2s" data-wow-delay="0s">
+          <div class="landing_page_inner">
+
+            <span class="logo_primary">ASSDA</span>
+            <span class="logo_secondary">
+              <img src="{% static "main/img/logo.png" %}">
+            </span>
+              <div class="content_box hide_sec">
+                <div class="content_float login_content">
+                    <div class="row">
+                      <div class="col-sm-12">
+                          <h2 class="title_md wow fadeInUp" data-wow-duration="0.5s" data-wow-delay="1s">WELCOME</h2>
+                          <form method="post">
+                                {% for error in form.non_field_errors %}
+                                      <div class="form-group has-errors text-danger login-common-error small">
+                                          {{error}}
+                                      </div>
+                                  {% endfor %}
+                              <div class="form-element form-input wow fadeInUp" data-wow-duration="0.5s" data-wow-delay="1.1s">
+                                  <input type="text" class="form-element-field" name="username" value="{{form.username.value|default_if_none:""}}" id="id_username" required="" autofocus="" placeholder=" ">
+                                  <label class="form-element-label" for="">Email</label>
+                                  <small class="form-element-hint"></small>
+                              </div>
+
+                              <div class="form-element form-input  wow fadeInUp" data-wow-duration="0.5s" data-wow-delay="1.2s">
+                                  <input class="form-element-field" type="password" name="password" id="id_password" required="" placeholder=" ">
+                                  <label class="form-element-label" for="">Password</label>
+                                  <small class="form-element-hint"></small>
+                              </div>
+
+                              <div class="in_link wow fadeInUp" data-wow-duration="0.5s" data-wow-delay="1.3s">
+                                <a href="{% url 'password_reset' %}">Forgot password?</a>
+                              </div>
+
+                              <button type="submit" class="primary_btn w_100 wow fadeInUp" data-wow-duration="0.5s" data-wow-delay="1.4s">SIGN IN</button>
+
+                            {% csrf_token %}
+                          </form>
+                      </div>
+                    </div>
+                </div>
+                <div class="white_bg wow fadeInLeft" data-wow-duration="0.5s" data-wow-delay="0.4s"></div>
+                <div class="curve_bg wow slideInLeft" data-wow-duration="1.2s" data-wow-delay="0s"></div>
+              </div>
+          </div>
+        </div>
+      </content>
+
+
+
+
+    <!-- jQuery 3.3.1 -->
+    <script src="{% static "main/js/jquery-3.3.1.min.js" %}"></script>
+    <!-- Font Awesome JS -->
+    <script defer src="{% static "main/js/bootstrap.min.js" %}"></script>
+
+    <script src="{% static "main/js/wow.js" %}"></script>
+    <script src="{% static "main/js/main.js" %}"></script>
+    <script>
+      
+        $(window).on('load', function() {
+            $('.loader').removeClass('show_sec').addClass('hide_sec');
+            $('.content_box').removeClass('hide_sec').addClass('show_sec');
+        });
+    
+new WOW().init();
+    
+    </script>
+      <script>
+        $(window).resize(function()
+        {
+          $(".curve_bg").css("left",$(".white_bg").innerWidth() - 5);
+        });
+        $(".curve_bg").css("left",$(".white_bg").innerWidth() - 5);
+      </script>
+
+<script>
+
+    // Firefox 1.0+
+    var isFirefox = typeof InstallTrigger !== 'undefined';
+
+    if(isFirefox == true)
+    {
+        $(".side_filter_scroller").addClass("scroll_adjust_firefox");
+    }
+
+    var isEdge = !isIE && !!window.StyleMedia;
+    if(isEdge == true)
+    {
+        $(".side_filter_scroller").addClass("scroll_adjust_ie");
+        $(".form-element-label").addClass("ie_custom_form_label");
+        $(".menu_box").addClass("border_bottom_menu");
+        $(".delete_table_icon").addClass("ie_custom_table_btn");
+    }
+    
+    var isIE = /*@cc_on!@*/false || !!document.documentMode;
+    if(isIE == true)
+    {
+        $(".side_filter_scroller").addClass("scroll_adjust_ie");
+        $(".form-element-label").addClass("ie_custom_form_label");
+        $(".menu_box").addClass("border_bottom_menu");
+        $(".delete_table_icon").addClass("ie_custom_table_btn");
+    }
+    
+    var is_iPad = navigator.userAgent.match(/iPad/i) != null;
+    if(is_iPad == true)
+    {
+      $(".curve_bg").removeClass("wow");
+      $(".white_bg").removeClass("wow");
+    }
+    
+</script>
+
+  </body>
+
+  </html>
+

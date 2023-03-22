@@ -1,0 +1,394 @@
+
+{% extends 'base.html' %}
+{% load static %}
+{% block title %} Top Agency Report {% endblock %}
+{% block content%}
+    <content>
+        <div class="top-header">
+            <div class="row">
+                <div class="col-sm-8 col-lg-8 col-xs-12 text-left wow fadeInUp" data-wow-duration="0.9s" data-wow-delay="0.1s">
+                    <h5 class="title_style">TOP AGENCY REPORT</h5>
+                    <ol class="breadcrumb">
+                        <li class="breadcrumb-item"><a href="{% url 'agencies' %}">Report management</a></li>
+                        <li class="breadcrumb-item active" aria-current="page">Top Agency report</li>
+                    </ol>
+                </div>
+
+                {% if transactions and selected_airline and perms.report.download_top_agency %}
+                <div class="col-sm-4 col-lg-4 col-xs-12 text-right wow fadeIn" data-wow-duration="0.9s" data-wow-delay="0.2s">
+                    <a href="{% url 'top_agent_report_download' %}?start_date={{start_date}}&end_date={{end_date}}&state={{state}}&city={{city}}&airline={{selected_airline}}&limit={{limit}}" class="primary_btn">
+                        Get EXCEL File
+                    </a>
+                </div>
+                {% endif %}
+            </div>
+        </div>
+
+
+
+        <div class="content-wrapper">
+            <div class="row">
+
+
+                <small id="filter-error" class="form-element-hint hide"><ul class="errorlist"><li>Please select an airline, month & year or a date range.</li></ul></small>
+
+            <div class="col-12">
+                    <div class="form-wrapper filter_wrapper">
+                        <form method="get" id="filterform">
+                            <div class="row filter_elements_grp">
+                                    <div class="col-12 col-sm-6 col-lg-3 pr-0 wow fadeIn" data-wow-duration="0.9s" data-wow-delay="0.25s">
+                                        <select name="airline" id="airline_select" class="form-control dropdown_arr_btn" required>
+                                            <option value="">Select Airline</option>
+                                            {% for airline in airlines %}
+                                            <option value="{{airline.id}}" {% if selected_airline == airline.id|slugify %}selected{% endif %}>{{airline.name}}</option>
+                                            {% endfor %}
+                                        </select>
+
+                                        <small id="airline-error" class="form-element-hint hide">Please select an airline.</small>
+                                    </div>
+
+                                    <div class="col-12 col-sm-6 col-lg-4 flex pr-0 custom_date_range" id="date_range_div">
+                                        <span class="w_50perc wow fadeIn" data-wow-duration="0.4s" data-wow-delay="0.1s">
+                                            <input type="text" id="start_date" value="{{start_date}}" name="start_date" class="date_ranger form-control"  placeholder="Start Date"  autocomplete="off"/>
+                                            <small id="start_date-error" class="form-element-hint hide">Please select a start date.</small>
+                                        </span>
+
+                                        <span class=" ml-15 w_50perc wow fadeIn" data-wow-duration="0.4s" data-wow-delay="0.2s">
+                                            <input type="text" id="end_date" value="{{end_date}}" name="end_date" class="date_ranger form-control" placeholder="End Date"  autocomplete="off"/>
+                                            <small id="end_date-error" class="form-element-hint hide">Please select an end date.</small>
+                                            <small id="greater-error" class="form-element-hint hide">Please select a date greater than start date.</small>
+                                        </span>
+                                    </div>
+                                    <div class="col-2 col-sm-2 col-lg-1 flex pr-0 custom_date_range" id="limit_div">
+                                        <span class="wow fadeIn" data-wow-duration="0.4s" data-wow-delay="0.1s">
+                                        <input type="number" oninput="this.value=(parseInt(this.value)||null)" placeholder="limit" autofocus='' id="limit" name="limit" class="form-control align_center pr-0 pl-0"   max="10000000" value="{{limit}}"/>
+                                        <small id="limit-error" class="custom_position_error form-element-hint hide">Please select a value greater than 0.</small>
+                                        </span>
+                                    </div>
+                                    
+
+                                    <div class="col-10 col-sm-4 col-lg-2 pr-0 wow fadeIn" data-wow-duration="0.9s" data-wow-delay="0.35s">
+                                            <select name="filter" id="filter" class="form-control dropdown_arr_btn">
+                                                <option value="state" {% if filter == "state" %}selected{% endif %}>Filter by state</option>
+                                                <option value="city" {% if filter == "city" %}selected{% endif %}>Filter by city</option>
+                                            </select>
+                                    </div>
+
+                                    <div class="col-12 col-sm-4 col-lg-2 pr-0 custom_date_range  wow fadeIn {% if filter == "city" %}hide{%endif%}" id="state_div"  data-wow-duration="0.9s" data-wow-delay="0.45s">
+                                        <select class="dropdown-toggle form-control dropdown_arr_btn" name="state" id="state">
+                                            <option value="">All states</option>
+                                            {% for state in states %}
+                                              <option value="{{state.id}}" {% if selected_state == state.id|slugify %}selected{% endif %}>{{state}}</option>
+                                            {% endfor %}
+                                        </select>
+                                    </div>
+
+                                    <div class="col-12 col-sm-4 col-lg-2 flex pr-0 custom_date_range {% if filter == "state" %}hide{%endif%}" id="city_div">
+                                        <select class="dropdown-toggle form-control dropdown_arr_btn" name="city" id="city">
+                                            <option value="">All cities</option>
+                                            {% for city in cities %}
+                                              <option value="{{city.id}}" {% if selected_city == city.id|slugify %}selected{% endif %}>{{city}}</option>
+                                            {% endfor %}
+                                        </select>
+                                    </div>
+
+                                    <div class="filter_btn_grp wow fadeIn"  data-wow-duration="0.9s" data-wow-delay="0.5s">
+                                        <button id="filterformsubmit" type="button" class="primary_btn_v2">Apply</button>
+                                        <a href="{% url 'top_agent_report' %}"><button type="button" class="secondary_btn_v2"> Reset </button></a>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+
+                {% if selected_airline %}
+                <div class="col-12">
+                    <div class="row">
+                        <div class="col-12">
+                            <div class="table-wrapper">
+                                <table class="table fixed_headers">
+                                    <thead>
+                                        <tr>
+
+                                            <th>
+                                                <a href="#">
+                                                    Sales&nbsp;Owner&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                                                </a>
+                                            </th>
+
+                                            <th>
+                                                <a href="#">
+                                                    Agency
+                                                </a>
+                                            </th>
+
+                                            <th>
+                                                <a href="#">
+                                                    Agency&nbsp;name
+                                                </a>
+                                            </th>
+
+                                            <th width="135">
+                                                <a href="#">
+                                                    Agency&nbsp;city&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                                                </a>
+                                            </th>
+
+                                            <th width="115">
+                                                <a href="#">
+                                                    Agency&nbsp;state
+                                                </a>
+                                            </th>
+
+                                            <th>
+                                                <a href="#">
+                                                    Agency&nbsp;phone&nbsp;number
+                                                </a>
+                                            </th>
+
+                                            <th>
+                                                <a href="#">
+                                                    Agency&nbsp;Email
+                                                </a>
+                                            </th>
+
+                                            <th>
+                                                <a href="#">
+                                                    Sales
+                                                </a>
+                                            </th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+
+                                        {% for transaction in transactions %}
+                                        <tr data-id="#">
+                                            <td>{{transaction.sales_owner}}</td>
+                                            <td><a href="{% url 'agency_details' transaction.agency %}">{{transaction.agency_no}}</a></td>
+                                            <td>{{transaction.agency_name}}</td>
+                                            <td>{{transaction.agency_city}}</td>
+                                            <td>{{transaction.agency_state}}</td>
+                                            <td>{{transaction.tel}}</td>
+                                            <td>{{transaction.agency_email}}</td>
+                                            <td>{{transaction.fare_sum}}</td>
+                                        </tr>
+                                        {% empty %}
+                                            <tr>
+                                                <td>
+                                                    No data available.
+                                                </td>
+                                            </tr>
+                                        {% endfor %}
+
+
+								        <!-- <tr><td>No results.</td></tr> -->
+                                    </tbody>
+                                </table>
+
+
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-sm-6 flex">
+                                <!--<div class="missing_file" data-toggle="modal" data-target="#missing_preview"> <img id="profileimage" src="{% static "main/img/file_red.svg" %}">  {{missing_count}} Files missing</div>-->
+
+
+                        </div>
+                        <div class="col-sm-6">
+                            {% if paginator.num_pages > 1 %}
+                                    <div class="table_pagination">
+                                        <ul class="pagination">
+                                            {% if page_obj.has_previous %}
+                                              <li><a href="?page={{ page_obj.previous_page_number }}&date_filter={{date_filter}}&month_year={{month_year}}&start_date={{start_date}}&end_date={{end_date}}&airline={{selected_airline}}" class="prev"></a></li>
+                                            {% endif %}
+                                            {% for i in paginator.page_range %}
+                                              <li><a href="?page={{i}}&date_filter={{date_filter}}&month_year={{month_year}}&start_date={{start_date}}&end_date={{end_date}}&airline={{selected_airline}}" class="{% if page_obj.number == i %}selected {% endif %}">{{i}}</a></li>
+                                            {% endfor %}
+                                            {% if page_obj.has_next %}
+                                            <li><a href="?page={{ page_obj.next_page_number }}&date_filter={{date_filter}}&month_year={{month_year}}&start_date={{start_date}}&end_date={{end_date}}&airline={{selected_airline}}" class="next"></a></li>
+                                            {% endif %}
+                                        </ul>
+                                    </div>
+                                {% endif %}
+                        </div>
+
+                    </div>
+                </div>
+                {% else %}
+                <div class="base_msg  wow fadeIn"  data-wow-duration="0.9s" data-wow-delay="0.7s">
+                    <p> Please select an airline and date to view sales details report </p>
+                </div>
+                {% endif %}
+            </div>
+        </div>
+    </content>
+
+  <!-- Modal -->
+  <div class="modal fade" id="tax_preview1" tabindex="-1" role="dialog" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered modal-lg" role="document">
+        <div class="modal-content">
+        <div class="modal-header">
+                <h5 class="title_style">TAX INFORMATION</h5>
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+            </button>
+        </div>
+        <div class="modal-body tax_view">
+
+            <div class="row" id="tax_details">
+
+            </div>
+            
+        </div>
+        </div>
+    </div>
+  </div>
+
+    <!-- Modal 2-->
+    <div class="modal fade" id="missing_preview" tabindex="-1" role="dialog" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered modal-lg" role="document">
+            <div class="modal-content">
+            <div class="modal-header box_shadow">
+                    <h5 class="title_style">MISSING FILES</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+    
+
+                    {% for ped in missing_peds %}
+                <div id="ped_details" class="missing_file_name">
+                    <p>Billing details on {{ped|date}} is missing.</p>
+                 </div>
+                    {% endfor %}
+
+                {% for day in missing_creds %}
+                <div id="day_details" class="missing_file_name">
+                    <p>Daily transaction file on {{day|date}} is missing.</p>
+                 </div>
+                    {% endfor %}
+
+                
+            </div>
+            </div>
+        </div>
+      </div>
+{% endblock %}
+
+{% block app_js_block %}
+    <script>
+
+    $( "#filter" ).change(function(){
+        console.log('hai');
+        var filter_val = $('#filter').val();
+        if (filter_val == 'state'){
+            $('#city').prop('selectedIndex',0);
+            $( "#city_div" ).addClass('hide');
+            $( "#state_div" ).removeClass('hide');
+        }else{
+            $('#state').prop('selectedIndex',0);
+            $( "#state_div" ).addClass('hide');
+            $( "#city_div" ).removeClass('hide');
+            }
+
+    })
+
+
+    $('#filterformsubmit').click(function(e){
+            e.preventDefault();
+            $('#airline-error').addClass('hide');
+            $('#limit-error').addClass('hide');
+            $('#start_date-error').addClass('hide');
+            $('#end_date-error').addClass('hide');
+            $('#greater-error').addClass('hide');
+
+
+            if (!$("#airline_select").val().length > 0){
+                $('#airline-error').removeClass('hide');
+                return false;
+            }
+
+            if ($("#limit").val() < 1){
+                $('#limit-error').removeClass('hide');
+                return false;
+            }
+            if (!$("#start_date").val().length > 0 | !$("#end_date").val().length > 0){
+
+                 if (!$("#start_date").val().length > 0){
+                    $('#start_date-error').removeClass('hide');
+                 }
+                 if (!$("#end_date").val().length > 0){
+                    $('#end_date-error').removeClass('hide');
+                 }
+                return false;
+            }
+            if ($("#start_date").val().length > 0 & $("#end_date").val().length > 0){
+                var StartDate = new Date($("#start_date").val());
+                var EndDate = new Date($("#end_date").val());
+                if (StartDate >= EndDate){
+                    $('#greater-error').removeClass('hide');
+                    return false;
+                    }
+
+            }
+
+           $('#filterform').submit();
+        });
+        $('input.monthyearpicker').datepicker({
+            autoclose:true,
+            format:'MM yyyy',
+            minViewMode:1
+        });
+        $('input.date_ranger').datepicker({
+            autoclose:true,
+            format:'dd MM yyyy',
+            minViewMode:0
+        });
+
+
+
+        $(document).on('click', '#get-exel', function(e){
+          e.preventDefault();
+          $('#airline-error').addClass('hide');
+            $('#start_date-error').addClass('hide');
+            $('#end_date-error').addClass('hide');
+            $('#greater-error').addClass('hide');
+          if (!$("#airline_select").val().length > 0){
+                $('#airline-error').removeClass('hide');
+                return false;
+            }
+            if (!$("#start_date").val().length > 0 | !$("#end_date").val().length > 0){
+
+                 if (!$("#start_date").val().length > 0){
+                    $('#start_date-error').removeClass('hide');
+                 }
+                 if (!$("#end_date").val().length > 0){
+                    $('#end_date-error').removeClass('hide');
+                 }
+                return false;
+            }
+
+            if ($("#start_date").val().length > 0 & $("#end_date").val().length > 0){
+                var StartDate = new Date($("#start_date").val());
+                var EndDate = new Date($("#end_date").val());
+                if (StartDate >= EndDate){
+                    $('#greater-error').removeClass('hide');
+                    return false;
+                    }
+
+            }
+
+          var start = $('#start_date').val();
+          var end = $('#end_date').val();
+          var airline= $("#airline_select").val();
+          var limit= $("#limit").val();
+          var city= $("#city").val();
+          var state= $("#state").val();
+
+          window.location.href = "{% url 'top_agent_report_download' %}?start_date=" +start+ "&end_date="+ end + "&airline=" +airline+ "&limit=" +limit+ "&city=" +city+ "&state=" +state;
+        });
+    </script>
+        
+{% endblock app_js_block %}

@@ -1,0 +1,28 @@
+{% for charge in charges %}
+<div class="col-sm-4 col-xs-6 col-xl-4 p-0 each_col_tax">
+    <div class="label_value">
+        <span class="tax_lab">Tax&nbsp;{{charge.type}}</span>
+        <span class="tax_val">{{charge.amount}}</span>
+    </div>
+
+</div>
+{% endfor %}
+
+
+{% for tax in taxes %}
+<div class="col-sm-4 col-xs-6 col-xl-4 p-0 each_col_tax">
+    <div class="label_value">
+        <span class="tax_lab">Tax&nbsp;{{tax.type}}</span>
+        <span class="tax_val">{{tax.amount}}</span>
+    </div>
+
+</div>
+{% endfor %}
+
+{% if not taxes and not charges %}
+<div class="col-sm-4 col-xs-6 col-xl-4 p-0 each_col_tax">
+    <div class="label_value">
+    No Taxes.
+    </div>
+</div>
+{% endif %}

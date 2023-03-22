@@ -1,0 +1,198 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block title %}
+	Add Airline
+{% endblock %}
+{% block css %}
+    {{ form.media.css }}
+{% endblock %}
+
+{% block content%}
+    <content>
+        <div class="top-header">
+            <div class="row">
+                <div class="col-sm-5 col-lg-4 col-xs-12 text-left wow fadeInUp" data-wow-duration="0.9s" data-wow-delay="0.1s">
+                    <h5 class="title_style">ADD AIRLINE</h5>
+                    <ol class="breadcrumb">
+                        <li class="breadcrumb-item"><a href="{% url 'airlines' %}">Airline management</a></li>
+                        <li class="breadcrumb-item active" aria-current="page">Add Airline</li>
+                    </ol>
+                </div>
+            </div>
+        </div>
+
+        <div class="content-wrapper baner_sm">
+
+            <form method="post" enctype="multipart/form-data" id="form">
+                {% csrf_token %}
+            <div class="form-wrapper">
+                <small class="form-element-hint">{{ form.non_field_errors }}</small>
+                <div class="row">
+                    <input type="hidden" name="country" value="{{form.country.value}}">
+                    <div class="col-12 col-sm-6 col-xs-6 wow fadeIn" data-wow-duration="0.9s" data-wow-delay="0.25s">
+
+                        <div class="form-element form-input {% if form.code.errors%}form-has-error{% endif %}">
+                            <input type="text" class="form-element-field" name="code" value= "{{ form.code.value|default_if_none:"" }}" id="id_code" maxlength="3" required="" placeholder=" ">
+                            <label class="form-element-label mandatory" for="">3 Digit Code</label>
+                            <small class="form-element-hint">{{ form.code.errors }}</small>
+                        </div>
+
+                    </div>
+                    <div class="col-12 col-sm-6 col-xs-6 wow fadeIn" data-wow-duration="0.9s" data-wow-delay="0.3s">
+                        <div class="form-element form-input {% if form.abrev.errors %}form-has-error{% endif %}">
+                            <input oninput="this.value = this.value.toUpperCase()" class="form-element-field" type="text" name="abrev" value="{{ form.abrev.value|default_if_none:"" }}" id="id_abrev" maxlength="2" required="" placeholder=" ">
+                            <label class="form-element-label mandatory" for="">2 Letter Code</label>
+                            <small class="form-element-hint">{{ form.abrev.errors }}</small>
+                        </div>
+
+                    </div>
+                    <div class="col-12 col-sm-6 col-xs-6 wow fadeIn" data-wow-duration="0.9s" data-wow-delay="0.35s">
+
+                        <div class="form-element form-input {% if form.name.errors %}form-has-error{% endif %}">
+                            <input class="form-element-field" type="text" name="name" id="id_name" maxlength="50" required="" value= "{{ form.name.value|default_if_none:"" }}" placeholder=" ">
+                            <label class="form-element-label mandatory" for="">Name</label>
+                            <small class="form-element-hint">{{ form.name.errors }}</small>
+                        </div>
+
+                    </div>
+
+                    <!--<div class="col-12 col-sm-6 col-xs-6">-->
+
+                        <!--<div class="form-element form-input {% if form.arc_coordination_fee.errors %}form-has-error{% endif %}">-->
+                            <!--<input class="form-element-field" type="number" name="arc_coordination_fee" value="{{ form.arc_coordination_fee.value|default_if_none:"" }}" step="any" id="id_arc_coordination_fee" required="">-->
+                            <!--<label class="form-element-label mandatory" for="">ARC Coordination Fee</label>-->
+                            <!--<small class="form-element-hint">{{ form.arc_coordination_fee.errors }}</small>-->
+                        <!--</div>-->
+
+                    <!--</div>-->
+                    <div class="col-12 col-sm-6 col-xs-6 wow fadeIn" data-wow-duration="0.9s" data-wow-delay="0.65s">
+
+                        <div class="form-element form-select {% if form.product_manager.errors %}form-has-error{% endif %}">
+                            {{form.product_manager}}
+                            <label class="form-element-label" for="">Product Manager</label>
+                            {{ form.product_manager.errors }}
+                        </div>
+                    </div>
+
+
+                    {% if country.name == 'United States' %}
+
+                    {% else%}
+                        <div class="col-12 col-sm-6 col-xs-6 wow fadeIn" data-wow-duration="0.9s" data-wow-delay="0.7s">
+
+                        <div class="form-element form-select {% if form.accepts_AMEX.errors %}form-has-error{% endif %}">
+                            <select class="form-element-field form-control dropdown_arr_btn" name="accepts_AMEX" id="id_accepts_AMEX">
+
+                              <option value="2" {% if form.accepts_AMEX.value == True %} selected {% endif %}>Yes</option>
+
+                              <option value="3" {% if form.accepts_AMEX.value == False %} selected {% endif %}>No</option>
+
+                            </select>
+                            <label class="form-element-label mandatory" for="">Accepts AMEX</label>
+                            {{ form.accepts_AMEX.errors }}
+                        </div>
+                    </div>
+
+                    <div class="col-12 col-sm-6 col-xs-6 wow fadeIn" data-wow-duration="0.9s" data-wow-delay="0.75s">
+
+                        <div class="form-element form-select {% if form.accepts_MC.errors %}form-has-error{% endif %}">
+                            <select class="form-element-field form-control dropdown_arr_btn" name="accepts_MC" id="id_accepts_MC">
+
+                              <option value="2" {% if form.accepts_MC.value == True %} selected {% endif %}>Yes</option>
+
+                              <option value="3" {% if form.accepts_MC.value == False %} selected {% endif %}>No</option>
+                            </select>
+                            <label class="form-element-label mandatory" for="">Accepts MC</label>
+                            {{ form.accepts_MC.errors }}
+                        </div>
+                    </div>
+
+                    <div class="col-12 col-sm-6 col-xs-6 wow fadeIn" data-wow-duration="0.9s" data-wow-delay="0.8s">
+
+                        <div class="form-element form-select {% if form.accepts_VI.errors %}form-has-error{% endif %}">
+                            <select class="form-element-field form-control dropdown_arr_btn" name="accepts_VI" id="id_accepts_VI">
+
+                              <option value="2" {% if form.accepts_VI.value == True %} selected {% endif %}>Yes</option>
+
+                              <option value="3" {% if form.accepts_VI.value == False %} selected {% endif %}>No</option>
+
+                            </select>
+                            <label class="form-element-label mandatory" for="">Accepts VI</label>
+                            {{ form.accepts_VI.errors }}
+                        </div>
+                    </div>
+
+                     <div class="col-12 col-sm-6 col-xs-6 wow fadeIn" data-wow-duration="0.9s" data-wow-delay="0.8s">
+
+                        <div class="form-element form-select {% if form.accepts_UATP.errors %}form-has-error{% endif %}">
+                            <select class="form-element-field form-control dropdown_arr_btn" name="accepts_UATP" id="id_accepts_UATP">
+
+                              <option value="2" {% if form.accepts_UATP.value == True %} selected {% endif %}>Yes</option>
+
+                              <option value="3" {% if form.accepts_UATP.value == False %} selected {% endif %}>No</option>
+
+                            </select>
+                            <label class="form-element-label mandatory" for="">Accepts UATP</label>
+                            {{ form.accepts_UATP.errors }}
+                        </div>
+                    </div>
+                    {% endif %}
+
+
+
+                </div><!-- row -->
+            </div> <!-- form wrapper -->
+
+            <div class="row">
+                <div class="col-sm-12 align_right button_group custom_p-0-15 wow fadeIn" data-wow-duration="0.9s" data-wow-delay="0.9s">
+                    <a href="{% url 'airlines' %}">Cancel</a>
+                    <button type="submit" class="primary_btn">Save</button>
+                </div>
+            </div>
+            </form>
+        </div>
+
+    </content>
+
+
+{% endblock %}
+
+{% block js %}
+    {{ form.media.js }}
+<script>
+$(document).ready(function(){
+    $("#form").validate({
+          rules: {
+              code: "required",
+              abrev: "required",
+              name: "required",
+          },
+
+          // Specify validation error messages
+          messages: {
+              code: "Please enter 3 digit code",
+              abrev: "Please enter 2 letter code",
+              name: "Please enter name",
+          },
+
+          success: function (element) {
+              $('#'+element[0].id).nextAll().eq(1).text('');
+          },
+
+          errorPlacement: function(error, element) {
+              var placement = $(element).data('error');
+              if (placement) {
+                $(placement).append(error)
+              } else {
+                $('#'+element[0].id).nextAll().eq(1).text(error[0].innerHTML);
+              }
+          },
+
+          submitHandler: function(form) {
+              form.submit();
+          },
+    });
+});
+</script>
+
+{% endblock %}

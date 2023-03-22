@@ -1,0 +1,334 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block title %}
+	Edit User
+{% endblock %}
+{% block css %}
+    {{ form.media.css }}
+{% endblock %}
+
+{% block content%}
+    <content class="user_page edit_user_page">
+        <div class="top-header">
+            <div class="row">
+                <div class="col-sm-12 col-lg-6 col-xs-12 text-left wow fadeInUp" data-wow-duration="0.9s" data-wow-delay="0.1s">
+                    <h5 class="title_style">EDIT USER</h5>
+                    <ol class="breadcrumb">
+                        <li class="breadcrumb-item"><a href="#">Users</a></li>
+                        <li class="breadcrumb-item"><a href="{% url 'users' %}">Users List</a></li>
+                        <li class="breadcrumb-item active" aria-current="page"><a href="{% url 'user_details' form.instance.pk %}">View User Details</a></li>
+                        <li class="breadcrumb-item active" aria-current="page">Edit User</li>
+                    </ol>
+                </div>
+            </div>
+        </div>
+            {{form.errors}}
+        <div class="content-wrapper baner_sm">
+            <form method="post" enctype="multipart/form-data" id="form" onsubmit="return checkselectfields();">
+                {% csrf_token %}
+
+                <div class="user_image_preview add_user_img_placeholder row wow fadeIn" data-wow-duration="0.9s" data-wow-delay="0.2s">
+                    <div class="image_usr">
+                        {% if form.avatar.value %}
+                            <img id="profileimage"  src="/media/{{ form.avatar.value|default_if_none:'' }}" alt="">
+                          {% else %}
+                              <img id="profileimage"  src="{% static "main/img/user_placeholder.jpg" %}" alt="">
+                          {% endif %}
+                    </div>
+                    <span class="edit_position">
+                        <i class="material-icons" data-md-tooltip="Edit" onclick="">
+
+                        <div class="edit_pic">
+                            
+                            <span style="position:relative">
+                            
+                            </span>
+                        </div>
+                    </i>
+
+                    </span>
+                    <div class="upload_pic">
+                        <span>Upload Image</span>
+                        <!-- <i class="material-icons" data-md-tooltip="Back" onclick="history.back()"></i> -->
+                        <input type="file" name="avatar" id="id_avatar" accept="image/*" value= "{{ form.avatar.value|default_if_none:"" }}">
+                    </div>
+                    <!-- <span class="cust_tooltip">Upload Image</span> -->
+                    <div class="delete_pic">
+                            <span>Delete Image</span>
+                    </div>
+                </div>
+
+
+            <!-- <div class="user_image_preview add_user_img_placeholder row wow fadeIn" data-wow-duration="0.9s" data-wow-delay="0.2s">
+
+                
+                <input type="file" name="avatar" id="id_avatar" accept="image/*" value= "{{ form.avatar.value|default_if_none:"" }}">
+                <div class="image_usr">
+                    {% if form.avatar.value %}
+                      <img id="profileimage"  src="/media/{{ form.avatar.value|default_if_none:'' }}" alt="">
+                    {% else %}
+                        <img id="profileimage"  src="{% static "main/img/user_placeholder.jpg" %}" alt="">
+                    {% endif %}
+                </div>-->
+
+            <div class="form-wrapper">
+                <div class="row">
+                    <div class="col-lg-4 col-sm-6 col-xs-12 wow fadeIn" data-wow-duration="0.9s" data-wow-delay="0.3s">
+
+                        <div class="form-element form-input">
+                            <input class="form-element-field" placeholder=" " type="email" name="email" id="id_email" required="" maxlength="254" value= "{{ form.instance.email }}" disabled>
+                            <label class="form-element-label mandatory" for="">Email ID</label>
+                            <input type="checkbox" name="avatar-clear" id="remove_file" style="display:none;">
+                        </div>
+
+                    </div>
+                    <div class="col-lg-4 col-sm-6 col-xs-12 wow fadeIn" data-wow-duration="0.9s" data-wow-delay="0.35s">
+                        <div class="form-element form-input {% if form.first_name.errors %}form-has-error{% endif %}">
+                            <input class="form-element-field char_30" required="" placeholder=" " type="text" name="first_name" id="id_first_name" maxlength="30" value= "{{ form.first_name.value|default_if_none:"" }}">
+                            <label class="form-element-label mandatory" for="">First Name</label>
+                            <small class="form-element-hint">{{ form.first_name.errors }}</small>
+                        </div>
+
+                    </div>
+                    <div class="col-lg-4 col-sm-6 col-xs-12 wow fadeIn" data-wow-duration="0.9s" data-wow-delay="0.4s">
+
+                        <div class="form-element form-input {% if form.last_name.errors %}form-has-error{% endif %}">
+                            <input class="form-element-field char_30" required="" placeholder=" " type="text" name="last_name" id="id_last_name" maxlength="30" value= "{{ form.last_name.value|default_if_none:"" }}">
+                            <label class="form-element-label mandatory" for="">Last Name</label>
+                            <small class="form-element-hint">{{ form.last_name.errors }}</small>
+                        </div>
+
+                    </div>
+                    {% if not form.instance.is_superuser and not form.instance == user %}
+                    <div class="col-lg-4 col-sm-6 col-xs-12 wow fadeIn" data-wow-duration="0.9s" data-wow-delay="0.45s">
+                        <div class="form-element form-input short_length_select2 select2-mandatory {% if form.groups.errors %}form-has-error{% endif %}">
+                            {{form.groups}}
+                            <!-- <label class="form-element-label" for="">User Role</label> -->
+                            <small class="form-element-hint">{{ form.groups.errors }}</small>
+                        </div>
+                    </div>
+                    {% endif %}
+
+                    {% if not form.instance == user %}
+                    <div class="col-lg-4 col-sm-6 col-xs-12 wow fadeIn" data-wow-duration="0.9s" data-wow-delay="0.5s">
+
+                        <div class="form-element form-select {% if form.is_active.errors %}form-has-error{% endif %}">
+                            <select name="is_active" id="id_is_active" class="form-element-field dropdown_arr_btn" onchange="callModal(this.value)">
+                                <option value="True" {% if form.is_active.value == True %} selected {% endif %}>Active</option>
+                                <option value="False" {% if form.is_active.value == False %} selected {% endif %}>Inactive</option>
+                            </select>
+                            <label class="form-element-label mandatory" for="">Status</label>
+                            <small class="form-element-hint">{{ form.is_active.errors }}</small>
+                        </div>
+
+
+                    </div>
+                    <div class="col-lg-4 col-sm-6 col-xs-12 wow fadeIn" data-wow-duration="0.9s" data-wow-delay="0.55s" style="display: none;" >
+                        <div class="form-element form-input short_length_select2 select2-mandatory select2-country-label{% if form.countries.errors %}form-has-error{% endif %}">
+                            {{form.countries}}
+                            <!-- <label class="form-element-label" for="">User Role</label> -->
+                            <!--{{form.countries.errors}}-->
+                            <small class="form-element-hint">{{ form.countries.errors }}</small>
+                        </div>
+                    </div>
+                    {% endif %}
+                </div><!-- row -->
+            </div> <!-- form wrapper -->
+
+                <div class="row">
+                    <div class="col-sm-12 align_right button_group custom_p-0-15 wow fadeIn" data-wow-duration="0.9s" data-wow-delay="0.6s">
+                        <a href="{% url 'user_details' form.instance.pk %}">Cancel</a>
+                        <button type="submit" class="primary_btn">Save</button>
+                    </div>
+                </div>
+            </form>
+        </div>
+
+    </content>
+
+<!-- Modal -->
+  <div class="modal fade" id="delete_pic_modal" tabindex="-1" role="dialog" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+        <div class="modal-content">
+        <div class="modal-header">
+                <h5 class="title_style">REMOVE PICTURE</h5>
+            <!-- <button type="button" class="close" data-dismiss="modal" aria-label="Close"> -->
+            <!-- <span aria-hidden="true">&times;</span> -->
+            </button>
+        </div>
+        <div class="modal-body">
+            <div class="modal_content">
+              Are you sure you want to remove this picture?
+            </div>
+        </div>
+        <div class="modal-footer button_group">
+            <a href="#" data-dismiss="modal">No</a>
+            <button type="button" class="primary_btn" id="btnDelteYes" onclick="removeProfilePic()">Yes</button>
+        </div>
+        </div>
+    </div>
+  </div>
+
+  <div class="modal fade" id="userStatusModal" tabindex="-1" role="dialog" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+        <div class="modal-content">
+        <div class="modal-header">
+            <h5 class="title_style">INACTIVE STATUS</h5>
+        </div>
+        <div class="modal-body">
+            <div class="modal_content">
+              This user wont be able to login to his/her account while being in “inactive” status.
+            </div>
+        </div>
+        <div class="modal-footer button_group">
+            <button type="button" class="primary_btn" data-dismiss="modal" id="btnYes">Ok</button>
+        </div>
+        </div>
+    </div>
+  </div>
+{% endblock %}
+
+{% block js %}
+    {{ form.media.js }}
+
+    <script>
+       (function(){
+           var avatar =  "{{ form.avatar.value }}";
+           if(avatar == ''){
+            $('.user_image_preview').addClass('noPic');
+           }
+       })();
+
+       $(document).on('click', '.delete_pic', function(e){
+          e.preventDefault();
+          var id = $(this).closest('.role_item').data('id');
+          $('#delete_pic_modal').data('id', id).modal('show');
+          $(".edit_pic").removeClass("opened");
+          $(".delete_pic").removeClass("view_btn");
+          $(".upload_pic").removeClass("view_btn");
+       });
+
+       $(document).ready(function(){
+           $('input[type="file"]#id_avatar').change(function(e){
+                var fileName = e.target.files[0].name;
+                if (fileName !='') {
+                    $('#remove_file').prop('checked', false);
+                }
+           });
+
+           $('#id_groups, #id_countries').change(function(e){
+
+                if(!this.value.length > 0){
+                    var msg = '';
+                    if(this.id == 'id_groups'){
+                        msg = 'Please select user roles';
+                    }else{
+                        msg = 'Please select countries';
+                    }
+                    $('#'+this.id).nextAll().eq(1).text(msg);
+                }else{
+                    $('#'+this.id).nextAll().eq(1).text('');
+                }
+           });
+
+          $("#form").validate({
+              rules: {
+                  first_name: "required",
+                  last_name: "required",
+                  email: {
+                    required: true,
+                    email: true
+                  },
+                  is_active: "required",
+              },
+
+              // Specify validation error messages
+              messages: {
+                  first_name: "Please enter your first name",
+                  last_name: "Please enter your last name",
+                  email: "Please enter a valid email id",
+                  groups: "Please select user roles",
+                  is_active: "Please select status",
+                  countries: "Please select countries",
+              },
+
+              success: function (element) {
+                  $('#'+element[0].id).nextAll().eq(1).text('');
+              },
+
+              errorPlacement: function(error, element) {
+                  var placement = $(element).data('error');
+                  if (placement) {
+                    $(placement).append(error)
+                  } else {
+                    $('#'+element[0].id).nextAll().eq(1).text(error[0].innerHTML);
+                  }
+              },
+
+          });
+       });
+
+	  document.getElementById("{{ form.avatar.id_for_label }}").onchange = function () {
+        var reader = new FileReader();
+
+        reader.onload = function (e) {
+          // get loaded data and render thumbnail.
+          document.getElementById("profileimage").src = e.target.result;
+        };
+
+        // read the image file as a data URL.
+        reader.readAsDataURL(this.files[0]);
+      };
+
+      function removeProfilePic(){
+        $('#remove_file').prop('checked', true);
+        $('.delete_pic').hide();
+        $('#delete_pic_modal').modal('hide');
+        $('#profileimage').attr('src', "{% static 'main/img/user_placeholder.jpg' %}");
+        $('.user_image_preview').addClass('noPic');
+      }
+
+      function callModal(value){
+        if(value == 'False'){
+            $('#userStatusModal').modal('show');
+        }
+      }
+
+      function checkselectfields(){
+        var err = '';
+        if(!$('#id_groups').val().length > 0){
+            $('#id_groups').nextAll().eq(1).text('Please select user roles');
+            err = 1;
+        }
+
+        if(!$('#id_countries').val().length > 0){
+            $('#id_countries').nextAll().eq(1).text('Please select countries');
+            err = 1;
+        }
+
+        if(err != ''){
+            return false;
+        }else{
+            return true;
+        }
+      }
+
+        </script>
+
+<script>
+    $(".edit_pic").click(function () {
+        
+        $(".edit_position").toggleClass("open_edit");
+        $(".delete_pic").toggleClass("view_btn");
+        $(".upload_pic").toggleClass("view_btn");
+        $(".edit_pic").toggleClass("opened");
+    });
+    $(".upload_pic").click(function () {
+        $(".edit_pic").removeClass("opened");
+        $(".delete_pic").removeClass("view_btn");
+        $(".upload_pic").removeClass("view_btn");
+    });
+    
+</script>
+
+{% endblock %}

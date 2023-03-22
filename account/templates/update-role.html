@@ -1,0 +1,623 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block title %}
+	Edit Role
+{% endblock %}
+{% block css %}
+    {{ form.media.css }}
+{% endblock %}
+
+{% block content%}
+    <content>
+        <div class="top-header">
+            <div class="row">
+                <div class="col-6 col-sm-6 col-lg-6 text-left">
+                    <h5 class="title_style">EDIT USER ROLE</h5>
+                    <ol class="breadcrumb">
+                        <li class="breadcrumb-item"><a href="{% url 'roles' %}">Roles</a></li>
+                        <li class="breadcrumb-item active" aria-current="page">Edit User Role</li>
+                    </ol>
+                </div>
+                <div class="col-6 col-sm-6 col-lg-6 text-right">
+                    <button data-toggle="modal" data-target="#deleteRoleModal" class="primary_btn">DELETE ROLE</button>
+
+                </div>
+            </div>
+        </div>
+
+        <div class="content-wrapper baner_sm">
+            <form class="fullheight_table" method="post" enctype="multipart/form-data" id="roleform">
+                {% csrf_token %}
+
+            <div class="form-wrapper">
+                <div class="row">
+                    <div class="col-12 col-sm-6 col-lg-6 col-md-6">
+
+                        <div id="role-name-div" class="form-element form-input {% if form.name.errors %}form-has-error{% endif %}">
+                            <input class="form-element-field" placeholder=" " type="text" name="name" required="" maxlength="80" id="id_name"  value= "{{ form.name.value|default_if_none:"" }}">
+                            <label class="form-element-label mandatory" for="">User Role</label>
+                            <small class="form-element-hint">{{ form.name.errors }}</small>
+                            <small id="name-error" class="form-element-hint hide"><ul class="errorlist"><li>Group with this Name already exists.</li></ul></small>
+                            <small id="name-req-error" class="form-element-hint hide"><ul class="errorlist"><li>Please enter user role.</li></ul></small>
+                        </div>
+                    </div>
+                    <div class="col-12">
+                        <div class="table-wrapper table-wrapper-less-height form-element form-input permission_custom_table permission_label  {% if form.permissions.errors %}form-has-error{% endif %}">
+                            <div class="permission_scroll_box">
+                                <table>
+
+
+                                    <tr>
+                                        <td>
+                                            Agency list management
+                                        </td>
+                                        <td>
+                                            <label class="form-checkbox-label">
+                                                <input class="form-checkbox-field view-input-checkbox" type="checkbox" name="view_agency" {% if 'view_agency' in grp_perms  %} checked="checked" {% endif %}>
+                                                <i class="form-checkbox-button"></i>
+                                                <span>View</span>
+                                            </label>
+
+                                        </td>
+                                        <td>
+                                            <label class="form-checkbox-label">
+                                                <input class="form-checkbox-field change-input-checkbox" type="checkbox" name="change_agency" {% if 'change_agency' in grp_perms  %} checked="checked" {% endif %}>
+                                                <i class="form-checkbox-button"></i>
+                                                <span>Update</span>
+                                            </label>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>
+                                            Agency type management
+                                        </td>
+                                        <td>
+                                            <label class="form-checkbox-label">
+                                            <input class="form-checkbox-field view-input-checkbox" type="checkbox" name="view_agencytype" {% if 'view_agencytype' in grp_perms  %} checked="checked" {% endif %}>
+                                            <i class="form-checkbox-button"></i>
+                                            <span>View</span>
+                                            </label>
+                                        </td>
+                                        <td>
+                                            <label class="form-checkbox-label">
+                                            <input class="form-checkbox-field change-input-checkbox" type="checkbox" name="change_agencytype" {% if 'change_agencytype' in grp_perms  %} checked="checked" {% endif %}>
+                                            <i class="form-checkbox-button"></i>
+                                            <span>Update</span>
+                                            </label>
+                                        </td>
+                                    </tr>
+
+                                    <tr>
+                                        <td>
+                                            Agency collection management
+                                        </td>
+                                        <td>
+                                            <label class="form-checkbox-label">
+                                            <input class="form-checkbox-field view-input-checkbox" type="checkbox" name="view_agencycollection" {% if 'view_agencycollection' in grp_perms  %} checked="checked" {% endif %}>
+                                            <i class="form-checkbox-button"></i>
+                                            <span>View</span>
+                                            </label>
+                                        </td>
+                                        <td>
+                                            <label class="form-checkbox-label">
+                                            <input class="form-checkbox-field change-input-checkbox" type="checkbox" name="change_agencycollection" {% if 'change_agencycollection' in grp_perms  %} checked="checked" {% endif %}>
+                                            <i class="form-checkbox-button"></i>
+                                            <span>Update</span>
+                                            </label>
+                                        </td>
+                                    </tr>
+
+                                    <tr>
+                                        <td>
+                                            User management
+                                        </td>
+                                        <td>
+                                            <label class="form-checkbox-label">
+                                            <input class="form-checkbox-field view-input-checkbox" type="checkbox" name="view_user" {% if 'view_user' in grp_perms  %} checked="checked" {% endif %}>
+                                            <i class="form-checkbox-button"></i>
+                                            <span>View</span>
+                                            </label>
+                                        </td>
+                                        <td>
+                                            <label class="form-checkbox-label">
+                                            <input class="form-checkbox-field change-input-checkbox" type="checkbox" name="change_user" {% if 'change_user' in grp_perms  %} checked="checked" {% endif %}>
+                                            <i class="form-checkbox-button"></i>
+                                            <span>Update</span>
+                                            </label>
+                                        </td>
+                                    </tr>
+
+                                    <tr>
+                                        <td>
+                                            State Owners
+                                        </td>
+                                        <td>
+                                            <label class="form-checkbox-label">
+                                            <input class="form-checkbox-field view-input-checkbox" type="checkbox" name="view_stateowners" {% if 'view_stateowners' in grp_perms  %} checked="checked" {% endif %}>
+                                            <i class="form-checkbox-button"></i>
+                                            <span>View</span>
+                                            </label>
+                                        </td>
+                                        <td>
+                                            <label class="form-checkbox-label">
+                                            <input class="form-checkbox-field change-input-checkbox" type="checkbox" name="change_stateowners" {% if 'change_stateowners' in grp_perms  %} checked="checked" {% endif %}>
+                                            <i class="form-checkbox-button"></i>
+                                            <span>Update</span>
+                                            </label>
+                                        </td>
+                                    </tr>
+
+                                    <tr>
+                                        <td>
+                                            User roles
+                                        </td>
+                                        <td>
+                                            <label class="form-checkbox-label">
+                                            <input class="form-checkbox-field view-input-checkbox" type="checkbox" name="view_group" {% if 'view_group' in grp_perms  %} checked="checked" {% endif %}>
+                                            <i class="form-checkbox-button"></i>
+                                            <span>View</span>
+                                            </label>
+                                        </td>
+                                        <td>
+                                            <label class="form-checkbox-label">
+                                            <input class="form-checkbox-field change-input-checkbox" type="checkbox" name="change_group" {% if 'change_group' in grp_perms  %} checked="checked" {% endif %}>
+                                            <i class="form-checkbox-button"></i>
+                                            <span>Update</span>
+                                            </label>
+                                        </td>
+                                    </tr>
+
+                                    <tr>
+                                        <td>
+                                            Airline management
+                                        </td>
+                                        <td>
+                                            <label class="form-checkbox-label">
+                                            <input class="form-checkbox-field view-input-checkbox" type="checkbox" name="view_airline_management" {% if 'view_airline_management' in grp_perms  %} checked="checked" {% endif %}>
+                                            <i class="form-checkbox-button"></i>
+                                            <span>View</span>
+                                            </label>
+                                        </td>
+                                        <td>
+                                            <label class="form-checkbox-label">
+                                            <input class="form-checkbox-field change-input-checkbox" type="checkbox" name="change_airline_management" {% if 'change_airline_management' in grp_perms  %} checked="checked" {% endif %}>
+                                            <i class="form-checkbox-button"></i>
+                                            <span>Update</span>
+                                            </label>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>
+                                            Upload Reports
+                                        </td>
+                                        <td>
+                                            <label class="form-checkbox-label">
+                                            <input class="form-checkbox-field view-input-checkbox" type="checkbox" name="view_upload_reports" {% if 'view_upload_reports' in grp_perms  %} checked="checked" {% endif %}>
+                                            <i class="form-checkbox-button"></i>
+                                            <span>Upload</span>
+                                            </label>
+                                        </td>
+                                        <td>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>
+                                            Sales Details Report
+                                        </td>
+                                        <td>
+                                            <label class="form-checkbox-label">
+                                            <input class="form-checkbox-field view-input-checkbox" type="checkbox" name="view_sales_details" {% if 'view_sales_details' in grp_perms  %} checked="checked" {% endif %}>
+                                            <i class="form-checkbox-button"></i>
+                                            <span>View</span>
+                                            </label>
+                                        </td>
+                                        <td>
+                                            <label class="form-checkbox-label">
+                                            <input class="form-checkbox-field change-input-checkbox" type="checkbox" name="download_sales_details" {% if 'download_sales_details' in grp_perms  %} checked="checked" {% endif %}>
+                                            <i class="form-checkbox-button"></i>
+                                            <span>Download</span>
+                                            </label>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>
+                                            Sales Summary Report
+                                        </td>
+                                        <td>
+                                            <label class="form-checkbox-label">
+                                            <input class="form-checkbox-field view-input-checkbox" type="checkbox" name="view_sales_summary" {% if 'view_sales_summary' in grp_perms  %} checked="checked" {% endif %}>
+                                            <i class="form-checkbox-button"></i>
+                                            <span>View</span>
+                                            </label>
+                                        </td>
+                                        <td>
+                                            <label class="form-checkbox-label">
+                                            <input class="form-checkbox-field change-input-checkbox" type="checkbox" name="download_sales_summary" {% if 'download_sales_summary' in grp_perms  %} checked="checked" {% endif %}>
+                                            <i class="form-checkbox-button"></i>
+                                            <span>Download</span>
+                                            </label>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>
+                                            BSP_Sales Summary Report
+                                        </td>
+                                        <td>
+                                            <label class="form-checkbox-label">
+                                            <input class="form-checkbox-field view-input-checkbox" type="checkbox" name="view_new_sales_summary" {% if 'view_new_sales_summary' in grp_perms  %} checked="checked" {% endif %}>
+                                            <i class="form-checkbox-button"></i>
+                                            <span>View</span>
+                                            </label>
+                                        </td>
+                                        <td>
+                                            <label class="form-checkbox-label">
+                                            <input class="form-checkbox-field change-input-checkbox" type="checkbox" name="download_new_sales_summary" {% if 'download_new_sales_summary' in grp_perms  %} checked="checked" {% endif %}>
+                                            <i class="form-checkbox-button"></i>
+                                            <span>Download</span>
+                                            </label>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>
+                                            ADM Report
+                                        </td>
+                                        <td>
+                                            <label class="form-checkbox-label">
+                                            <input class="form-checkbox-field view-input-checkbox" type="checkbox" name="view_adm" {% if 'view_adm' in grp_perms  %} checked="checked" {% endif %}>
+                                            <i class="form-checkbox-button"></i>
+                                            <span>View</span>
+                                            </label>
+                                        </td>
+                                        <td>
+                                            <label class="form-checkbox-label">
+                                            <input class="form-checkbox-field change-input-checkbox" type="checkbox" name="download_adm" {% if 'download_adm' in grp_perms  %} checked="checked" {% endif %}>
+                                            <i class="form-checkbox-button"></i>
+                                            <span>Download</span>
+                                            </label>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>
+                                            Sales By Report
+                                        </td>
+                                        <td>
+                                            <label class="form-checkbox-label">
+                                            <input class="form-checkbox-field view-input-checkbox" type="checkbox" name="view_sales_by" {% if 'view_sales_by' in grp_perms  %} checked="checked" {% endif %}>
+                                            <i class="form-checkbox-button"></i>
+                                            <span>View</span>
+                                            </label>
+                                        </td>
+                                        <td>
+                                            <label class="form-checkbox-label">
+                                            <input class="form-checkbox-field change-input-checkbox" type="checkbox" name="download_sales_by" {% if 'download_sales_by' in grp_perms  %} checked="checked" {% endif %}>
+                                            <i class="form-checkbox-button"></i>
+                                            <span>Download</span>
+                                            </label>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>
+                                            All Sales Report
+                                        </td>
+                                        <td>
+                                            <label class="form-checkbox-label">
+                                            <input class="form-checkbox-field view-input-checkbox" type="checkbox" name="view_all_sales" {% if 'view_all_sales' in grp_perms  %} checked="checked" {% endif %}>
+                                            <i class="form-checkbox-button"></i>
+                                            <span>View</span>
+                                            </label>
+                                        </td>
+                                        <td>
+                                            <label class="form-checkbox-label">
+                                            <input class="form-checkbox-field change-input-checkbox" type="checkbox" name="download_all_sales" {% if 'download_all_sales' in grp_perms  %} checked="checked" {% endif %}>
+                                            <i class="form-checkbox-button"></i>
+                                            <span>Download</span>
+                                            </label>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>
+                                            Year To Year Sales Report
+                                        </td>
+                                        <td>
+                                            <label class="form-checkbox-label">
+                                            <input class="form-checkbox-field view-input-checkbox" type="checkbox" name="view_year_to_year" {% if 'view_year_to_year' in grp_perms  %} checked="checked" {% endif %}>
+                                            <i class="form-checkbox-button"></i>
+                                            <span>View</span>
+                                            </label>
+                                        </td>
+                                        <td>
+                                            <label class="form-checkbox-label">
+                                            <input class="form-checkbox-field change-input-checkbox" type="checkbox" name="download_year_to_years" {% if 'download_year_to_years' in grp_perms  %} checked="checked" {% endif %}>
+                                            <i class="form-checkbox-button"></i>
+                                            <span>Download</span>
+                                            </label>
+                                        </td>
+                                    </tr>
+                                  <tr>
+                                        <td>
+                                            Monthly Airlines Summary Report
+                                        </td>
+                                        <td>
+                                            <label class="form-checkbox-label">
+                                            <input class="form-checkbox-field view-input-checkbox" type="checkbox" name="view_weekly_sales_report" {% if 'view_weekly_sales_report' in grp_perms  %} checked="checked" {% endif %}>
+                                            <i class="form-checkbox-button"></i>
+                                            <span>View</span>
+                                            </label>
+                                        </td>
+                                        <td>
+                                            <label class="form-checkbox-label">
+                                            <input class="form-checkbox-field change-input-checkbox" type="checkbox" name="download_weekly_sales" {% if 'download_weekly_sales' in grp_perms  %} checked="checked" {% endif %}>
+                                            <i class="form-checkbox-button"></i>
+                                            <span>Download</span>
+                                            </label>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>
+                                            Commission Report
+                                        </td>
+                                        <td>
+                                            <label class="form-checkbox-label">
+                                            <input class="form-checkbox-field view-input-checkbox" type="checkbox" name="view_commission" {% if 'view_commission' in grp_perms  %} checked="checked" {% endif %}>
+                                            <i class="form-checkbox-button"></i>
+                                            <span>View</span>
+                                            </label>
+                                        </td>
+                                        <td>
+                                            <label class="form-checkbox-label">
+                                            <input class="form-checkbox-field change-input-checkbox" type="checkbox" name="download_commission" {% if 'download_commission' in grp_perms  %} checked="checked" {% endif %}>
+                                            <i class="form-checkbox-button"></i>
+                                            <span>Download</span>
+                                            </label>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>
+                                            Sales Comparison Report
+                                        </td>
+                                        <td>
+                                            <label class="form-checkbox-label">
+                                            <input class="form-checkbox-field view-input-checkbox" type="checkbox" name="view_sales_comparison" {% if 'view_sales_comparison' in grp_perms  %} checked="checked" {% endif %}>
+                                            <i class="form-checkbox-button"></i>
+                                            <span>View</span>
+                                            </label>
+                                        </td>
+                                        <td>
+                                            <label class="form-checkbox-label">
+                                            <input class="form-checkbox-field change-input-checkbox" type="checkbox" name="download_sales_comparison" {% if 'download_sales_comparison' in grp_perms  %} checked="checked" {% endif %}>
+                                            <i class="form-checkbox-button"></i>
+                                            <span>Download</span>
+                                            </label>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>
+                                            Top Agency Report
+                                        </td>
+                                        <td>
+                                            <label class="form-checkbox-label">
+                                            <input class="form-checkbox-field view-input-checkbox" type="checkbox" name="view_top_agency" {% if 'view_top_agency' in grp_perms  %} checked="checked" {% endif %}>
+                                            <i class="form-checkbox-button"></i>
+                                            <span>View</span>
+                                            </label>
+                                        </td>
+                                        <td>
+                                            <label class="form-checkbox-label">
+                                            <input class="form-checkbox-field change-input-checkbox" type="checkbox" name="download_top_agency" {% if 'download_top_agency' in grp_perms  %} checked="checked" {% endif %}>
+                                            <i class="form-checkbox-button"></i>
+                                            <span>Download</span>
+                                            </label>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>
+                                            Monthly YOY Report
+                                        </td>
+                                        <td>
+                                            <label class="form-checkbox-label">
+                                            <input class="form-checkbox-field view-input-checkbox" type="checkbox" name="view_monthly_yoy" {% if 'view_monthly_yoy' in grp_perms  %} checked="checked" {% endif %}>
+                                            <i class="form-checkbox-button"></i>
+                                            <span>View</span>
+                                            </label>
+                                        </td>
+                                        <td>
+                                            <label class="form-checkbox-label">
+                                            <input class="form-checkbox-field change-input-checkbox" type="checkbox" name="download_monthly_yoy" {% if 'download_monthly_yoy' in grp_perms  %} checked="checked" {% endif %}>
+                                            <i class="form-checkbox-button"></i>
+                                            <span>Download</span>
+                                            </label>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>
+                                            Airline Agency Report
+                                        </td>
+                                        <td>
+                                            <label class="form-checkbox-label">
+                                            <input class="form-checkbox-field view-input-checkbox" type="checkbox" name="view_airline_agency" {% if 'view_airline_agency' in grp_perms  %} checked="checked" {% endif %}>
+                                            <i class="form-checkbox-button"></i>
+                                            <span>View</span>
+                                            </label>
+                                        </td>
+                                        <td>
+                                            <label class="form-checkbox-label">
+                                            <input class="form-checkbox-field change-input-checkbox" type="checkbox" name="download_airline_agency" {% if 'download_airline_agency' in grp_perms  %} checked="checked" {% endif %}>
+                                            <i class="form-checkbox-button"></i>
+                                            <span>Download</span>
+                                            </label>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>
+                                            Agency Collection Report
+                                        </td>
+                                        <td>
+                                            <label class="form-checkbox-label">
+                                            <input class="form-checkbox-field view-input-checkbox" type="checkbox" name="view_agency_collection_report" {% if 'view_agency_collection_report' in grp_perms  %} checked="checked" {% endif %}>
+                                            <i class="form-checkbox-button"></i>
+                                            <span>View</span>
+                                            </label>
+                                        </td>
+                                        <td>
+                                            <label class="form-checkbox-label">
+                                            <input class="form-checkbox-field change-input-checkbox" type="checkbox" name="download_agency_collection_report" {% if 'download_agency_collection_report' in grp_perms  %} checked="checked" {% endif %}>
+                                            <i class="form-checkbox-button"></i>
+                                            <span>Download</span>
+                                            </label>
+                                        </td>
+                                    </tr>
+                                  <tr>
+                                        <td>
+                                            Calender Management
+                                        </td>
+                                        <td>
+                                            <label class="form-checkbox-label">
+                                            <input class="form-checkbox-field view-input-checkbox" type="checkbox" name="view_calendar" {% if 'view_calendar' in grp_perms  %} checked="checked" {% endif %}>
+                                            <i class="form-checkbox-button"></i>
+                                            <span>View</span>
+                                            </label>
+                                        </td>
+                                        <td>
+                                            <label class="form-checkbox-label">
+                                            <input class="form-checkbox-field change-input-checkbox" type="checkbox" name="view_upload_calendar" {% if 'view_upload_calendar' in grp_perms  %} checked="checked" {% endif %}>
+                                            <i class="form-checkbox-button"></i>
+                                            <span>Upload</span>
+                                            </label>
+                                        </td>
+                                    </tr>
+
+                                    {% if is_arc %}
+                                    <tr>
+                                        <td>
+                                            Disbursement Summary Report
+                                        </td>
+                                        <td>
+                                            <label class="form-checkbox-label">
+                                            <input class="form-checkbox-field view-input-checkbox" type="checkbox" name="view_disbursement_summary" {% if 'view_disbursement_summary' in grp_perms  %} checked="checked" {% endif %}>
+                                            <i class="form-checkbox-button"></i>
+                                            <span>View</span>
+                                            </label>
+                                        </td>
+                                        <td>
+                                            <label class="form-checkbox-label">
+                                            <input class="form-checkbox-field change-input-checkbox" type="checkbox" name="download_disbursement_summary" {% if 'download_disbursement_summary' in grp_perms  %} checked="checked" {% endif %}>
+                                            <i class="form-checkbox-button"></i>
+                                            <span>Download</span>
+                                            </label>
+                                        </td>
+                                    </tr>
+                                    {% endif %}
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </div><!-- row -->
+            </div> <!-- form wrapper -->
+
+            <div class="row float_abs_btns">
+                <div class="col-sm-12 align_right button_group">
+                    <a href="{% url 'roles' %}">Cancel</a>
+                    <button type="button" id="roleformsubmit" class="primary_btn">Save</button>
+                </div>
+            </div>
+            </form>
+        </div>
+
+    </content>
+
+<!-- Modal -->
+
+<div class="modal fade" id="deleteRoleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+        <div class="modal-content">
+        <div class="modal-header">
+                <h5 class="title_style">DELETE ROLE</h5>
+            <!-- <button type="button" class="close" data-dismiss="modal" aria-label="Close"> -->
+            <!-- <span aria-hidden="true">&times;</span> -->
+            </button>
+        </div>
+        <div class="modal-body">
+            <div class="modal_content">
+                <p class="modal_content_text">
+                    Are you sure you want to delete this role?
+                </p>
+            </div>
+        </div>
+        <div class="modal-footer button_group">
+            <a href="#" data-dismiss="modal">No</a>
+            <form method="POST" action="{% url 'delete_role' object.id %}">
+                {% csrf_token %}
+                <button type="sumbit" class="primary_btn">Yes</button>
+            </form>
+        </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block js %}
+    <script>
+        function validateRoleName() {
+            var bool = false;
+
+            $.ajax({
+                    url: '/roles/name-check/',
+                    type: 'POST',
+                    async: false,
+                    dataType: 'json',
+                    data: {name: $("#id_name").val(),id: {{form.instance.pk}}},
+                    success: function(data) {
+                        if (data == true) {
+                            bool = true;
+                        }
+                    }
+            });
+
+            return bool;
+        }
+        $('#roleformsubmit').click(function(e){
+            e.preventDefault();
+
+            $('#name-error').addClass('hide');
+            $('#name-req-error').addClass('hide');
+            $('#role-name-div').removeClass('form-has-error');
+
+            if (!$("#id_name").val().length > 0){
+                $('#role-name-div').addClass('form-has-error');
+                $('#name-req-error').removeClass('hide');
+                return false;
+            }
+
+          // check if the input is valid
+            if(validateRoleName()) {
+                $('#name-error').removeClass('hide');
+                $('#role-name-div').addClass('form-has-error');
+                return false;
+                }
+
+           $('#roleform').submit();
+        });
+        $(document).ready(function() {
+          $(window).keydown(function(event){
+            if(event.keyCode == 13) {
+              event.preventDefault();
+              return false;
+            }
+          });
+        });
+
+        $(".change-input-checkbox").change(function() {
+            if(this.checked) {
+                $(this).parent().closest('tr').find('.view-input-checkbox').prop('checked', true);
+            }
+        });
+        $(".view-input-checkbox").change(function() {
+            if(!this.checked) {
+                $(this).parent().closest('tr').find('.change-input-checkbox').prop('checked', false);
+            }
+        });
+    </script>
+    {{ form.media.js }}
+
+{% endblock %}
+

@@ -1,0 +1,28 @@
+<tbody id="ftp-filelist-table-content">
+<input type="hidden" class="current_path" value="{{current_path}}">
+<input type="hidden" class="server_name" value="{{server_name}}">
+<input type="hidden" class="r-server-id" value="{{r_server_id}}">
+{% if prev_path != None %}
+<tr>
+  <td class="prev-path" data-attr="{{ prev_path }}">..</td>
+</tr>
+{% endif %}
+                                      {%  for history in historylist %}
+                                      <!-- {{forloop.counter}} -->
+                                      <!--  class="wow fadeIn" data-wow-duration="0.9s" data-wow-delay="0.{{forloop.counter}}5s" -->
+
+<tr>
+
+                                            <td style="color:{{file.color}}">{{ history.file }}</td>
+                                            <td>{{ history.created_on }}</td>
+                                            <td>{% if history.status == True %}Success{% else %}Failed{% endif %}</td>
+<!--                                            {% if country_name != 'United States' %}-->
+<!--                                            <td>{{ agency.get_status_iata_display }}</td>-->
+<!--                                            {% else %}-->
+<!--                                            <td>{{ agency.get_status_display }}</td>-->
+<!--                                            {%endif%}-->
+                                        </tr>
+                                      {% empty %}
+                                        <tr><td colspan="3">No data available.</td></tr>
+								{% endfor %}
+                                    </tbody>

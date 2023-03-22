@@ -1,0 +1,69 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block css %}
+    {{ form.media.css }}
+{% endblock %}
+
+{% block content%}
+    <content>
+        <div class="top-header">
+            <div class="row">
+                <div class="col-sm-12 col-lg-4 col-xs-12 text-left">
+                    <h5 class="title_style">EDIT STATES</h5>
+                    <ol class="breadcrumb">
+                        <li class="breadcrumb-item"><a href="{% url 'state_owners' %}">State Owner management</a></li>
+                        <li class="breadcrumb-item active" aria-current="page">Edit States</li>
+                    </ol>
+                </div>
+            </div>
+        </div>
+
+        <div class="content-wrapper baner_sm">
+            <form method="post" enctype="multipart/form-data">
+                {% csrf_token %}
+
+            <div class="form-wrapper">
+                <div class="row">
+                    <div class="col-12">
+
+                        <div class="form-element form-input {% if form.name.errors %}form-has-error{% endif %}">
+                            <input class="form-element-field" placeholder=" " type="text" name="name" maxlength="80" id="id_name"  value= "{{ form.instance.get_full_name|default_if_none:"" }}" disabled>
+                            <label class="form-element-label" for="">User</label>
+                        </div>
+                    </div>
+                    <!--<div class="col-12">-->
+                        <!--<div class="form-element form-input select2_custom_height states_label  {% if form.own_states.errors %}form-has-error{% endif %}">-->
+                            <!--{{form.own_states}}-->
+                            <!--&lt;!&ndash; <div class="form-element-bar"></div> &ndash;&gt;-->
+                            <!--&lt;!&ndash; <label class="form-element-label" for="field1">First Name</label> &ndash;&gt;-->
+                            <!--{{ form.own_states.errors }}-->
+                        <!--</div>-->
+                    <!--</div>-->
+                    <div class="col-12">
+                        <div class="form-element form-input select2_custom_height states_label  {% if form.states.errors %}form-has-error{% endif %}">
+                            {{form.states}}
+                            <!-- <div class="form-element-bar"></div> -->
+                            <!-- <label class="form-element-label" for="field1">First Name</label> -->
+                            {{ form.states.errors }}
+                        </div>
+                    </div>
+                </div><!-- row -->
+            </div> <!-- form wrapper -->
+
+            <div class="row">
+                <div class="col-sm-12 align_right button_group custom_p-0-15">
+                    <a href="{% url 'state_owners' %}">Cancel</a>
+                    <button type="submit" class="primary_btn">Save</button>
+                </div>
+            </div>
+            </form>
+        </div>
+
+    </content>
+
+
+{% endblock %}
+
+{% block js %}
+    {{ form.media.js }}
+{% endblock %}

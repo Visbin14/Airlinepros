@@ -1,0 +1,156 @@
+
+
+{% extends 'base.html' %}
+{% load static %}
+{% block title %}
+	Roles
+{% endblock %}
+
+{% block content%}
+
+
+
+    <content>
+        <div class="top-header">
+            <div class="row">
+                <div class="col-sm-3 col-lg-4 col-xs-12 text-left wow fadeInUp" data-wow-duration="0.9s" data-wow-delay="0.1s">
+                    <h5 class="title_style">ROLE LIST</h5>
+                    <ol class="breadcrumb">
+                        <li class="breadcrumb-item"><a href="#">Users</a></li>
+                        <li class="breadcrumb-item active" aria-current="page">Roles list</li>
+                    </ol>
+                </div>
+                <div class="col-sm-9 col-lg-8 col-xs-12 text-right wow fadeIn" data-wow-duration="0.9s" data-wow-delay="0.2s">
+                    <div class="search-form right_lg_btn">
+                        <form>
+                            <input type="text" name="q" class="form-control" placeholder="Search.." value="{{query}}" autofocus onfocus="this.setSelectionRange(this.value.length, this.value.length);">
+							<a href="{% url 'roles' %}">
+								<span class="close-icon"></span>
+							</a>
+                        </form>
+                    </div>
+                    {% if perms.auth.change_group %}
+                    <a href="{% url 'add_role' %}" class="primary_btn">ADD ROLE</a>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+        <div class="content-wrapper baner_sm">
+			<div class="row">
+                {% for role in roles %}	
+				<div class="col-sm-6 col-lg-4 col-xs-12 col-md-4 col-xl-3 role_item  wow fadeIn" data-id="{{role.id}}" data-wow-duration="1s" data-wow-delay="{{forloop.counter}}00ms">
+					<div class="card_style1">
+						<div class="card_text display_inline">
+                                <a href="{% if perms.auth.change_group %}{% url 'update_role' role.pk %}{%else%}{% url 'role_details' role.pk %}{% endif %}" class="page_link"></a>
+                            <p class="roleName">{{role.name}}</p>
+						</div>
+                        {% if perms.auth.change_group %}
+						<div class="card_actions display_inline">
+							<ul>
+								<li class="sep_line">
+                                    <i class="material-icons inline_block" data-md-tooltip="Delete">
+                                        <a class="edit_light delete_role"></a>
+                                    </i>
+								</li>
+								<li>
+                                    <i class="material-icons inline_block" data-md-tooltip="Edit">
+                                        <a href="{% url 'update_role' role.pk %}" class="trash_light"></a>
+                                    </i>
+								</li>
+							</ul>
+						</div>
+                        {% endif %}
+					</div>
+				</div>
+                {% empty %}
+                <div class="col-sm-12">
+                    No data available.
+                </div>
+				{% endfor %}
+
+
+				<!-- <div class="col-12">
+					<div class="table-wrapper">
+						<table class="table fixed_headers">
+							<thead>
+								<tr>
+									<th>
+                                        {% if order_by == 'name' %}<i class="fa fa-sort-up" aria-hidden="true"></i>{% endif %}
+										{% if order_by == '-name' %}<i class="fa fa-sort-down" aria-hidden="true"></i>{% endif %}
+										{% if order_by != 'name' and order_by != '-name' %}<i class="fa fa-sort" aria-hidden="true"></i> {%endif%}
+								  		<a href="{% url 'roles' %}?order_by={% if order_by == 'name' %}-name{% else %}name{% endif %}">
+										NAME
+										</a>
+                                    </th>
+								</tr>
+							</thead>
+							<tbody>
+								{% for role in roles %}
+									<tr>
+										<td><a href="{% url 'update_role' role.pk %}">{{role.name}}</a></td>
+									</tr>
+								{% endfor %}
+							</tbody>
+						</table>
+					</div>
+				</div> -->
+			</div>
+        </div>
+    </content>
+<!-- Modal -->
+  <div class="modal fade" id="delete_role_modal" tabindex="-1" role="dialog" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+        <div class="modal-content">
+        <div class="modal-header">
+                <h5 class="title_style">DELETE ROLE</h5>
+            <!-- <button type="button" class="close" data-dismiss="modal" aria-label="Close"> -->
+            <!-- <span aria-hidden="true">&times;</span> -->
+            </button>
+        </div>
+        <div class="modal-body">
+            <div class="modal_content">
+              Are you sure you want to delete this user role?
+            </div>
+        </div>
+        <div class="modal-footer button_group">
+            <a href="#" data-dismiss="modal">No</a>
+            <button type="button" class="primary_btn" id="btnDelteYes">Yes</button>
+        </div>
+        </div>
+    </div>
+  </div>
+{% endblock %}
+
+{% block app_js_block %}
+  <script>
+  $(document).on('click', '.delete_role', function(e){
+      e.preventDefault();
+      var id = $(this).closest('.role_item').data('id');
+      $('#delete_role_modal').data('id', id).modal('show');
+  });
+
+  $('#btnDelteYes').click(function () {
+      var id = $('#delete_role_modal').data('id');
+      $.ajax({url: '/roles/' + id + '/delete/', type:'post', success: function(result){
+          $("div[data-id=" + id + "]").detach();
+          $('#delete_role_modal').modal('toggle');
+          toastr.success('User role deleted successfully');
+      }});
+  });
+  </script>
+
+
+<script>
+$(document).ready(function() {
+
+    $(".roleName").css("width",$(".card_text").innerWidth());
+
+    $(window).resize(function()
+    {
+        $(".roleName").css("width",$(".card_text").innerWidth());
+    });
+
+});
+</script>
+{% endblock app_js_block %}
+
